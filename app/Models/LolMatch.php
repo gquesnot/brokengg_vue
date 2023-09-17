@@ -26,12 +26,13 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property int $is_trashed
  * @property string|null $created_at
  * @property string|null $updated_at
- * @property-read Map|null $map
- * @property-read Mode|null $mode
- * @property-read Collection<int, SummonerMatch> $participants
+ * @property-read \App\Models\Map|null $map
+ * @property-read \App\Models\Mode|null $mode
+ * @property-read Collection<int, \App\Models\SummonerMatch> $participants
  * @property-read int|null $participants_count
- * @property-read Queue|null $queue
- * @property-read Version|null $version
+ * @property-read \App\Models\Queue|null $queue
+ * @property-read \App\Models\Version|null $version
+ *
  * @method static Builder|LolMatch newModelQuery()
  * @method static Builder|LolMatch newQuery()
  * @method static Builder|LolMatch query()
@@ -47,13 +48,14 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @method static Builder|LolMatch whereQueueId($value)
  * @method static Builder|LolMatch whereUpdated($value)
  * @method static Builder|LolMatch whereUpdatedAt($value)
+ *
  * @mixin Eloquent
  */
 #[TypeScript]
 final class LolMatch extends Model
 {
-
     protected $table = 'lol_matchs';
+
     public $timestamps = false;
 
     public $fillable = [
@@ -67,7 +69,7 @@ final class LolMatch extends Model
         'match_duration',
         'is_trashed',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     public function sinceMatchEnd()
@@ -99,5 +101,4 @@ final class LolMatch extends Model
     {
         return $this->hasOne(Version::class, 'id', 'version_id');
     }
-
 }

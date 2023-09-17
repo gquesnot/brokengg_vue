@@ -27,10 +27,11 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property bool $auto_update
  * @property string|null $created_at
  * @property string|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, LolMatch> $matches
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LolMatch> $matches
  * @property-read int|null $matches_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, SummonerMatch> $summonerMatches
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatch> $summonerMatches
  * @property-read int|null $summoner_matches_count
+ *
  * @method static Builder|Summoner newModelQuery()
  * @method static Builder|Summoner newQuery()
  * @method static Builder|Summoner query()
@@ -47,6 +48,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @method static Builder|Summoner whereSummonerId($value)
  * @method static Builder|Summoner whereSummonerLevel($value)
  * @method static Builder|Summoner whereUpdatedAt($value)
+ *
  * @mixin Eloquent
  */
 #[TypeScript]
@@ -74,23 +76,21 @@ class Summoner extends Model
         'auto_update' => 'boolean',
     ];
 
-
     public function matches()
     {
         return $this->hasManyThrough(LolMatch::class, SummonerMatch::class, 'summoner_id', 'id', 'id', 'match_id');
     }
-
 
     public function summonerMatches()
     {
         return $this->hasMany(SummonerMatch::class, 'summoner_id', 'id');
     }
 
-
     public function getEncountersCountForSummoner(Summoner $summoner)
     {
 
         $match_ids = $this->summonerMatches()->pluck('match_id');
+
         return $summoner->getEncountersCountQuery($match_ids)->where('summoner_matchs.summoner_id', $summoner->id)->first();
     }
 
@@ -103,7 +103,6 @@ class Summoner extends Model
         $query->whereHas('match', function ($sub_query) {
             $sub_query->where('updated', true)->where('is_trashed', false)->orderBy('match_creation', 'desc');
         });
-
 
         $filtered_query = $query->clone()->withWhereHas('match', function ($q) use ($filters) {
             if (Arr::has($filters, 'queue_id')) {
@@ -124,6 +123,7 @@ class Summoner extends Model
             return [$filtered_query, $filtered_query];
 
         }
+
         return [$filtered_query, $query];
 
     }
@@ -151,7 +151,6 @@ class Summoner extends Model
             ->orderByDesc('encounter_count');
     }
 
-
     public function champions(): Builder
     {
         return Champion::with(['matches' => function ($query) {
@@ -169,23 +168,22 @@ class Summoner extends Model
     public function getLiveGameFromLobbySearch(string $lobby_search, Collection $encounter_counts)
     {
         $summoner_names = explode("\n", $lobby_search);
-        $live_game = ["participants" => [], 'is_live' => false];
+        $live_game = ['participants' => [], 'is_live' => false];
         foreach ($summoner_names as $idx => $name) {
-            $name = trim(str_replace("joined the lobby", "", $name));
-
+            $name = trim(str_replace('joined the lobby', '', $name));
 
             $summoner = Summoner::whereName($name)->first();
             if ($name == $this->name) {
-                $live_game['participants'][] = ["summoner" => $this, 'encounter_count' => 0];
-            } else if ($summoner) {
-                $live_game['participants'][] = ["summoner" => $summoner, 'encounter_count' => $encounter_counts->get($summoner->id)];
+                $live_game['participants'][] = ['summoner' => $this, 'encounter_count' => 0];
+            } elseif ($summoner) {
+                $live_game['participants'][] = ['summoner' => $summoner, 'encounter_count' => $encounter_counts->get($summoner->id)];
             } else {
-                $live_game['participants'][] = ["summoner" => (object)['name' => $name], 'encounter_count' => 0];
+                $live_game['participants'][] = ['summoner' => (object) ['name' => $name], 'encounter_count' => 0];
             }
         }
+
         return $live_game;
     }
-
 
     public function getSummonerStats(Collection $match_ids)
     {
@@ -201,7 +199,7 @@ class Summoner extends Model
             DB::raw('count(*) as total_game'),
         ]);
         $first = $query->first();
+
         return $first['avg_kills'] != null ? $first : null;
     }
-
 }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ControllerHelper;
 use App\Helpers\FilterHelper;
 use App\Models\Champion;
 use App\Models\Map;
@@ -14,8 +13,6 @@ use Inertia\Inertia;
 
 class LiveGameController extends Controller
 {
-
-
     public function index(Request $request, Summoner $summoner)
     {
         [$filters, $filters_cpy] = FilterHelper::parseFilters($request);
@@ -24,7 +21,7 @@ class LiveGameController extends Controller
         ])['lobby_search'] ?? null;
         $fake_live_game = null;
         $live_game = null;
-        if (!$lobby_search) {
+        if (! $lobby_search) {
             $live_game = $summoner->getLiveGame();
             if ($live_game) {
                 $live_game['map'] = Map::find(intval($live_game['mapId']));

@@ -3,19 +3,19 @@ import SummonerHeader from "@/Components/Summoner/SummonerHeader.vue";
 
 
 const props = defineProps<{
-  champion: ChampionInterface
+    champion: ChampionInterface
 }>();
 
 </script>
 
 <template>
-  <div class="w-7/12 mx-auto my-6">
+    <div class="w-7/12 mx-auto my-6">
 
-    <SummonerHeader
-        tab="Champions"
-    />
-    Champion
-  </div>
+        <SummonerHeader
+            tab="Champions"
+        />
+        Champion
+    </div>
 
 
 </template>

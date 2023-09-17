@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ControllerHelper;
 use App\Helpers\FilterHelper;
 use App\Models\LolMatch;
 use App\Models\Summoner;
@@ -16,6 +15,7 @@ class EncounterController extends Controller
         [$filters, $filters_cpy] = FilterHelper::parseFilters($request);
         [$query, $encounter_query] = $summoner->getSummonerMatchQuery($filters);
         $filtered_match_ids = $query->pluck('match_id')->toArray();
+
         return Inertia::render('Summoner/Encounter', [
             'encounter' => $encounter,
             'with_' => $this->getMatchData($summoner, $encounter, $filtered_match_ids, true),
@@ -26,17 +26,18 @@ class EncounterController extends Controller
     protected function getMatchData(Summoner $summoner, Summoner $encounter, array $filtered_match_ids, bool $with)
     {
         $match_ids = $this->getMatchIds($summoner, $encounter, $filtered_match_ids, $with);
+
         return [
-            "matches" => $this->getMatches($summoner, $encounter, $match_ids),
-            "summoner_stats" => $summoner->getSummonerStats($match_ids),
-            "encounter_stats" => $encounter->getSummonerStats($match_ids)
+            'matches' => $this->getMatches($summoner, $encounter, $match_ids),
+            'summoner_stats' => $summoner->getSummonerStats($match_ids),
+            'encounter_stats' => $encounter->getSummonerStats($match_ids),
         ];
     }
-
 
     protected function getMatchIds(Summoner $summoner, Summoner $encounter, array $filtered_match_ids, bool $with)
     {
         $operator = $with ? '=' : '!=';
+
         return $summoner->summonerMatches()
             ->whereIn('summoner_matchs.match_id', $filtered_match_ids)
             ->join('summoner_matchs as e', function ($join) use ($encounter) {
@@ -59,5 +60,4 @@ class EncounterController extends Controller
                 'participants.champion:id,name,img_url',
             ])->get();
     }
-
 }

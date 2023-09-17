@@ -45,7 +45,7 @@ class UpdateDragonDataJob implements ShouldQueue
             $queue_id = intval($queue['queueId']);
             $model = Queue::whereId($queue_id)->first();
             $description = $queue['description'];
-            if (!$description) {
+            if (! $description) {
                 $description = $queue['map'];
             }
             $data = [
@@ -78,7 +78,6 @@ class UpdateDragonDataJob implements ShouldQueue
         }
     }
 
-
     public function updateChampions($version)
     {
         $champions = DataDragonAPI::getStaticChampions(version: $version);
@@ -107,11 +106,11 @@ class UpdateDragonDataJob implements ShouldQueue
             $item_id = intval($item_id);
             $model = Item::whereId($item_id)->first();
             $data = [
-                "name" => $item['name'],
-                "id" => $item_id,
-                "description" => $item['description'],
-                "img_url" => $item['image']['full'],
-                "tags" => $item['tags'],
+                'name' => $item['name'],
+                'id' => $item_id,
+                'description' => $item['description'],
+                'img_url' => $item['image']['full'],
+                'tags' => $item['tags'],
             ];
             if ($model) {
                 $model->update($data);

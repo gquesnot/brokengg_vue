@@ -3,7 +3,6 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,10 +15,8 @@ use Inertia\Inertia;
 |
 */
 
-
-
 Route::resource('/summoner', \App\Http\Controllers\SummonerController::class)->only([
-    'store', 'update'
+    'store', 'update',
 ]);
 
 Route::get('/summoner/{summoner}/matches', [\App\Http\Controllers\MatchesController::class, 'index'])->name('summoner.matches');
@@ -32,14 +29,11 @@ Route::get('/summoner/{summoner}/live-game', [\App\Http\Controllers\LiveGameCont
 
 Route::get('/summoner-match/{summoner_match}', [\App\Http\Controllers\MatchController::class, 'getSummonerMatchLoaded'])->name('get-summoner-match-loaded');
 
-
 Route::get('/', [App\Http\Controllers\SummonerController::class, 'index'])->name('home');
-
 
 Route::get('/sync', function () {
     \App\Jobs\UpdateDragonDataJob::dispatch();
 })->name('sync');
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

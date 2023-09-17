@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
 
-import {router} from "@inertiajs/vue3";
 import {urlChampionHelper} from "@/helpers/url_helpers";
 import {getSummoner} from "@/helpers/root_props_helpers";
 import {navigateToEncounter} from "@/helpers/router_helpers";
@@ -19,7 +18,7 @@ const summoner = getSummoner();
 
 <template>
     <div
-         :class="`flex pl-2  border-l-4 py-1 w-1/2 ${is_my_team ? 'border-blue-500' : 'border-red-500'}`">
+        :class="`flex pl-2  border-l-4 py-1 w-1/2 ${is_my_team ? 'border-blue-500' : 'border-red-500'}`">
         <div class="w-8 h-8" v-if="participant['champion']">
             <VImg
                 :src="urlChampionHelper(participant['champion']['img_url'])"

@@ -15,6 +15,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property string $title
  * @property string $img_url
  * @property array|null $stats
+ *
  * @method static Builder|Champion newModelQuery()
  * @method static Builder|Champion newQuery()
  * @method static Builder|Champion query()
@@ -23,6 +24,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @method static Builder|Champion whereName($value)
  * @method static Builder|Champion whereStats($value)
  * @method static Builder|Champion whereTitle($value)
+ *
  * @mixin Eloquent
  */
 #[TypeScript]
@@ -35,14 +37,12 @@ final class Champion extends Model
         'name',
         'title',
         'img_url',
-        'stats'
+        'stats',
     ];
-
 
     public $casts = [
-        'stats' => 'array'
+        'stats' => 'array',
     ];
-
 
     public static function url(string $version, string $url)
     {

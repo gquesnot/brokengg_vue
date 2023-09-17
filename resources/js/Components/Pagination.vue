@@ -22,7 +22,7 @@ const switchPage = (url: string | null) => {
     }
     const route_params = getRouteParams()
 
-  //@ts-ignore
+    //@ts-ignore
     router.visit(route(route().current(), getParamsWithFilters(getFilters(), {
         ...route_params,
         page: page.toString()

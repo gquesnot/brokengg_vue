@@ -3,10 +3,13 @@
 import {SummonerMatchInterface} from "@/types/summoner-match";
 import {getSummoner} from "@/helpers/root_props_helpers";
 import {urlChampionHelper, urlItemHelper} from "@/helpers/url_helpers";
+import {navigateToEncounter} from "@/helpers/router_helpers";
+import {SummonerEncounterCountInterface} from "@/types/summoner_encounter_count";
 
 
 const props = defineProps<{
-    participants: SummonerMatchInterface[] | null|undefined,
+    participants: SummonerMatchInterface[],
+    summoner_encounter_count: SummonerEncounterCountInterface,
     duration_minutes: number,
     won: boolean
 }>();
@@ -22,20 +25,16 @@ const getTrColor = (participant: SummonerMatchInterface) => {
     }
 }
 
-let max_total_damage_dealt:number = 0;
-let max_total_damage_taken:number = 0;
-if (props.participants){
-    for (let participant of props.participants) {
-        if (participant.total_damage_dealt_to_champions > max_total_damage_dealt) {
-            max_total_damage_dealt = participant.total_damage_dealt_to_champions
-        }
-        if ( participant.total_damage_taken > max_total_damage_taken) {
-            max_total_damage_taken = participant.total_damage_taken
-        }
+let max_total_damage_dealt: number = 0;
+let max_total_damage_taken: number = 0;
+for (let participant of props.participants) {
+    if (participant.total_damage_dealt_to_champions > max_total_damage_dealt) {
+        max_total_damage_dealt = participant.total_damage_dealt_to_champions
+    }
+    if (participant.total_damage_taken > max_total_damage_taken) {
+        max_total_damage_taken = participant.total_damage_taken
     }
 }
-
-
 
 </script>
 
@@ -46,13 +45,14 @@ if (props.participants){
             <th :class="`${won ? 'text-blue-600' : 'text-red-600' } font-bold p-2`">
                 {{ won ? 'Victory' : 'Defeat' }}
             </th>
+            <th class="p-2">Seen</th>
             <th class="p-2">KDA</th>
             <th class="p-2">Damage</th>
             <th class="p-2">CS</th>
             <th class="p-2">Item</th>
         </tr>
         </thead>
-        <tbody >
+        <tbody>
         <template v-for="(participant, index) in participants " :key="participant.id">
             <tr :class="`${getTrColor(participant)} border-gray-500 border-b-2 text-left`"
                 v-if="participant.won === won">
@@ -75,6 +75,28 @@ if (props.participants){
                         </div>
                     </div>
                 </td>
+                <td>
+                    <template v-if="participant.summoner_id === summoner.id">
+                        <div class="w-3 h-3 flex items-center justify-center">
+                            <VIcon icon="fa fa-user-o" class="w-3 h-3"/>
+                        </div>
+
+                    </template>
+                    <template v-else>
+                        <a href="#"
+                           @click.prevent="navigateToEncounter(summoner.id, participant.summoner_id)">
+
+                            <template
+                                v-if="summoner_encounter_count.hasOwnProperty(participant.summoner_id)">
+                                {{ summoner_encounter_count[participant.summoner_id] }}
+                            </template>
+                            <template v-else>
+                                1
+                            </template>
+                        </a>
+
+                    </template>
+                </td>
                 <td class="w-64 py-1  px-3">
                     <div class="ml-4 text-xl flex justify-center items-center flex-col">
                         <div class="flex">
@@ -92,14 +114,18 @@ if (props.participants){
                 <td class="w-fit py-1 px-3">
                     <div class="flex w-48 text-center">
                         <div class="w-24">
-                            {{participant.total_damage_dealt_to_champions}}
-                            <VProgressLinear :model-value="Math.round((participant.total_damage_dealt_to_champions / max_total_damage_dealt) * 100)" color="error"
-                                             :height="10" />
+                            {{ participant.total_damage_dealt_to_champions }}
+                            <VProgressLinear
+                                :model-value="Math.round((participant.total_damage_dealt_to_champions / max_total_damage_dealt) * 100)"
+                                color="error"
+                                :height="10"/>
                         </div>
                         <div class="ml-4 w-24">
-                            {{participant.total_damage_taken}}
-                            <VProgressLinear :model-value="Math.round((participant.total_damage_taken / max_total_damage_taken) * 100)" color="dark-blue"
-                                             :height="10" />
+                            {{ participant.total_damage_taken }}
+                            <VProgressLinear
+                                :model-value="Math.round((participant.total_damage_taken / max_total_damage_taken) * 100)"
+                                color="dark-blue"
+                                :height="10"/>
                         </div>
 
 
@@ -107,7 +133,7 @@ if (props.participants){
                 </td>
                 <td class="w-fit py-1 px-3">
                     <div class="text-center">
-                        <div>{{participant.minions_killed}}</div>
+                        <div>{{ participant.minions_killed }}</div>
                         <div>{{ (participant.minions_killed / duration_minutes).toFixed(1) }}/m</div>
                     </div>
                 </td>

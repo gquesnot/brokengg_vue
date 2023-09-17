@@ -103,9 +103,15 @@ const formToFilters = () => {
     let filters: FiltersInterface = {
         queue_id: form.filters.queue_id,
         champion_id: form.filters.champion_id,
-        start_date: form.filters.start_date ? form.filters.start_date.toString() : undefined,
-        end_date: form.filters.end_date ? form.filters.end_date.toString() : undefined,
+        start_date: form.filters.start_date ? form.filters.start_date.toISOString() : undefined,
+        end_date: form.filters.end_date ? form.filters.end_date.toISOString() : undefined,
         should_filter_encounters: form.filters.should_filter_encounters ? form.filters.should_filter_encounters : false,
+    }
+    if (filters.start_date !== undefined) {
+        filters.start_date = filters.start_date.split('T')[0]
+    }
+    if (filters.end_date !== undefined) {
+        filters.end_date = filters.end_date.split('T')[0]
     }
     return filters
 }

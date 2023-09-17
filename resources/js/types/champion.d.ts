@@ -5,5 +5,4 @@ type ChampionInterface = {
     img_url: string;
     champion_id: string;
     stats: any[];
-    matches?: SummonerMatchInterface[] | null;
 }

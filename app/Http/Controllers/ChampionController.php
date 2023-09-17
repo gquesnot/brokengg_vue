@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ControllerHelper;
 use App\Helpers\FilterHelper;
 use App\Models\Champion;
 use App\Models\Summoner;

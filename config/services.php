@@ -33,6 +33,6 @@ return [
     'riot' => [
         'api_key' => env('RIOT_API_KEY'),
         'max_match_count' => intval(env('RIOT_MAX_MATCH_COUNT', 0)),
-    ]
+    ],
 
 ];

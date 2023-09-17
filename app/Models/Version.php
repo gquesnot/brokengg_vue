@@ -11,11 +11,13 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property string $version
+ *
  * @method static Builder|Version newModelQuery()
  * @method static Builder|Version newQuery()
  * @method static Builder|Version query()
  * @method static Builder|Version whereId($value)
  * @method static Builder|Version whereVersion($value)
+ *
  * @mixin Eloquent
  */
 class Version extends Model
@@ -24,6 +26,6 @@ class Version extends Model
 
     public $fillable = [
         'id',
-        'version'
+        'version',
     ];
 }

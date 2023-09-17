@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ControllerHelper;
 use App\Helpers\FilterHelper;
 use App\Models\LolMatch;
 use App\Models\Summoner;
@@ -19,23 +18,11 @@ class MatchesController extends Controller
 
         $match_ids = $query->pluck('match_id');
         $encounter_match_ids = $encounter_query->pluck('match_id');
-        # fix order
+        // fix order
         $matches = SummonerMatch::whereSummonerId($summoner->id)
             ->whereIn('summoner_matchs.match_id', $match_ids)
             ->orderByDesc(LolMatch::select('match_creation')->whereColumn('lol_matchs.id', 'summoner_matchs.match_id'))
-            ->with([
-                'match:id,match_id,match_duration,match_end,mode_id,map_id,queue_id',
-                'match.queue:id,description',
-                'match.map:id,description',
-                'match.mode:id,description',
-                'items:id,img_url',
-                'champion:id,name,img_url',
-            ])
-            ->with([
-                'otherParticipants',
-                'otherParticipants.summoner:id,name',
-                'otherParticipants.champion:id,name,img_url',
-            ])
+            ->loadAll()
             ->paginate(20);
 
         return Inertia::render('Summoner/Matches', [

@@ -13,11 +13,13 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  *
  * @property int $id
  * @property string $description
+ *
  * @method static Builder|Queue newModelQuery()
  * @method static Builder|Queue newQuery()
  * @method static Builder|Queue query()
  * @method static Builder|Queue whereDescription($value)
  * @method static Builder|Queue whereId($value)
+ *
  * @mixin Eloquent
  */
 #[TypeScript]
@@ -27,9 +29,8 @@ class Queue extends Model
 
     public $fillable = [
         'id',
-        'description'
+        'description',
     ];
-
 
     public function name(): Attribute
     {

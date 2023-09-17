@@ -20,7 +20,7 @@ export const getParamsWithFilters = (filters: any, other_params: Record<string, 
 
 
 export const getFilters = (): FiltersInterface => {
-    let base_filters = usePage().props.filters;
+    const base_filters = usePage().props.filters;
     return {
         champion_id: base_filters.champion_id ? parseInt(base_filters.champion_id) : undefined,
         queue_id: base_filters.queue_id ? parseInt(base_filters.queue_id) : undefined,

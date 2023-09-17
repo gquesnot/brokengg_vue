@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ControllerHelper;
 use App\Helpers\FilterHelper;
 use App\Models\Summoner;
 use Illuminate\Http\Request;
@@ -17,8 +16,9 @@ class EncountersController extends Controller
         [$query, $encounter_query] = $summoner->getSummonerMatchQuery($filters);
         $encounters_query = $summoner->getEncountersCountQuery($query->pluck('match_id'))
             ->when($search != null && $search != '', function ($query) use ($search) {
-                $query->where('summoners.name', 'like', '%' . $search . '%');
+                $query->where('summoners.name', 'like', '%'.$search.'%');
             });
+
         return Inertia::render('Summoner/Encounters', [
             'encounters' => $encounters_query->paginate(20),
             'search' => $search,

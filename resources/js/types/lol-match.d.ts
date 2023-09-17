@@ -13,9 +13,9 @@ type LolMatchInterface = {
     is_trashed: boolean;
     created_at: string /* Date */ | null;
     updated_at: string /* Date */ | null;
-    participants?: SummonerMatchInterface[] | null;
-    map?: MapInterface | null;
-    queue?: QueueInterface | null;
-    mode ?: ModeInterface | null;
+    participants: SummonerMatchInterface[];
+    map: MapInterface;
+    queue: QueueInterface;
+    mode: ModeInterface;
 
 }

@@ -22,11 +22,10 @@ type SummonerMatchInterface = {
     total_damage_dealt_to_champions: number;
     gold_earned: number;
     total_damage_taken: number;
-    match: null | LolMatchInterface;
-    champion: null | ChampionInterface;
-    summoner: null | SummonerInterface;
-    items: null | ItemInterface[];
-    other_participants: null | SummonerMatchInterface[];
+    match: LolMatchInterface;
+    champion: ChampionInterface;
+    summoner: SummonerInterface;
+    items: ItemInterface[];
 }
 
 

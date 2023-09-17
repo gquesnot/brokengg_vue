@@ -7,7 +7,6 @@ import {navigateToEncounter} from "@/helpers/router_helpers";
 import {getSummoner} from "@/helpers/root_props_helpers";
 
 
-
 const props = defineProps<{
     encounter: EncounterInterface
 }>();

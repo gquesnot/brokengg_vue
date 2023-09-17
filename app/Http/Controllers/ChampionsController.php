@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ControllerHelper;
 use App\Helpers\FilterHelper;
 use App\Models\Summoner;
 use Illuminate\Http\Request;
@@ -10,8 +9,6 @@ use Inertia\Inertia;
 
 class ChampionsController extends Controller
 {
-
-
     public function index(Request $request, Summoner $summoner)
     {
         [$filters, $filters_cpy] = FilterHelper::parseFilters($request);

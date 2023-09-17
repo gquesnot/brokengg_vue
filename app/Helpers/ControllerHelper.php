@@ -10,15 +10,15 @@ use App\Models\Version;
 
 class ControllerHelper
 {
-    static function getBaseInertiaResponse(Summoner $summoner)
+    public static function getBaseInertiaResponse(Summoner $summoner)
     {
 
         return [
-            'summoner' => fn() => $summoner,
-            'version' => fn() => Version::orderByDesc('version')->first()?->version,
-            'champion_options' => fn() => Champion::orderBy('name')
+            'summoner' => fn () => $summoner,
+            'version' => fn () => Version::orderByDesc('version')->first()?->version,
+            'champion_options' => fn () => Champion::orderBy('name')
                 ->get()
-                ->map(fn(Champion $champion) => [
+                ->map(fn (Champion $champion) => [
                     'value' => $champion->id,
                     'label' => $champion->name,
                 ])->toArray(),
@@ -29,15 +29,16 @@ class ControllerHelper
                 $queue_ids = LolMatch::whereIn('id', $match_ids)
                     ->groupBy('queue_id')
                     ->pluck('queue_id')
-                    ->filter(fn($id) => $id !== null);
+                    ->filter(fn ($id) => $id !== null);
+
                 return Queue::whereIn('id', $queue_ids)
                     ->orderBy('description')
                     ->get()
-                    ->map(fn($queue) => [
+                    ->map(fn ($queue) => [
                         'value' => $queue->id,
                         'label' => $queue->description,
                     ])->toArray();
-            }
+            },
         ];
     }
 }

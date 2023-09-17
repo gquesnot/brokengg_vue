@@ -1,1 +1,1 @@
-type SummonerEncounterCountInterface = Record<number, number>;
+export type SummonerEncounterCountInterface = Record<number, number>;

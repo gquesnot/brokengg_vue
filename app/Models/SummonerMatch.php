@@ -14,7 +14,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
-
 /**
  * App\Models\SummonerMatch
  *
@@ -38,14 +37,16 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property int $total_damage_dealt_to_champions
  * @property int $gold_earned
  * @property int $total_damage_taken
- * @property-read Champion|null $champion
- * @property-read Collection<int, Item> $items
+ * @property-read \App\Models\Champion|null $champion
+ * @property-read Collection<int, \App\Models\Item> $items
  * @property-read int|null $items_count
- * @property-read LolMatch|null $match
+ * @property-read \App\Models\LolMatch|null $match
  * @property-read Collection<int, SummonerMatch> $otherParticipants
  * @property-read int|null $other_participants_count
- * @property-read Summoner|null $summoner
+ * @property-read \App\Models\Summoner|null $summoner
+ *
  * @method static Builder|SummonerMatch championsCalc()
+ * @method static Builder|SummonerMatch loadAll()
  * @method static Builder|SummonerMatch newModelQuery()
  * @method static Builder|SummonerMatch newQuery()
  * @method static Builder|SummonerMatch query()
@@ -69,13 +70,14 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @method static Builder|SummonerMatch whereTotalDamageTaken($value)
  * @method static Builder|SummonerMatch whereTripleKills($value)
  * @method static Builder|SummonerMatch whereWon($value)
+ *
  * @mixin Eloquent
  */
 #[TypeScript]
 final class SummonerMatch extends Model
 {
-
     protected $table = 'summoner_matchs';
+
     public $timestamps = false;
 
     public $fillable = [
@@ -100,11 +102,25 @@ final class SummonerMatch extends Model
         'total_damage_taken',
     ];
 
-
     public $casts = [
         'won' => 'boolean',
     ];
 
+    public function scopeLoadAll(Builder $query)
+    {
+        $query->with([
+            'match:id,match_id,match_duration,match_end,mode_id,map_id,queue_id',
+            'match.queue:id,description',
+            'match.map:id,description',
+            'match.mode:id,description',
+            'items:id,img_url',
+            'champion:id,name,img_url',
+            'match.participants',
+            'match.participants.summoner:id,name',
+            'match.participants.champion:id,name,img_url',
+            'match.participants.items:id,img_url',
+        ]);
+    }
 
     public function csPerMinute(): Attribute
     {
@@ -120,14 +136,14 @@ final class SummonerMatch extends Model
     public function winrate(): Attribute
     {
         return Attribute::make(
-            get: fn() => round($this->wins / $this->total * 100, 2),
+            get: fn () => round($this->wins / $this->total * 100, 2),
         );
     }
 
     public function loses(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->total - $this->wins,
+            get: fn () => $this->total - $this->wins,
         );
     }
 
@@ -146,87 +162,86 @@ final class SummonerMatch extends Model
     public function wins(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => intval($value),
+            get: fn ($value) => intval($value),
         );
     }
 
     public function avgKills(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => round(floatval($value), 2),
+            get: fn ($value) => round(floatval($value), 2),
         );
     }
 
     public function avgDeaths(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => round(floatval($value), 2),
+            get: fn ($value) => round(floatval($value), 2),
         );
     }
 
     public function avgAssists(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => round(floatval($value), 2),
+            get: fn ($value) => round(floatval($value), 2),
         );
     }
 
     public function avgCs(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => intval($value),
+            get: fn ($value) => intval($value),
         );
     }
 
     public function avgDamageDealtToChampions(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => intval($value),
+            get: fn ($value) => intval($value),
         );
     }
 
     public function avgGold(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => intval($value),
+            get: fn ($value) => intval($value),
         );
     }
 
     public function avgDamageTaken(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => intval($value),
+            get: fn ($value) => intval($value),
         );
     }
 
     public function totalDoubleKills(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => intval($value),
+            get: fn ($value) => intval($value),
         );
     }
 
     public function totalTripleKills(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => intval($value),
+            get: fn ($value) => intval($value),
         );
     }
 
     public function totalQuadraKills(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => intval($value),
+            get: fn ($value) => intval($value),
         );
     }
 
     public function totalPentaKills(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => intval($value),
+            get: fn ($value) => intval($value),
         );
     }
-
 
     public function scopeChampionsCalc(Builder $query)
     {
@@ -283,5 +298,4 @@ final class SummonerMatch extends Model
     {
         return $this->hasOne(Champion::class, 'id', 'champion_id');
     }
-
 }

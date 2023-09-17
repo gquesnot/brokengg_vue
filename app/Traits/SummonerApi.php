@@ -2,7 +2,6 @@
 
 namespace App\Traits;
 
-
 use App\Models\Champion;
 use App\Models\Item;
 use App\Models\ItemSummonerMatch;
@@ -18,12 +17,11 @@ use Illuminate\Support\Facades\Http;
 
 trait SummonerApi
 {
-
-    static function updateOrCreateSummonerByName(string $summoner_name): ?Summoner
+    public static function updateOrCreateSummonerByName(string $summoner_name): ?Summoner
     {
 
         $summoner_array = Summoner::getSummonerByName($summoner_name);
-        if (!$summoner_array) {
+        if (! $summoner_array) {
             return null;
         }
         if (Summoner::wherePuuid($summoner_array['puuid'])->exists()) {
@@ -32,19 +30,20 @@ trait SummonerApi
             $summoner = new Summoner();
         }
         $summoner->updateSummonerWithArray($summoner_array);
+
         return $summoner;
     }
 
     public function updateSummonerByPuuid(): void
     {
         $summoner_array = $this->getSummonerByPUUID();
-        if (!$summoner_array) {
+        if (! $summoner_array) {
             return;
         }
         $this->updateSummonerWithArray($summoner_array);
     }
 
-    static function getSummonerByName($summoner_name)
+    public static function getSummonerByName($summoner_name)
     {
         $url = "https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/{$summoner_name}";
         $response = Http::withoutVerifying()->withHeaders([
@@ -53,14 +52,15 @@ trait SummonerApi
         $data = $response->json();
         if (self::responseLimitExceeded($data)) {
             sleep(20);
+
             return Summoner::getSummonerByName($summoner_name);
         }
         if (self::responseNotFound($data) || self::responseIsForbidden($data)) {
             return null;
         }
+
         return $data;
     }
-
 
     public function getSummonerByPuuid()
     {
@@ -71,14 +71,15 @@ trait SummonerApi
         $data = $response->json();
         if (self::responseLimitExceeded($data)) {
             sleep(20);
+
             return $this->getSummonerByPuuid();
         }
         if (self::responseNotFound($data) || self::responseIsForbidden($data)) {
             return null;
         }
+
         return $data;
     }
-
 
     public function updateSummonerWithArray(array $summoner_array)
     {
@@ -98,7 +99,6 @@ trait SummonerApi
         $this->updateSummonerMatches();
     }
 
-
     public function updateSummonerMatchIds(): array
     {
         $match_ids = $this->getAllMatchIds();
@@ -110,9 +110,9 @@ trait SummonerApi
             })
             ->toArray();
         LolMatch::upsert($db_match_ids, ['match_id'], ['match_id']);
+
         return $match_ids;
     }
-
 
     public function getAllMatchIds(): array
     {
@@ -120,6 +120,7 @@ trait SummonerApi
         foreach ($this->yieldMatchIds() as $match_id) {
             $all_match_ids[] = $match_id;
         }
+
         return $all_match_ids;
     }
 
@@ -154,18 +155,19 @@ trait SummonerApi
         $data = $response->json();
         if (self::responseLimitExceeded($data)) {
             sleep(20);
+
             return $this->getSummonerMatchIds($start, $count);
         }
         if (self::responseNotFound($data) || self::responseIsForbidden($data)) {
             return null;
         }
+
         return $data;
     }
 
-
-    public function updateSummonerMatches(?array $match_ids = null)
+    public function updateSummonerMatches(array $match_ids = null)
     {
-        $query = LolMatch::whereUpdated(False)->whereIsTrashed(False);
+        $query = LolMatch::whereUpdated(false)->whereIsTrashed(false);
         if ($match_ids === null) {
             $matches = $query->get();
         } else {
@@ -178,10 +180,10 @@ trait SummonerApi
             });
 
             $api_match = $this->getMatch($match->match_id);
-            if (!$api_match) {
+            if (! $api_match) {
                 $match->update(['is_trashed' => true, 'updated' => true]);
             }
-            if (!$this->updateMatchFromArray($match, $api_match)) {
+            if (! $this->updateMatchFromArray($match, $api_match)) {
                 $match->update(['is_trashed' => true, 'updated' => true]);
             }
         }
@@ -192,27 +194,26 @@ trait SummonerApi
         $map_id = intval($api_match['info']['mapId']);
         $queue_id = intval($api_match['info']['queueId']);
 
-
         $map = Map::find($map_id);
         $queue = Queue::find($queue_id);
         $mode = Mode::whereName($api_match['info']['gameMode'])->first();
 
-        if (!$map || !$queue || !$mode) {
-            return False;
+        if (! $map || ! $queue || ! $mode) {
+            return false;
         }
         $matches_to_add = [];
         foreach ($api_match['info']['participants'] as $participant) {
-            # remake
+            // remake
             $champion_id = intval($participant['championId']);
             if ($participant['gameEndedInEarlySurrender']) {
-                return False;
+                return false;
             }
             $summoner = Summoner::wherePuuid($participant['puuid'])->first();
-            if (!$summoner) {
+            if (! $summoner) {
                 $summoner = Summoner::create([
-                    "name" => $participant['summonerName'],
-                    "puuid" => $participant['puuid'],
-                    "summoner_level" => $participant['summonerLevel'],
+                    'name' => $participant['summonerName'],
+                    'puuid' => $participant['puuid'],
+                    'summoner_level' => $participant['summonerLevel'],
                     'profile_icon_id' => $participant['profileIcon'],
                     'summoner_id' => $participant['summonerId'],
                 ]);
@@ -220,14 +221,14 @@ trait SummonerApi
 
             $champion = Champion::find($champion_id);
             $save_data = [
-                "match_id" => $match->id,
+                'match_id' => $match->id,
                 'summoner_id' => $summoner->id,
-                "champion_id" => $champion->id,
-                "champ_level" => $participant['champLevel'],
-                "kills" => $participant['kills'],
-                "deaths" => $participant['deaths'],
-                "assists" => $participant['assists'],
-                "won" => $participant['win'],
+                'champion_id' => $champion->id,
+                'champ_level' => $participant['champLevel'],
+                'kills' => $participant['kills'],
+                'deaths' => $participant['deaths'],
+                'assists' => $participant['assists'],
+                'won' => $participant['win'],
                 'minions_killed' => $participant['totalMinionsKilled'],
                 'largest_killing_spree' => $participant['largestKillingSpree'],
                 'double_kills' => $participant['doubleKills'],
@@ -247,7 +248,7 @@ trait SummonerApi
                     $save_data['kda'] = $participant['challenges']['kda'];
                 }
             }
-            #$summoner_match = SummonerMatch::create($data);
+            //$summoner_match = SummonerMatch::create($data);
             $save_items = [];
             $items = [
                 $participant['item0'],
@@ -285,7 +286,6 @@ trait SummonerApi
             }
         }
 
-
         $match->match_creation = Carbon::createFromTimestampMs($api_match['info']['gameCreation']);
         $match->match_end = Carbon::createFromTimestampMs($api_match['info']['gameEndTimestamp']);
         $match->match_duration = gmdate('H:i:s', $api_match['info']['gameDuration']);
@@ -295,9 +295,9 @@ trait SummonerApi
         $match->updated = true;
 
         $match->save();
+
         return true;
     }
-
 
     public function getMatch(string $match_id)
     {
@@ -308,14 +308,15 @@ trait SummonerApi
         $data = $response->json();
         if (self::responseLimitExceeded($data)) {
             sleep(20);
+
             return $this->getMatch($match_id);
         }
         if (self::responseNotFound($data) || self::responseIsForbidden($data)) {
             return null;
         }
+
         return $data;
     }
-
 
     public function getLiveGame()
     {
@@ -326,28 +327,28 @@ trait SummonerApi
         $data = $response->json();
         if (self::responseLimitExceeded($data)) {
             sleep(20);
+
             return $this->getLiveGame();
         }
         if (self::responseNotFound($data) || self::responseIsForbidden($data)) {
             return null;
         }
+
         return $data;
     }
 
-
-    static function responseLimitExceeded($data): bool
+    public static function responseLimitExceeded($data): bool
     {
         return Arr::get($data, 'status.status_code') == 429;
     }
 
-    static function responseNotFound($data)
+    public static function responseNotFound($data)
     {
         return Arr::get($data, 'status.status_code') == 404;
     }
 
-    static function responseIsForbidden($data)
+    public static function responseIsForbidden($data)
     {
         return Arr::get($data, 'status.status_code') == 403;
     }
-
 }

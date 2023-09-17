@@ -15,6 +15,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property string $description
  * @property array $tags
  * @property string $img_url
+ *
  * @method static Builder|Item newModelQuery()
  * @method static Builder|Item newQuery()
  * @method static Builder|Item query()
@@ -23,12 +24,12 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @method static Builder|Item whereImgUrl($value)
  * @method static Builder|Item whereName($value)
  * @method static Builder|Item whereTags($value)
+ *
  * @mixin Eloquent
  */
 #[TypeScript]
 final class Item extends Model
 {
-
     public $timestamps = false;
 
     public $fillable = [
@@ -36,11 +37,11 @@ final class Item extends Model
         'name',
         'description',
         'tags',
-        'img_url'
+        'img_url',
     ];
 
     public $casts = [
-        'tags' => 'array'
+        'tags' => 'array',
     ];
 
     public static function url(string $version, string $url): string

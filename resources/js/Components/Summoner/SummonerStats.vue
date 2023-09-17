@@ -42,8 +42,9 @@ const props = defineProps({
 </script>
 
 <template>
-    <div :class="`bg-gray-700 text-gray-200 flex justify-${justify} rounded my-3  p-4 ${is_reverse ? 'flex-row-reverse ' : ''}`"
-         v-if="summoner_stats !== null">
+    <div
+        :class="`bg-gray-700 text-gray-200 flex justify-${justify} rounded my-3  p-4 ${is_reverse ? 'flex-row-reverse ' : ''}`"
+        v-if="summoner_stats !== null">
         <div v-if="with_summoner_name" :class="`mx-4 flex items-center ${is_reverse ? 'flex-row-reverse ' : ''}`">
             <VImg :src="urlProfilIconHelper(summoner.profile_icon_id)" class="w-16 h-16 rounded-full"/>
             <div class="text-xl font-bold cursor-pointer mx-2" @click="navigateToSummoner(summoner.id)">{{
