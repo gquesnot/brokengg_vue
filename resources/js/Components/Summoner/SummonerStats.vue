@@ -2,9 +2,9 @@
 
 
 import {PropType} from "vue";
-import {urlProfilIconHelper} from "@/helpers/url_helpers";
-import {SummonerStatsInterface} from "@/types/summoner_stats";
-import {navigateToSummoner} from "@/helpers/router_helpers";
+import {urlProfilIconHelper} from "@/Helpers/url_helpers";
+import {SummonerStatsInterface} from "@/Types/summoner_stats";
+import {navigateToSummoner} from "@/Helpers/router_helpers";
 
 
 const props = defineProps({

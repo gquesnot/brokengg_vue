@@ -1,8 +1,8 @@
-import {PaginationLinkInterface} from "@/types/pagination_link";
+import {PaginationLinkInterface} from "@/Types/pagination_link";
 
 export interface ChampionStatsInterface {
     champion: ChampionInterface;
-    id:number;
+    id: number;
     champion_id: number;
     total: number;
     wins: number;
@@ -22,7 +22,7 @@ export interface ChampionStatsInterface {
     total_penta_kills: number;
 }
 
-export interface CustomChampionPaginated{
+export interface CustomChampionPaginated {
     data: ChampionStatsInterface[];
     links: PaginationLinkInterface[];
 }

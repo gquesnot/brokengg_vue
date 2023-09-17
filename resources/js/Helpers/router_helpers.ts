@@ -1,8 +1,4 @@
-import {FiltersInterface} from "@/types/filters";
-import {inject, provide} from "vue";
 import {router} from "@inertiajs/vue3";
-
-
 
 
 export const navigateTo = (route_name: string, params: Record<string, number | string>) => {
@@ -12,7 +8,7 @@ export const navigateTo = (route_name: string, params: Record<string, number | s
 }
 
 
-export const navigateToEncounter = (summoner_id:number, encounter_id: number) => {
+export const navigateToEncounter = (summoner_id: number, encounter_id: number) => {
     navigateTo('summoner.encounter', {
         summoner: summoner_id,
         encounter: encounter_id,
@@ -20,7 +16,7 @@ export const navigateToEncounter = (summoner_id:number, encounter_id: number) =>
 }
 
 
-export const navigateToMatch = ( summoner_id:number, match_id: number) => {
+export const navigateToMatch = (summoner_id: number, match_id: number) => {
     navigateTo('summoner.match', {
         summoner: summoner_id,
         match: match_id,

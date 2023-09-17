@@ -1,6 +1,3 @@
-import {FiltersInterface} from "@/types/filters";
-import {SummonerStatsInterface} from "@/types/summoner_stats";
-
 export interface User {
     id: number;
     name: string;
@@ -19,7 +16,6 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
     version: string;
     only: string[];
     route_params: Record<string, string>;
-
 
 
 };

@@ -5,8 +5,8 @@ import moment from 'moment';
 import {router} from "@inertiajs/vue3";
 import SummonerStats from "@/Components/Summoner/SummonerStats.vue";
 import EncounterRow from "@/Components/Summoner/EncounterRow.vue";
-import {navigateToMatch} from "@/helpers/router_helpers";
-import {SummonerEncounterInterface} from "@/types/summoner_encounter";
+import {navigateToMatch} from "@/Helpers/router_helpers";
+import {SummonerEncounterInterface} from "@/Types/summoner_encounter";
 
 
 const props = defineProps<{

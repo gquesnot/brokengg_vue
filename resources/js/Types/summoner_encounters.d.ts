@@ -1,4 +1,4 @@
-import {PaginationLinkInterface} from "@/types/pagination_link";
+import {PaginationLinkInterface} from "@/Types/pagination_link";
 
 export interface EncounterInterface {
     summoner_id: number;

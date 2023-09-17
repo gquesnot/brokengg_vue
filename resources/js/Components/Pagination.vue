@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {Link, router} from '@inertiajs/vue3'
-import {PaginationLinkInterface} from "@/types/pagination_link";
-import {getFilters, getOnly, getParamsWithFilters, getRouteParams} from "@/helpers/root_props_helpers";
+import {PaginationLinkInterface} from "@/Types/pagination_link";
+import {getFilters, getOnly, getParamsWithFilters, getRouteParams} from "@/Helpers/root_props_helpers";
 
 
 const props = defineProps<{

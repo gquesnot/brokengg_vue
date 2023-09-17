@@ -2,9 +2,9 @@
 import SummonerHeader from "@/Components/Summoner/SummonerHeader.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {router, useForm} from "@inertiajs/vue3";
-import {FiltersInterface} from "@/types/filters";
 import LiveGameRowPart from "@/Components/Summoner/LiveGameRowPart.vue";
-import {getSummoner} from "@/helpers/root_props_helpers";
+import {getSummoner} from "@/Helpers/root_props_helpers";
+
 
 
 const props = defineProps<{
@@ -50,14 +50,14 @@ const searchLobby = () => {
         </div>
         <div v-for="participant in live_game['participants']" :key="participant['summoner']['id']">
           <LiveGameRowPart v-if="participant['teamId'] == 100" :is_my_team="true"
-                         :participant="participant"/>
+                           :participant="participant"/>
         </div>
         <div class="text-xl font-bold text-red mt-4">
           Red Team
         </div>
         <div v-for="participant in live_game['participants']" :key="participant['summoner']['id']">
           <LiveGameRowPart v-if="participant['teamId'] == 200" :is_my_team="false"
-                           :key="participant['summoner']['id']"  :participant="participant"/>
+                           :key="participant['summoner']['id']" :participant="participant"/>
         </div>
       </div>
     </div>
