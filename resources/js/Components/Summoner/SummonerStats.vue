@@ -42,7 +42,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <div :class="`bg-${color}-500 flex justify-${justify}  my-2  p-4 ${is_reverse ? 'flex-row-reverse ' : ''}`"
+    <div :class="`bg-gray-700 text-gray-200 flex justify-${justify} rounded my-3  p-4 ${is_reverse ? 'flex-row-reverse ' : ''}`"
          v-if="summoner_stats !== null">
         <div v-if="with_summoner_name" :class="`mx-4 flex items-center ${is_reverse ? 'flex-row-reverse ' : ''}`">
             <VImg :src="urlProfilIconHelper(summoner.profile_icon_id)" class="w-16 h-16 rounded-full"/>
@@ -70,7 +70,7 @@ const props = defineProps({
             <div class="flex">
                 <div class="text-white font-bold">{{ summoner_stats.avg_kills.toFixed(1) }}</div>
                 <div class="text-white mx-1">/</div>
-                <div class="text-red-900 font-bold">{{ summoner_stats.avg_deaths.toFixed(1) }}</div>
+                <div class="text-red-700 font-bold">{{ summoner_stats.avg_deaths.toFixed(1) }}</div>
                 <div class="text-white mx-1">/</div>
                 <div class="text-white font-bold">{{ summoner_stats.avg_assists.toFixed(1) }}</div>
             </div>

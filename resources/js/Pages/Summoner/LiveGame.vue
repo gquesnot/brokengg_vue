@@ -35,9 +35,6 @@ const searchLobby = () => {
     <SummonerHeader
         tab="LiveGame"
     />
-    <div class="flex justify-end">
-      <PrimaryButton @click="router.reload({preserveState:true, only:['live_game']})">Refresh</PrimaryButton>
-    </div>
     <div v-if="live_game !== null">
       <div class="">
         <div class="flex">
@@ -66,7 +63,10 @@ const searchLobby = () => {
       <div class="flex flex-col justify-center items-center min-h-[10rem] ">
         <div>Summoner is not in a live game</div>
         <VTextarea v-model="form.lobby_search" class="my-2 w-1/2 mx-auto" placeholder="Lobby Summoner" rows="5"/>
+        <div class="flex">
         <PrimaryButton @click="searchLobby">Search</PrimaryButton>
+          <PrimaryButton @click="router.reload({preserveState:true, only:['live_game']})" class="ml-4">Refresh</PrimaryButton>
+        </div>
       </div>
       <div v-if="fake_live_game" class="flex items-center   flex-col">
         <LiveGameRowPart :key="participant['summoner']['id']" v-for="participant in fake_live_game['participants']"

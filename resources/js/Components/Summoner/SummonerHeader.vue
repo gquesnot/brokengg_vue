@@ -150,7 +150,7 @@ const switchTab = (label: string) => {
           </PrimaryButton>
         </div>
       </div>
-      <div class="bg-gray-500 w-1/2 p-4">
+      <div class="bg-gray-700 w-1/2 p-4 text-gray-200 rounded">
         <div class="flex">
           <div class="w-1/2">
             <div>
@@ -181,7 +181,7 @@ const switchTab = (label: string) => {
               />
             </div>
             <div>
-              <v-switch label="Filter Encounters" v-model="form.filters.should_filter_encounters"></v-switch>
+              <v-switch  label="Filter Encounters" v-model="form.filters.should_filter_encounters"></v-switch>
             </div>
           </div>
           <div class="w-1/2 ml-4">
@@ -191,6 +191,7 @@ const switchTab = (label: string) => {
                   v-model="form.filters.start_date"
                   id="start_time"
                   name="start_time"
+                  class="text-black"
                   clearable
                   :format="['YYYY-MM-DD']"
                   :input-props="{placeholder: 'YYYY-MM-DD'}"
@@ -202,6 +203,7 @@ const switchTab = (label: string) => {
                   v-model="form.filters.end_date"
                   id="end_time"
                   name="end_time"
+                  class="text-black"
                   clearable
                   :format="['YYYY-MM-DD']"
                   :input-props="{placeholder: 'YYYY-MM-DD'}"
@@ -221,7 +223,7 @@ const switchTab = (label: string) => {
     </div>
   </div>
 
-  <div class="grid grid-cols-6 w-1/2 mr-auto">
+  <div class="grid grid-cols-6 w-1/2 mr-auto mb-4">
     <div v-for="tab in tabs">
       <ResponsiveNavLink class="flex items-center justify-center" @click.prevent="switchTab(tab.label)" href="#"
                          :active="tab.label == props.tab">
