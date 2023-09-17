@@ -1,4 +1,4 @@
-import {PaginationLinkInterface} from "@/Types/pagination_link";
+import {PaginationLinkInterface} from "@/types/pagination_link";
 
 type SummonerMatchInterface = {
     id: number;

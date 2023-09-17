@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SummonerHeader from "@/Components/Summoner/SummonerHeader.vue";
 import Pagination from "@/Components/Pagination.vue";
-import {CustomChampionPaginated} from "@/Types/champions_stats";
+import {CustomChampionPaginated} from "@/types/champions_stats";
 import ChampionsRow from "@/Components/Summoner/ChampionsRow.vue";
 
 

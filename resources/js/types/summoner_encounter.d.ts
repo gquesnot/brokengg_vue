@@ -1,4 +1,4 @@
-import {SummonerStatsInterface} from "@/Types/summoner_stats";
+import {SummonerStatsInterface} from "@/types/summoner_stats";
 
 export interface SummonerEncounterInterface {
     matches: LolMatchInterface[];

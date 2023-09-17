@@ -2,8 +2,8 @@
 import SummonerHeader from "@/Components/Summoner/SummonerHeader.vue";
 import {ref} from "vue";
 import EncounterPart from "@/Components/Summoner/EncounterPart.vue";
-import {getSummoner} from "@/Helpers/root_props_helpers";
-import {SummonerEncounterInterface} from "@/Types/summoner_encounter";
+import {getSummoner} from "@/helpers/root_props_helpers";
+import {SummonerEncounterInterface} from "@/types/summoner_encounter";
 
 
 const props = defineProps<{

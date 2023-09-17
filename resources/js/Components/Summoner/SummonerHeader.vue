@@ -5,7 +5,7 @@ import {Ref, ref} from "vue";
 import {Head, router, useForm, usePage} from "@inertiajs/vue3";
 import Datepicker from "vue3-datepicker";
 
-import {FiltersInterface} from "@/Types/filters";
+import {FiltersInterface} from "@/types/filters";
 import {
   getChampionOptions,
   getFilters,
@@ -13,8 +13,8 @@ import {
   getParamsWithFilters, getQueueOptions,
   getRouteParams,
   getSummoner
-} from "@/Helpers/root_props_helpers";
-import {urlProfilIconHelper} from "@/Helpers/url_helpers";
+} from "@/helpers/root_props_helpers";
+import {urlProfilIconHelper} from "@/helpers/url_helpers";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 

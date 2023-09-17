@@ -1,10 +1,10 @@
 <script setup lang="ts">
 
 
-import {SummonerEncountersPaginated} from "@/Types/summoner_encounters";
+import {SummonerEncountersPaginated} from "@/types/summoner_encounters";
 import {ref, watch} from "vue";
 import {debounce} from "lodash";
-import {getFilters, getOnly, getParamsWithFilters, getSummoner} from "@/Helpers/root_props_helpers";
+import {getFilters, getOnly, getParamsWithFilters, getSummoner} from "@/helpers/root_props_helpers";
 import {router} from "@inertiajs/vue3";
 import TextInput from "@/Components/TextInput.vue";
 import SummonerHeader from "@/Components/Summoner/SummonerHeader.vue";

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {urlChampionHelper} from "@/Helpers/url_helpers";
-import {SummonerMatchInterface} from "@/Types/summoner-match";
-import {getSummoner} from "@/Helpers/root_props_helpers";
-import {navigateToEncounter, navigateToSummoner} from "@/Helpers/router_helpers";
+import {urlChampionHelper} from "@/helpers/url_helpers";
+import {SummonerMatchInterface} from "@/types/summoner-match";
+import {getSummoner} from "@/helpers/root_props_helpers";
+import {navigateToEncounter, navigateToSummoner} from "@/helpers/router_helpers";
 
 const props = defineProps<{
     participant: SummonerMatchInterface

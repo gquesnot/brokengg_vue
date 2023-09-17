@@ -2,8 +2,8 @@
 
 
 import {PropType} from "vue";
-import {urlChampionHelper} from "@/Helpers/url_helpers";
-import {SummonerMatchInterface} from "@/Types/summoner-match";
+import {urlChampionHelper} from "@/helpers/url_helpers";
+import {SummonerMatchInterface} from "@/types/summoner-match";
 
 
 const props = defineProps({

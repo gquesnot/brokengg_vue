@@ -2,9 +2,9 @@
 
 
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import {EncounterInterface} from "@/Types/summoner_encounters";
-import {navigateToEncounter} from "@/Helpers/router_helpers";
-import {getSummoner} from "@/Helpers/root_props_helpers";
+import {EncounterInterface} from "@/types/summoner_encounters";
+import {navigateToEncounter} from "@/helpers/router_helpers";
+import {getSummoner} from "@/helpers/root_props_helpers";
 
 
 

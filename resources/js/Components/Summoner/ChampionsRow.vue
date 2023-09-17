@@ -1,11 +1,11 @@
 <script setup lang="ts">
 
 import {router} from "@inertiajs/vue3";
-import {urlChampionHelper} from "@/Helpers/url_helpers";
-import {ChampionStatsInterface} from "@/Types/champions_stats";
+import {urlChampionHelper} from "@/helpers/url_helpers";
+import {ChampionStatsInterface} from "@/types/champions_stats";
 import {computed} from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import {getSummoner} from "@/Helpers/root_props_helpers";
+import {getSummoner} from "@/helpers/root_props_helpers";
 
 
 

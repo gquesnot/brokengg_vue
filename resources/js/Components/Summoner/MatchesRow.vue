@@ -4,12 +4,12 @@
 import moment from 'moment';
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {router} from "@inertiajs/vue3";
-import {urlChampionHelper, urlItemHelper} from "@/Helpers/url_helpers";
-import {FiltersInterface} from "@/Types/filters";
+import {urlChampionHelper, urlItemHelper} from "@/helpers/url_helpers";
+import {FiltersInterface} from "@/types/filters";
 import MatchesRowPart from "@/Components/Summoner/MatchesRowPart.vue";
-import {SummonerMatchInterface} from "@/Types/summoner-match";
-import {getSummoner} from "@/Helpers/root_props_helpers";
-import {navigateToMatch} from "@/Helpers/router_helpers";
+import {SummonerMatchInterface} from "@/types/summoner-match";
+import {getSummoner} from "@/helpers/root_props_helpers";
+import {navigateToMatch} from "@/helpers/router_helpers";
 
 
 const props = defineProps<{

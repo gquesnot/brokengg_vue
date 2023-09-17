@@ -3,7 +3,7 @@ import SummonerHeader from "@/Components/Summoner/SummonerHeader.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {router, useForm} from "@inertiajs/vue3";
 import LiveGameRowPart from "@/Components/Summoner/LiveGameRowPart.vue";
-import {getSummoner} from "@/Helpers/root_props_helpers";
+import {getSummoner} from "@/helpers/root_props_helpers";
 
 
 

@@ -1,5 +1,5 @@
 import {usePage} from "@inertiajs/vue3";
-import {FiltersInterface} from "@/Types/filters";
+import {FiltersInterface} from "@/types/filters";
 
 
 export const getParamsWithFilters = (filters: any, other_params: Record<string, string> = {}): Record<string, any> => {
