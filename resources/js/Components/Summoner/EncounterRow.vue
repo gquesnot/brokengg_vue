@@ -8,7 +8,7 @@ import {SummonerMatchInterface} from "@/types/summoner-match";
 
 const props = defineProps({
     summoner_match: {
-        type: Object as PropType<SummonerMatchInterface> | null,
+        type: Object as PropType<SummonerMatchInterface>,
         required: true
     },
     is_reverse: {
@@ -23,8 +23,7 @@ const props = defineProps({
 
 <template>
     <div
-        :class="`${props.summoner_match?.won ? 'bg-blue-500' : 'bg-red-500'} flex items-center justify-start p-2 ${is_reverse ? 'flex-row-reverse ' : ''}`"
-        v-if="summoner_match !== null">
+        :class="`${props.summoner_match?.won ? 'bg-blue-500' : 'bg-red-500'} flex items-center justify-start p-2 ${is_reverse ? 'flex-row-reverse ' : ''}`">
         <div>
             <VImg :src="urlChampionHelper(summoner_match.champion?.img_url)" class="w-16 h-16"/>
         </div>

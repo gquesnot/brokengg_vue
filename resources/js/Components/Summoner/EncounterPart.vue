@@ -53,10 +53,10 @@ const my_summoner_match_id = (match: any): number => {
                 </template>
                 <div @click="navigateToMatch(summoner.id, my_summoner_match_id(match))"
                      :class="`${!(match.participants) || has_won(match) ?'bg-blue-500':'bg-red-500'} flex flex-col items-center justify-center cursor-pointer`">
-                    <div>{{ match?.queue?.description }}</div>
-                    <div>{{ moment(match?.match_end).fromNow() }}</div>
+                    <div>{{ match.queue.description }}</div>
+                    <div>{{ moment(match.match_end).fromNow() }}</div>
                     <div>{{ !(match.participants) || has_won(match) ? 'Victory' : 'Defeat' }}</div>
-                    <div>{{ match?.match_duration }}</div>
+                    <div>{{ match.match_duration }}</div>
                 </div>
                 <template v-for="participant in match.participants"
                           :key="participant.summoner_id+'_'+participant.match_id">
