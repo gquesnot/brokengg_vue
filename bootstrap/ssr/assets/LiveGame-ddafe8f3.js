@@ -83,7 +83,7 @@ const _sfc_main = {
     };
     return (_ctx, _push, _parent, _attrs) => {
       const _component_VTextarea = resolveComponent("VTextarea");
-      _push(`<div${ssrRenderAttrs(mergeProps({ class: "w-10/12 mx-auto my-6" }, _attrs))}>`);
+      _push(`<div${ssrRenderAttrs(mergeProps({ class: "w-7/12 mx-auto my-6" }, _attrs))}>`);
       _push(ssrRenderComponent(_sfc_main$2, { tab: "LiveGame" }, null, _parent));
       _push(`<div class="flex justify-end">`);
       _push(ssrRenderComponent(PrimaryButton, {

@@ -90,7 +90,7 @@ const _sfc_main = {
   setup(__props) {
     return (_ctx, _push, _parent, _attrs) => {
       const _component_VTable = resolveComponent("VTable");
-      _push(`<div${ssrRenderAttrs(mergeProps({ class: "w-10/12 mx-auto my-6" }, _attrs))}>`);
+      _push(`<div${ssrRenderAttrs(mergeProps({ class: "w-7/12 mx-auto my-6" }, _attrs))}>`);
       _push(ssrRenderComponent(_sfc_main$2, { tab: "Champions" }, null, _parent));
       _push(ssrRenderComponent(_component_VTable, null, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {

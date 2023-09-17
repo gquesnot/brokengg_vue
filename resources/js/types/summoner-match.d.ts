@@ -1,4 +1,5 @@
 import {PaginationLinkInterface} from "@/types/pagination_link";
+import {LolMatchInterface} from "@/types/lol-match";
 
 type SummonerMatchInterface = {
     id: number;

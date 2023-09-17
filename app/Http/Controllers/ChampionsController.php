@@ -17,14 +17,10 @@ class ChampionsController extends Controller
         [$filters, $filters_cpy] = FilterHelper::parseFilters($request);
         [$query, $encounter_query] = $summoner->getSummonerMatchQuery($filters);
         $champions = $query->championsCalc()->with('champion')->paginate(20);
-        $data = array_merge(
-            ControllerHelper::getBaseInertiaResponse($summoner),
-            [
-                'champions' => $champions,
-                "filters" => $filters_cpy
-            ]
-        );
-        return Inertia::render('Summoner/Champions', $data);
+
+        return Inertia::render('Summoner/Champions', [
+            'champions' => $champions,
+        ]);
 
     }
 }

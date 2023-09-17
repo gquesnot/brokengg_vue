@@ -162,7 +162,7 @@ const _sfc_main = {
       const _component_VTab = resolveComponent("VTab");
       const _component_VWindow = resolveComponent("VWindow");
       const _component_VWindowItem = resolveComponent("VWindowItem");
-      _push(`<div${ssrRenderAttrs(mergeProps({ class: "w-10/12 mx-auto my-6" }, _attrs))}>`);
+      _push(`<div${ssrRenderAttrs(mergeProps({ class: "w-7/12 mx-auto my-6" }, _attrs))}>`);
       _push(ssrRenderComponent(_sfc_main$4, { tab: "Encounters" }, null, _parent));
       _push(ssrRenderComponent(_component_VTabs, {
         modelValue: tab.value,

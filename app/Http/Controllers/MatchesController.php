@@ -38,15 +38,10 @@ class MatchesController extends Controller
             ])
             ->paginate(20);
 
-        $data = array_merge(
-            ControllerHelper::getBaseInertiaResponse($summoner),
-            [
-                "filters" => $filters_cpy,
-                'summoner_stats' => $summoner->getSummonerStats($match_ids),
-                'matches' => $matches,
-                'summoner_encounter_count' => $summoner->getEncountersCount($encounter_match_ids),
-            ]
-        );
-        return Inertia::render('Summoner/Matches', $data);
+        return Inertia::render('Summoner/Matches', [
+            'summoner_stats' => $summoner->getSummonerStats($match_ids),
+            'matches' => $matches,
+            'summoner_encounter_count' => $summoner->getEncountersCount($encounter_match_ids),
+        ]);
     }
 }

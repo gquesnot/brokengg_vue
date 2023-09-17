@@ -219,7 +219,7 @@ const _sfc_main = {
   setup(__props) {
     const summoner = getSummoner();
     return (_ctx, _push, _parent, _attrs) => {
-      _push(`<div${ssrRenderAttrs(mergeProps({ class: "w-10/12 mx-auto my-6" }, _attrs))}>`);
+      _push(`<div${ssrRenderAttrs(mergeProps({ class: "w-7/12 mx-auto my-6" }, _attrs))}>`);
       _push(ssrRenderComponent(_sfc_main$3, { tab: "Matches" }, null, _parent));
       _push(ssrRenderComponent(_sfc_main$4, {
         summoner: unref(summoner),

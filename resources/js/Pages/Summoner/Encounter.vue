@@ -20,7 +20,7 @@ const summoner = getSummoner();
 </script>
 
 <template>
-  <div class="w-10/12 mx-auto my-6">
+  <div class="w-7/12 mx-auto my-6">
 
     <SummonerHeader
         tab="Encounters"

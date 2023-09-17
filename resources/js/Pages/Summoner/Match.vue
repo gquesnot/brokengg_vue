@@ -1,21 +1,26 @@
 <script setup lang="ts">
 import SummonerHeader from "@/Components/Summoner/SummonerHeader.vue";
+import {LolMatchInterface} from "@/types/lol-match";
+import {SummonerMatchInterface} from "@/types/summoner-match";
+import MatchDetail from "@/Components/Summoner/MatchDetail.vue";
 
 
 const props = defineProps<{
-  match: LolMatchInterface
+  summoner_match:SummonerMatchInterface
 }>();
+
+
 
 
 </script>
 
 <template>
-  <div class="w-10/12 mx-auto my-6">
+  <div class="w-7/12 mx-auto my-6">
 
     <SummonerHeader
         tab="Matches"
     />
-    Match
+    <MatchDetail :summoner_match="summoner_match"/>
   </div>
 
 

@@ -19,14 +19,9 @@ class EncountersController extends Controller
             ->when($search != null && $search != '', function ($query) use ($search) {
                 $query->where('summoners.name', 'like', '%' . $search . '%');
             });
-        $data = array_merge(
-            ControllerHelper::getBaseInertiaResponse($summoner),
-            [
-                "filters" => $filters_cpy,
-                'encounters' => $encounters_query->paginate(20),
-                'search' => $search,
-            ]
-        );
-        return Inertia::render('Summoner/Encounters', $data);
+        return Inertia::render('Summoner/Encounters', [
+            'encounters' => $encounters_query->paginate(20),
+            'search' => $search,
+        ]);
     }
 }

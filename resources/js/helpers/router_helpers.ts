@@ -16,10 +16,12 @@ export const navigateToEncounter = (summoner_id: number, encounter_id: number) =
 }
 
 
-export const navigateToMatch = (summoner_id: number, match_id: number) => {
+
+
+export const navigateToMatch = (summoner_id: number, summoner_match_id: number) => {
     navigateTo('summoner.match', {
         summoner: summoner_id,
-        match: match_id,
+        summoner_match: summoner_match_id,
     })
 }
 

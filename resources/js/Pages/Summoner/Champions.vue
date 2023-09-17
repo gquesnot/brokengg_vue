@@ -15,22 +15,19 @@ const params_to_reload: string[] = [
 </script>
 
 <template>
-  <div class="w-10/12 mx-auto my-6">
+  <div class="w-7/12 mx-auto my-6">
 
     <SummonerHeader
         tab="Champions"
     />
 
-    <VTable>
+    <VTable class="position-absolute w-10/12 left-40">
       <thead>
       <tr>
         <th class="text-left">Champion</th>
         <th class="text-left">W-L</th>
         <th class="text-left">Win Rate</th>
-        <th class="text-left">Avg Kills</th>
-        <th class="text-left">Avg Deaths</th>
-        <th class="text-left">Avg Assists</th>
-        <th class="text-left">Avg kda</th>
+        <th class="text-left">Avg KDA</th>
         <th class="text-left">Max Kills</th>
         <th class="text-left">Max Deaths</th>
         <th class="text-left">Max Assists</th>

@@ -14,13 +14,9 @@ class ChampionController extends Controller
     public function index(Request $request, Summoner $summoner, Champion $champion)
     {
         [$filters, $filters_cpy] = FilterHelper::parseFilters($request);
-        $data = array_merge(
-            ControllerHelper::getBaseInertiaResponse($summoner),
-            [
-                'champion' => $champion,
-                "filters" => $filters_cpy
-            ]
-        );
-        return Inertia::render('Summoner/Champion', $data);
+
+        return Inertia::render('Summoner/Champion', [
+            'champion' => $champion,
+        ]);
     }
 }

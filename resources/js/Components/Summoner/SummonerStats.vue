@@ -46,7 +46,7 @@ const props = defineProps({
          v-if="summoner_stats !== null">
         <div v-if="with_summoner_name" :class="`mx-4 flex items-center ${is_reverse ? 'flex-row-reverse ' : ''}`">
             <VImg :src="urlProfilIconHelper(summoner.profile_icon_id)" class="w-16 h-16 rounded-full"/>
-            <div class="text-xl font-bold cursor-pointer mx-4" @click="navigateToSummoner(summoner.id)">{{
+            <div class="text-xl font-bold cursor-pointer mx-2" @click="navigateToSummoner(summoner.id)">{{
                     summoner.name
                 }}
             </div>
@@ -74,7 +74,7 @@ const props = defineProps({
                 <div class="text-white mx-1">/</div>
                 <div class="text-white font-bold">{{ summoner_stats.avg_assists.toFixed(1) }}</div>
             </div>
-            <div class="font-bold text-2xl">
+            <div class="font-bold text-xl">
                 {{ summoner_stats.avg_kda?.toFixed(2) }}:1 KDA
             </div>
             <div>

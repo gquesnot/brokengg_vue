@@ -16,16 +16,11 @@ class EncounterController extends Controller
         [$filters, $filters_cpy] = FilterHelper::parseFilters($request);
         [$query, $encounter_query] = $summoner->getSummonerMatchQuery($filters);
         $filtered_match_ids = $query->pluck('match_id')->toArray();
-        $data = array_merge(
-            ControllerHelper::getBaseInertiaResponse($summoner),
-            [
-                'encounter' => $encounter,
-                "filters" => $filters_cpy,
-                'with_' => $this->getMatchData($summoner, $encounter, $filtered_match_ids, true),
-                'vs_' => $this->getMatchData($summoner, $encounter, $filtered_match_ids, false),
-            ]
-        );
-        return Inertia::render('Summoner/Encounter', $data);
+        return Inertia::render('Summoner/Encounter', [
+            'encounter' => $encounter,
+            'with_' => $this->getMatchData($summoner, $encounter, $filtered_match_ids, true),
+            'vs_' => $this->getMatchData($summoner, $encounter, $filtered_match_ids, false),
+        ]);
     }
 
     protected function getMatchData(Summoner $summoner, Summoner $encounter, array $filtered_match_ids, bool $with)

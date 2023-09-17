@@ -1,3 +1,5 @@
+import {SummonerMatchInterface} from "@/types/summoner-match";
+
 type LolMatchInterface = {
     id: number;
     updated: boolean;
@@ -12,6 +14,8 @@ type LolMatchInterface = {
     created_at: string /* Date */ | null;
     updated_at: string /* Date */ | null;
     participants?: SummonerMatchInterface[] | null;
-    mode?: ModeInterface | null;
+    map?: MapInterface | null;
     queue?: QueueInterface | null;
+    mode ?: ModeInterface | null;
+
 }

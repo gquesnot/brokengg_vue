@@ -46,15 +46,10 @@ class LiveGameController extends Controller
             $fake_live_game = $summoner->getLiveGameFromLobbySearch($lobby_search, $encounter_counts);
         }
 
-        $data = array_merge(
-            ControllerHelper::getBaseInertiaResponse($summoner),
-            [
-                "filters" => $filters_cpy,
-                'live_game' => $live_game,
-                'fake_live_game' => $fake_live_game,
-            ]
-        );
-        return Inertia::render('Summoner/LiveGame', $data);
+        return Inertia::render('Summoner/LiveGame', [
+            'live_game' => $live_game,
+            'fake_live_game' => $fake_live_game,
+        ]);
 
     }
 }

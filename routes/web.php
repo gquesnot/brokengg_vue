@@ -23,16 +23,14 @@ Route::resource('/summoner', \App\Http\Controllers\SummonerController::class)->o
 ]);
 
 Route::get('/summoner/{summoner}/matches', [\App\Http\Controllers\MatchesController::class, 'index'])->name('summoner.matches');
-Route::get('/summoner/{summoner}/matches/{match}', [\App\Http\Controllers\MatchController::class, 'index'])->name('summoner.match');
+Route::get('/summoner/{summoner}/matches/{summoner_match}', [\App\Http\Controllers\MatchController::class, 'index'])->name('summoner.match');
 Route::get('/summoner/{summoner}/encounters', [\App\Http\Controllers\EncountersController::class, 'index'])->name('summoner.encounters');
 Route::get('/summoner/{summoner}/encounters/{encounter}', [\App\Http\Controllers\EncounterController::class, 'index'])->name('summoner.encounter');
 Route::get('/summoner/{summoner}/champions', [\App\Http\Controllers\ChampionsController::class, 'index'])->name('summoner.champions');
 Route::get('/summoner/{summoner}/champions/{champion}', [\App\Http\Controllers\ChampionController::class, 'index'])->name('summoner.champion');
 Route::get('/summoner/{summoner}/live-game', [\App\Http\Controllers\LiveGameController::class, 'index'])->name('summoner.live-game');
 
-Route::resource('/match', \App\Http\Controllers\MatchController::class)->only([
-    'show'
-]);
+Route::get('/summoner-match/{summoner_match}', [\App\Http\Controllers\MatchController::class, 'getSummonerMatchLoaded'])->name('get-summoner-match-loaded');
 
 
 Route::get('/', [App\Http\Controllers\SummonerController::class, 'index'])->name('home');

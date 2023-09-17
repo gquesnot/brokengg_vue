@@ -49,10 +49,12 @@ const navigateToChampion = () => {
   <td>
     {{ winRate }}%
   </td>
-  <td>{{ props.champion.avg_kills }}</td>
-  <td>{{ props.champion.avg_deaths }}</td>
-  <td>{{ props.champion.avg_assists }}</td>
-  <td>{{ ((props.champion.avg_kills + props.champion.avg_assists) / props.champion.avg_deaths).toFixed(2) }}:1</td>
+  <td >
+      <div class="flex flex-col w-36 text-center">
+          <div class="flex">{{props.champion.avg_kills}} / {{props.champion.avg_deaths}} / {{props.champion.avg_assists}}</div>
+          <div> {{((props.champion.avg_kills + props.champion.avg_assists) / props.champion.avg_deaths).toFixed(2) }}:1</div>
+      </div>
+  </td>
   <td>{{ props.champion.max_kills }}</td>
   <td>{{ props.champion.max_deaths }}</td>
   <td>{{ props.champion.max_assists }}</td>

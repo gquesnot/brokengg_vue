@@ -18,10 +18,16 @@ const props = defineProps<{
 
 
 
-const has_won = (match: any) => {
+const has_won = (match: any): boolean => {
   return match.participants.filter((participant: any) => {
     return participant.summoner_id === props.summoner.id
   })[0].won
+}
+
+const my_summoner_match_id = (match: any): number => {
+  return match.participants.filter((participant: any) => {
+    return participant.summoner_id === props.summoner.id
+  })[0].id
 }
 
 
@@ -46,7 +52,7 @@ const has_won = (match: any) => {
           <EncounterRow :is_reverse="false" :summoner_match="participant"  class="mr-4"
                         v-if="participant.summoner_id === summoner.id"/>
         </template>
-        <div @click="navigateToMatch(summoner.id, match.id)"
+        <div @click="navigateToMatch(summoner.id, my_summoner_match_id(match))"
              :class="`${!(match.participants) || has_won(match) ?'bg-blue-500':'bg-red-500'} flex flex-col items-center justify-center cursor-pointer`">
           <div>{{ match?.queue?.description }}</div>
           <div>{{ moment(match?.match_end).fromNow() }}</div>

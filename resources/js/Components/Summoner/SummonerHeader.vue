@@ -113,7 +113,9 @@ const formToFilters = () => {
 const switchTab = (label: string) => {
   let tab = getTab(label)
   if (tab) {
-    router.visit(route(tab.route, getRouteParams()), {
+    router.visit(route(tab.route, {
+        summoner: summoner.id,
+    }), {
       preserveState: true,
     })
   }
