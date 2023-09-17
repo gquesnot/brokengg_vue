@@ -26,6 +26,7 @@ watch(search, debounce(function (value: string) {
     search: value
   })), {
     preserveState: true,
+      preserveScroll:true,
     only: getOnly()
   })
 }, 700))
