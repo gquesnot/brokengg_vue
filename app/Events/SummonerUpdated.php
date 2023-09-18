@@ -43,7 +43,7 @@ class SummonerUpdated implements ShouldBroadcast
         if (Cache::has('summoner-updated-'.$this->summoner_id)) {
             return false;
         }
-        Cache::put('summoner-updated-'.$this->summoner_id, now(), 5);
+        Cache::put('summoner-updated-'.$this->summoner_id, now(), 3);
 
         return true;
     }
