@@ -1,4 +1,4 @@
-import {SummonerMatchInterface} from "@/types/summoner-match";
+import {SummonerMatchInterface} from "@/types/summoner_match";
 
 type LolMatchInterface = {
     id: number;

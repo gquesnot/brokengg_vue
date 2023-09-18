@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Events\SummonerUpdated;
 use App\Models\Champion;
 use App\Models\Item;
 use App\Models\ItemSummonerMatch;
@@ -183,7 +184,7 @@ trait SummonerApi
             if (! $api_match) {
                 $match->update(['is_trashed' => true, 'updated' => true]);
             }
-            if (! $this->updateMatchFromArray($match, $api_match)) {
+            elseif (! $this->updateMatchFromArray($match, $api_match)){
                 $match->update(['is_trashed' => true, 'updated' => true]);
             }
         }
@@ -295,6 +296,7 @@ trait SummonerApi
         $match->updated = true;
 
         $match->save();
+        event(new SummonerUpdated($this->id));
 
         return true;
     }

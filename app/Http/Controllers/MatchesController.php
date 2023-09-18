@@ -22,7 +22,7 @@ class MatchesController extends Controller
         $matches = SummonerMatch::whereSummonerId($summoner->id)
             ->whereIn('summoner_matchs.match_id', $match_ids)
             ->orderByDesc(LolMatch::select('match_creation')->whereColumn('lol_matchs.id', 'summoner_matchs.match_id'))
-            ->loadAll()
+            ->loadPartial()
             ->paginate(20);
 
         return Inertia::render('Summoner/Matches', [

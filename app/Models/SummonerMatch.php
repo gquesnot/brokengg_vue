@@ -44,9 +44,9 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property-read Collection<int, SummonerMatch> $otherParticipants
  * @property-read int|null $other_participants_count
  * @property-read \App\Models\Summoner|null $summoner
- *
  * @method static Builder|SummonerMatch championsCalc()
  * @method static Builder|SummonerMatch loadAll()
+ * @method static Builder|SummonerMatch loadPartial()
  * @method static Builder|SummonerMatch newModelQuery()
  * @method static Builder|SummonerMatch newQuery()
  * @method static Builder|SummonerMatch query()
@@ -70,7 +70,6 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @method static Builder|SummonerMatch whereTotalDamageTaken($value)
  * @method static Builder|SummonerMatch whereTripleKills($value)
  * @method static Builder|SummonerMatch whereWon($value)
- *
  * @mixin Eloquent
  */
 #[TypeScript]
@@ -113,12 +112,24 @@ final class SummonerMatch extends Model
             'match.queue:id,description',
             'match.map:id,description',
             'match.mode:id,description',
-            'items:id,img_url',
-            'champion:id,name,img_url',
-            'match.participants',
+            'match.participants:id,summoner_id,champion_id,match_id,won,kda,kills,deaths,assists,minions_killed,total_damage_dealt_to_champions,total_damage_taken,gold_earned',
             'match.participants.summoner:id,name',
             'match.participants.champion:id,name,img_url',
             'match.participants.items:id,img_url',
+        ]);
+    }
+
+    public function scopeLoadPartial(Builder $query){
+        $query->with([
+            'match:id,match_id,match_duration,match_end,mode_id,map_id,queue_id',
+            'match.queue:id,description',
+            'match.map:id,description',
+            'match.mode:id,description',
+            'items:id,img_url',
+            'champion:id,name,img_url',
+            'match.participants:id,summoner_id,champion_id,match_id,won',
+            'match.participants.summoner:id,name',
+            'match.participants.champion:id,name,img_url',
         ]);
     }
 

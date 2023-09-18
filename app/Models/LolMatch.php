@@ -32,7 +32,6 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property-read int|null $participants_count
  * @property-read \App\Models\Queue|null $queue
  * @property-read \App\Models\Version|null $version
- *
  * @method static Builder|LolMatch newModelQuery()
  * @method static Builder|LolMatch newQuery()
  * @method static Builder|LolMatch query()
@@ -48,7 +47,6 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @method static Builder|LolMatch whereQueueId($value)
  * @method static Builder|LolMatch whereUpdated($value)
  * @method static Builder|LolMatch whereUpdatedAt($value)
- *
  * @mixin Eloquent
  */
 #[TypeScript]

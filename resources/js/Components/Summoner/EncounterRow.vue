@@ -3,7 +3,7 @@
 
 import {PropType} from "vue";
 import {urlChampionHelper} from "@/helpers/url_helpers";
-import {SummonerMatchInterface} from "@/types/summoner-match";
+import {SummonerMatchInterface} from "@/types/summoner_match";
 
 
 const props = defineProps({

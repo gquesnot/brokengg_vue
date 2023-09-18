@@ -3,7 +3,7 @@ import SummonerHeader from "@/Components/Summoner/SummonerHeader.vue";
 import Pagination from "@/Components/Pagination.vue";
 import SummonerStats from "@/Components/Summoner/SummonerStats.vue";
 import MatchesRow from "@/Components/Summoner/MatchesRow.vue";
-import {SummonerMatchesPaginated} from "@/types/summoner-match";
+import {SummonerMatchesPaginated} from "@/types/summoner_match";
 import {SummonerStatsInterface} from "@/types/summoner_stats";
 import {getSummoner} from "@/helpers/root_props_helpers";
 import {SummonerEncounterCountInterface} from "@/types/summoner_encounter_count";

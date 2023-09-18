@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 
-import {Ref, ref} from "vue";
+import {onMounted, Ref, ref} from "vue";
 import {Head, router, useForm, usePage} from "@inertiajs/vue3";
 import Datepicker from "vue3-datepicker";
 
@@ -27,6 +27,16 @@ const filters = getFilters();
 const summoner = getSummoner();
 const champion_options = getChampionOptions();
 const queue_options = getQueueOptions();
+
+onMounted(() => {
+    window.Echo.channel('summoner.'+summoner.id).listen('SummonerUpdated', (e: any) => {
+        router.reload({
+            preserveState: true,
+            preserveScroll: true,
+            only: getOnly()
+        })
+    })
+})
 
 
 const form = useForm<{

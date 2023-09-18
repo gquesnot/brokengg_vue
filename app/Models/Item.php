@@ -15,7 +15,6 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property string $description
  * @property array $tags
  * @property string $img_url
- *
  * @method static Builder|Item newModelQuery()
  * @method static Builder|Item newQuery()
  * @method static Builder|Item query()
@@ -24,7 +23,6 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @method static Builder|Item whereImgUrl($value)
  * @method static Builder|Item whereName($value)
  * @method static Builder|Item whereTags($value)
- *
  * @mixin Eloquent
  */
 #[TypeScript]

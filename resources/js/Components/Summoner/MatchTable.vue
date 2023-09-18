@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {SummonerMatchInterface} from "@/types/summoner-match";
+import {SummonerMatchInterface} from "@/types/summoner_match";
 import {getSummoner} from "@/helpers/root_props_helpers";
 import {urlChampionHelper, urlItemHelper} from "@/helpers/url_helpers";
 import {navigateToEncounter} from "@/helpers/router_helpers";

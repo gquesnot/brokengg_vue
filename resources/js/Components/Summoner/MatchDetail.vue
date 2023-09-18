@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {SummonerMatchInterface} from "@/types/summoner-match";
+import {SummonerMatchInterface} from "@/types/summoner_match";
 import {getSummoner} from "@/helpers/root_props_helpers";
 import MatchTable from "@/Components/Summoner/MatchTable.vue";
 import {getDurationMinutes} from "@/helpers/duration_helpers";

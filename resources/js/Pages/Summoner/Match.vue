@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import SummonerHeader from "@/Components/Summoner/SummonerHeader.vue";
-import {SummonerMatchInterface} from "@/types/summoner-match";
+import {SummonerMatchInterface} from "@/types/summoner_match";
 import MatchesRow from "@/Components/Summoner/MatchesRow.vue";
 import {SummonerEncounterCountInterface} from "@/types/summoner_encounter_count";
 

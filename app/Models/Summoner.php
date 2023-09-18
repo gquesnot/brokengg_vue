@@ -31,7 +31,6 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property-read int|null $matches_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatch> $summonerMatches
  * @property-read int|null $summoner_matches_count
- *
  * @method static Builder|Summoner newModelQuery()
  * @method static Builder|Summoner newQuery()
  * @method static Builder|Summoner query()
@@ -48,7 +47,6 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @method static Builder|Summoner whereSummonerId($value)
  * @method static Builder|Summoner whereSummonerLevel($value)
  * @method static Builder|Summoner whereUpdatedAt($value)
- *
  * @mixin Eloquent
  */
 #[TypeScript]

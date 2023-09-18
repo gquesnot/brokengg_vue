@@ -17,7 +17,7 @@ class MatchController extends Controller
         $encounter_match_ids = $encounter_query->pluck('match_id');
 
         return Inertia::render('Summoner/Match', [
-            'summoner_match' => fn () => SummonerMatch::loadAll()->find($summoner_match->id),
+            'summoner_match' => fn () => SummonerMatch::loadPartial()->find($summoner_match->id),
             'summoner_encounter_count' => fn () => $summoner->getEncountersCount($encounter_match_ids),
         ]);
     }
