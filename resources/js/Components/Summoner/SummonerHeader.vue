@@ -29,16 +29,19 @@ const summoner = getSummoner();
 const champion_options = getChampionOptions();
 const queue_options = getQueueOptions();
 
+
 onMounted(() => {
-    window.Echo.listen('summoner-'+summoner.id).listen('.summoner-updated', (e: any) => {
-      //@ts-ignore
-      router.visit(route(route().current(), getParamsWithFilters(getFilters(), getRouteParams())), {
-        preserveState: true,
-        preserveScroll:true,
-        only: getOnly()
-      })
+  window.Echo.channel('summoner-'+summoner.id).listen('.summoner-updated', (e: any) => {
+    //@ts-ignore
+    router.reload( getParamsWithFilters(getFilters(), getRouteParams()), {
+      preserveState: true,
+      preserveScroll:true,
+      only: getOnly()
     })
+  })
+
 })
+
 
 
 const form = useForm<{
