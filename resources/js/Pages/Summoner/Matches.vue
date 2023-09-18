@@ -11,7 +11,7 @@ import {SummonerEncounterCountInterface} from "@/types/summoner_encounter_count"
 
 const props = defineProps<{
     matches: SummonerMatchesPaginated
-    summoner_stats: SummonerStatsInterface
+    summoner_stats: SummonerStatsInterface|null
     summoner_encounter_count: SummonerEncounterCountInterface
 }>();
 
@@ -29,7 +29,7 @@ const summoner = getSummoner();
             tab="Matches"
         />
 
-        <SummonerStats :summoner_stats="summoner_stats" :summoner="summoner" justify="start"/>
+        <SummonerStats v-if="summoner_stats"  :summoner_stats="summoner_stats" :summoner="summoner" justify="start"/>
         <div class="flex flex-col" v-for="match in matches.data" :key="match.id">
             <MatchesRow
                 :key="match.id"
