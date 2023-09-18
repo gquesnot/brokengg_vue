@@ -13,17 +13,13 @@ class SummonerUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+
     /**
      * Create a new event instance.
      */
-    public function __construct(public int $summoner_id)
+    public function __construct(public int $summoner_id, public bool $is_after_update = false)
     {
         //
-    }
-
-    public static function call(int $summoner_id)
-    {
-
     }
 
     /**
@@ -34,17 +30,23 @@ class SummonerUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('summoner.'.$this->summoner_id),
+            new Channel('summoner.' . $this->summoner_id),
         ];
     }
 
+
     public function broadCastWhen(): bool
     {
-        if (Cache::has('summoner-updated-'.$this->summoner_id)) {
-            return false;
+        if ($this->is_after_update || !Cache::has('summoner-updated-' . $this->summoner_id)) {
+            Cache::put('summoner-updated-' . $this->summoner_id, true, 3);
+            return true;
         }
-        Cache::put('summoner-updated-'.$this->summoner_id, now(), 3);
-
-        return true;
+        return False;
     }
+
+    public function broadcastQueue(): string
+    {
+        return 'broadcast';
+    }
+
 }

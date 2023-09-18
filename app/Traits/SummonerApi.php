@@ -14,6 +14,8 @@ use App\Models\Summoner;
 use App\Models\SummonerMatch;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 
 trait SummonerApi
@@ -295,7 +297,7 @@ trait SummonerApi
         $match->updated = true;
 
         $match->save();
-        event(new SummonerUpdated($this->id));
+        SummonerUpdated::dispatch($this->id);
 
         return true;
     }

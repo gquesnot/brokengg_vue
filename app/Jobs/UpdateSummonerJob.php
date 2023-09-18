@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\SummonerUpdated;
 use App\Models\Summoner;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -21,5 +22,6 @@ class UpdateSummonerJob implements ShouldQueue
     {
         $this->summoner->updateSummonerByPuuid();
         $this->summoner->updateMatches();
+        SummonerUpdated::dispatch($this->summoner->id, true);
     }
 }
