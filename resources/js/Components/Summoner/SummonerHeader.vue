@@ -33,13 +33,15 @@ const queue_options = getQueueOptions();
 
 onMounted(() => {
   window.Echo.channel('summoner-'+summoner.id).listen('.summoner-updated', (e: any) => {
-    debounce(() => {
-      router.reload({
+    // dispatch after 200 ms without debounce
+    setTimeout(() => {
+      router.reload( {
         preserveState: true,
-        preserveScroll:true,
+        preserveScroll: true,
         only: getOnly()
       })
-    }, 300)
+    }, 200)
+
   })
 })
 
