@@ -23,17 +23,17 @@ const props = defineProps({
 
 <template>
     <div
-        :class="`${props.summoner_match?.won ? 'bg-blue-500' : 'bg-red-500'} flex items-center justify-start p-2 ${is_reverse ? 'flex-row-reverse ' : ''}`">
+        :class="`${props.summoner_match?.won ? 'bg-blue-1' : 'bg-red-1'}  flex items-center justify-start p-2 ${is_reverse ? 'flex-row-reverse ' : ''}`">
         <div>
             <VImg :src="urlChampionHelper(summoner_match.champion?.img_url)" class="w-16 h-16"/>
         </div>
-        <div class="mx-4">
+        <div class="mx-4 text-gray-5">
             <div class="flex">
-                <div class="text-white font-bold">{{ summoner_match.kills.toFixed(1) }}</div>
-                <div class="text-white mx-1">/</div>
-                <div class="text-black font-bold">{{ summoner_match.deaths.toFixed(1) }}</div>
-                <div class="text-white mx-1">/</div>
-                <div class="text-white font-bold">{{ summoner_match.assists.toFixed(1) }}</div>
+                <div class="text-gray-5 font-bold">{{ summoner_match.kills.toFixed(1) }}</div>
+                <div class="text-gray-4 mx-1">/</div>
+                <div class="text-red-3 font-bold">{{ summoner_match.deaths.toFixed(1) }}</div>
+                <div class="text-gray-4 mx-1">/</div>
+                <div class="text-gray-5 font-bold">{{ summoner_match.assists.toFixed(1) }}</div>
             </div>
             <div class="font-bold text-2xl">
                 {{ summoner_match.kda?.toFixed(2) }}:1 KDA

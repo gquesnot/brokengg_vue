@@ -33,7 +33,7 @@ const my_summoner_match_id = (match: any): number => {
 
 <template>
     <template v-if="encounter_data.matches.length > 0">
-        <div class="grid grid-cols-2">
+        <div class="grid grid-cols-2 text-gray-5">
             <div>
                 <SummonerStats :with_summoner_name="true" :summoner_stats="encounter_data.summoner_stats"
                                :summoner="summoner" color="blue"/>
@@ -52,7 +52,7 @@ const my_summoner_match_id = (match: any): number => {
                                   v-if="participant.summoner_id === summoner.id"/>
                 </template>
                 <div @click="navigateToMatch(summoner.id, my_summoner_match_id(match))"
-                     :class="`${!(match.participants) || has_won(match) ?'bg-blue-500':'bg-red-500'} flex flex-col items-center justify-center cursor-pointer`">
+                     :class="`${!(match.participants) || has_won(match) ?' bg-blue-1':'bg-red-1'} text-gray-5 flex flex-col items-center justify-center cursor-pointer`">
                     <div>{{ match.queue.description }}</div>
                     <div>{{ moment(match.match_end).fromNow() }}</div>
                     <div>{{ !(match.participants) || has_won(match) ? 'Victory' : 'Defeat' }}</div>

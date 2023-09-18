@@ -19,9 +19,9 @@ const summoner = getSummoner();
 
 const getTrColor = (participant: SummonerMatchInterface) => {
     if (summoner.id === participant.summoner_id) {
-        return participant.won ? 'bg-blue-900' : 'bg-red-800'
+        return participant.won ? 'bg-blue-2' : 'bg-red-2'
     } else {
-        return participant.won ? 'bg-blue-950' : 'bg-red-900'
+        return participant.won ? 'bg-blue-1' : 'bg-red-1'
     }
 }
 
@@ -39,10 +39,10 @@ for (let participant of props.participants) {
 </script>
 
 <template>
-    <table class="text-gray-200 ">
+    <table class="text-gray-5 ">
         <thead>
         <tr>
-            <th :class="`${won ? 'text-blue-600' : 'text-red-600' } font-bold p-2`">
+            <th :class="`${won ? 'text-blue-3' : 'text-red-3' } font-bold p-2`">
                 {{ won ? 'Victory' : 'Defeat' }}
             </th>
             <th class="p-2">Seen</th>
@@ -100,11 +100,11 @@ for (let participant of props.participants) {
                 <td class="w-64 py-1  px-3">
                     <div class="ml-4 text-xl flex justify-center items-center flex-col">
                         <div class="flex">
-                            <div class="text-gray-200 font-bold">{{ participant.kills }}</div>
-                            <div class="text-gray-500 mx-1">/</div>
-                            <div class="text-red font-bold">{{ participant.deaths }}</div>
-                            <div class="text-gray-500 mx-1">/</div>
-                            <div class="text-gray-200 font-bold">{{ participant.assists }}</div>
+                            <div class="text-gray-5 font-bold">{{ participant.kills }}</div>
+                            <div class="text-gray-4 mx-1">/</div>
+                            <div class="text-red-3 font-bold">{{ participant.deaths }}</div>
+                            <div class="text-gray-4 mx-1">/</div>
+                            <div class="text-gray-5 font-bold">{{ participant.assists }}</div>
                         </div>
                         <div>
                             {{ participant.kda?.toFixed(2) }}:1 KDA

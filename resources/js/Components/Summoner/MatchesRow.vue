@@ -41,8 +41,8 @@ const toggleIsOpen = () => {
 
 <template>
     <div
-        :class="`${summoner_match.won ? 'bg-blue-950' : 'bg-red-900'}  my-1.5 flex rounded opacity-95 text-gray-200`">
-        <div :class="`${summoner_match.won ? 'bg-blue-600' : 'bg-red-700'} w-3 rounded-l`"></div>
+        :class="`${summoner_match.won ? 'bg-blue-1' : 'bg-red-1'}  my-1.5 flex rounded opacity-95 text-gray-200`">
+        <div :class="`${summoner_match.won ? 'bg-blue-2' : 'bg-red-2'} w-3 rounded-l`"></div>
         <div class="w-28 flex flex-col justify-center space-y-1 my-2 pl-4">
             <div>{{ summoner_match.match?.queue?.description.replace('games', '') }}</div>
             <div>{{ moment(summoner_match.match?.match_end).fromNow() }}</div>
@@ -58,11 +58,11 @@ const toggleIsOpen = () => {
                 </div>
                 <div class="ml-4 text-xl flex justify-center items-center flex-col">
                     <div class="flex">
-                        <div class="text-gray-200 font-bold">{{ summoner_match.kills }}</div>
-                        <div class="text-gray-500 mx-1">/</div>
-                        <div class="text-red font-bold">{{ summoner_match.deaths }}</div>
-                        <div class="text-gray-500 mx-1">/</div>
-                        <div class="text-gray-200 font-bold">{{ summoner_match.assists }}</div>
+                        <div class="text-gray-5 font-bold">{{ summoner_match.kills }}</div>
+                        <div class="text-gray-4 mx-1">/</div>
+                        <div class="text-red-4 font-bold">{{ summoner_match.deaths }}</div>
+                        <div class="text-gray-4 mx-1">/</div>
+                        <div class="text-gray-5 font-bold">{{ summoner_match.assists }}</div>
                     </div>
                     <div>
                         {{ summoner_match.kda?.toFixed(2) }}:1 KDA
@@ -126,11 +126,11 @@ const toggleIsOpen = () => {
 
         </div>
         <div class="flex justify-end ml-1  w-14">
-            <div :class="`${summoner_match.won ? 'bg-blue-600' : 'bg-red-700'} w-14 flex items-end pb-4 rounded-r`">
+            <div :class="`${summoner_match.won ? 'bg-blue-2 text-blue-4' : 'bg-red-2 text-red-4'} w-14 flex items-end pb-4 rounded-r`">
 
                 <VIcon
                     @click="toggleIsOpen"
-                    :class="`${is_open ? 'transform rotate-180' : ''} ${summoner_match.won ? 'text-blue' : 'text-red'} cursor-pointer w-8 h-8 mx-auto`"
+                    :class="`${is_open ? 'transform rotate-180' : ''} cursor-pointer w-8 h-8 mx-auto`"
                     icon="fa fa-chevron-down"/>
 
             </div>

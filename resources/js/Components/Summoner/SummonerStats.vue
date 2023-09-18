@@ -43,7 +43,7 @@ const props = defineProps({
 
 <template>
     <div
-        :class="`bg-gray-700 text-gray-200 flex justify-${justify} rounded my-3  p-4 ${is_reverse ? 'flex-row-reverse ' : ''}`">
+        :class="`text-gray-5 bg-gray-1 text-gray-1 flex justify-${justify} rounded my-3  p-4 ${is_reverse ? 'flex-row-reverse ' : ''}`">
         <div v-if="with_summoner_name" :class="`mx-4 flex items-center ${is_reverse ? 'flex-row-reverse ' : ''}`">
             <VImg :src="urlProfilIconHelper(summoner.profile_icon_id)" class="w-16 h-16 rounded-full"/>
             <div class="text-xl font-bold cursor-pointer mx-2" @click="navigateToSummoner(summoner.id)">{{
@@ -68,11 +68,11 @@ const props = defineProps({
 
         <div class="mx-4 flex flex-col items-center justify-center">
             <div class="flex">
-                <div class="text-white font-bold">{{ summoner_stats.avg_kills.toFixed(1) }}</div>
-                <div class="text-white mx-1">/</div>
-                <div class="text-red-700 font-bold">{{ summoner_stats.avg_deaths.toFixed(1) }}</div>
-                <div class="text-white mx-1">/</div>
-                <div class="text-white font-bold">{{ summoner_stats.avg_assists.toFixed(1) }}</div>
+                <div class="text-gray-5 font-bold">{{ summoner_stats.avg_kills.toFixed(1) }}</div>
+                <div class="text-gray-4 mx-1">/</div>
+                <div class="text-red-3 font-bold">{{ summoner_stats.avg_deaths.toFixed(1) }}</div>
+                <div class="text-gray-4 mx-1">/</div>
+                <div class="text-gray-5 font-bold">{{ summoner_stats.avg_assists.toFixed(1) }}</div>
             </div>
             <div class="font-bold text-xl">
                 {{ summoner_stats.avg_kda?.toFixed(2) }}:1 KDA

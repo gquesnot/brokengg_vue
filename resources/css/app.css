@@ -6,3 +6,60 @@
 .v-switch__track{
     @apply bg-gray-100 !important;
 }
+
+.text-gray-5{
+    @apply text-gray-200 !important;
+}
+.text-gray-4{
+    @apply text-gray-600 !important;
+}
+
+.bg-gray-1{
+    @apply bg-gray-700 !important;
+}
+
+.bg-red-1{
+    @apply bg-red-950 !important;
+}
+
+.bg-red-2{
+    @apply bg-red-800 !important;
+}
+
+.bg-red-3{
+    @apply bg-red-700 !important;
+}
+
+.bg-blue-1{
+    @apply bg-blue-950 !important;
+}
+
+.bg-blue-2{
+    @apply bg-blue-800 !important;
+}
+
+.bg-blue-3{
+    @apply bg-blue-700 !important;
+}
+
+.text-red-3{
+    @apply text-red-700 !important;
+}
+.text-red-4{
+    @apply text-red-400 !important;
+}
+
+
+.text-blue-3{
+    @apply text-blue-700 !important;
+}
+
+.text-blue-4{
+    @apply text-blue-400 !important;
+}
+
+
+
+
+
+

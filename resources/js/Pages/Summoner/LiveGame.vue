@@ -41,14 +41,14 @@ const searchLobby = () => {
                     <div class="ml-2">{{ live_game['map']['description'] }}</div>
                     <div class="ml-2">{{ live_game['duration'] }}</div>
                 </div>
-                <div class="text-xl font-bold text-blue">
+                <div class="text-xl font-bold text-blue-3">
                     Blue Team
                 </div>
                 <div v-for="participant in live_game['participants']" :key="participant['summoner']['id']">
                     <LiveGameRowPart v-if="participant['teamId'] == 100" :is_my_team="true"
                                      :participant="participant"/>
                 </div>
-                <div class="text-xl font-bold text-red mt-4">
+                <div class="text-xl font-bold text-red-3 mt-4">
                     Red Team
                 </div>
                 <div v-for="participant in live_game['participants']" :key="participant['summoner']['id']">
