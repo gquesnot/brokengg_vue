@@ -2,13 +2,9 @@
 
 namespace App\Events;
 
-use App\Models\Summoner;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
@@ -25,8 +21,8 @@ class SummonerUpdated implements ShouldBroadcast
         //
     }
 
-
-    static function call(int $summoner_id){
+    public static function call(int $summoner_id)
+    {
 
     }
 
@@ -42,13 +38,13 @@ class SummonerUpdated implements ShouldBroadcast
         ];
     }
 
-
     public function broadCastWhen(): bool
     {
         if (Cache::has('summoner-updated-'.$this->summoner_id)) {
             return false;
         }
         Cache::put('summoner-updated-'.$this->summoner_id, now(), 5);
+
         return true;
     }
 }

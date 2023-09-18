@@ -44,6 +44,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property-read Collection<int, SummonerMatch> $otherParticipants
  * @property-read int|null $other_participants_count
  * @property-read \App\Models\Summoner|null $summoner
+ *
  * @method static Builder|SummonerMatch championsCalc()
  * @method static Builder|SummonerMatch loadAll()
  * @method static Builder|SummonerMatch loadPartial()
@@ -70,6 +71,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @method static Builder|SummonerMatch whereTotalDamageTaken($value)
  * @method static Builder|SummonerMatch whereTripleKills($value)
  * @method static Builder|SummonerMatch whereWon($value)
+ *
  * @mixin Eloquent
  */
 #[TypeScript]
@@ -119,7 +121,8 @@ final class SummonerMatch extends Model
         ]);
     }
 
-    public function scopeLoadPartial(Builder $query){
+    public function scopeLoadPartial(Builder $query)
+    {
         $query->with([
             'match:id,match_id,match_duration,match_end,mode_id,map_id,queue_id',
             'match.queue:id,description',

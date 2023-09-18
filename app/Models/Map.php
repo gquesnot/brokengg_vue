@@ -12,11 +12,13 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  *
  * @property int $id
  * @property string $description
+ *
  * @method static Builder|Map newModelQuery()
  * @method static Builder|Map newQuery()
  * @method static Builder|Map query()
  * @method static Builder|Map whereDescription($value)
  * @method static Builder|Map whereId($value)
+ *
  * @mixin Eloquent
  */
 #[TypeScript]

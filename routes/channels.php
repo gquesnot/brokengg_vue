@@ -14,4 +14,3 @@ use Illuminate\Support\Facades\Broadcast;
 */
 
 //Broadcast::channel('summoner.{summoner_id}',);
-

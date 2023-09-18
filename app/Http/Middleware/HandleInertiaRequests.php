@@ -122,13 +122,13 @@ class HandleInertiaRequests extends Middleware
                     'location' => $request->url(),
                 ]);
             },
-            'filters' =>  $new_filters,
+            'filters' => $new_filters,
             'champion_options' => fn () => $champion_options,
             'queue_options' => $queue_options,
-            'summoner' =>  $summoner,
+            'summoner' => $summoner,
             'version' => fn () => Version::orderByDesc('version')->first()->version,
-            'route_params' =>$route_params,
-            'only' =>  $only,
+            'route_params' => $route_params,
+            'only' => $only,
         ]);
     }
 }

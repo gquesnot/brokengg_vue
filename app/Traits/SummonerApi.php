@@ -183,8 +183,7 @@ trait SummonerApi
             $api_match = $this->getMatch($match->match_id);
             if (! $api_match) {
                 $match->update(['is_trashed' => true, 'updated' => true]);
-            }
-            elseif (! $this->updateMatchFromArray($match, $api_match)){
+            } elseif (! $this->updateMatchFromArray($match, $api_match)) {
                 $match->update(['is_trashed' => true, 'updated' => true]);
             }
         }

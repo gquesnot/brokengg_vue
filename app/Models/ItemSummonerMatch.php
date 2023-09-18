@@ -16,12 +16,14 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property int $position
  * @property-read \App\Models\Item|null $item
  * @property-read \App\Models\SummonerMatch|null $summonerMatch
+ *
  * @method static Builder|ItemSummonerMatch newModelQuery()
  * @method static Builder|ItemSummonerMatch newQuery()
  * @method static Builder|ItemSummonerMatch query()
  * @method static Builder|ItemSummonerMatch whereItemId($value)
  * @method static Builder|ItemSummonerMatch wherePosition($value)
  * @method static Builder|ItemSummonerMatch whereSummonerMatchId($value)
+ *
  * @mixin Eloquent
  */
 #[TypeScript]

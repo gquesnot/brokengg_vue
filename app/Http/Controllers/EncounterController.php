@@ -58,7 +58,7 @@ class EncounterController extends Controller
                 },
                 'participants.summoner:id,name',
                 'participants.champion:id,name,img_url',
-                'queue'
+                'queue',
             ])->get();
     }
 }
