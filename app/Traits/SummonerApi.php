@@ -175,11 +175,9 @@ trait SummonerApi
             $matches = $query->whereIn('match_id', $match_ids)->get();
         }
         foreach ($matches as $match) {
-            SummonerMatch::whereMatchId($match->id)->get()->each(function ($summoner_match) {
-                $summoner_match->items()->delete();
-                $summoner_match->delete();
-            });
-
+            $summoner_match_ids = SummonerMatch::whereMatchId($match->id)->pluck('id');
+            ItemSummonerMatch::whereIn('summoner_match_id', $summoner_match_ids)->delete();
+            SummonerMatch::whereMatchId($match->id)->delete();
             $api_match = $this->getMatch($match->match_id);
             if (! $api_match || ! $this->updateMatchFromArray($match, $api_match)) {
                 $match->update(['is_trashed' => true, 'updated' => true]);
