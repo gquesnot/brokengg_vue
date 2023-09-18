@@ -18,6 +18,7 @@ import {
 import {urlProfilIconHelper} from "@/helpers/url_helpers";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
+import Echo from 'laravel-echo'
 
 const props = defineProps<{
     tab: string
@@ -29,8 +30,7 @@ const champion_options = getChampionOptions();
 const queue_options = getQueueOptions();
 
 onMounted(() => {
-  //@ts-ignore
-    window.Echo.channel('summoner.'+summoner.id).listen('SummonerUpdated', (e: any) => {
+    window.Echo.listen('summoner-'+summoner.id).listen('.summoner-updated', (e: any) => {
       //@ts-ignore
       router.visit(route(route().current(), getParamsWithFilters(getFilters(), getRouteParams())), {
         preserveState: true,

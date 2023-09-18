@@ -47,7 +47,12 @@ class SummonerUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('summoner.'.$this->summoner_id),
+            new Channel('summoner-'.$this->summoner_id),
         ];
+    }
+
+    public function broadcastAs(): string
+    {
+        return 'summoner-updated';
     }
 }
