@@ -37,13 +37,13 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property int $total_damage_dealt_to_champions
  * @property int $gold_earned
  * @property int $total_damage_taken
- * @property-read \App\Models\Champion|null $champion
- * @property-read Collection<int, \App\Models\Item> $items
+ * @property-read Champion|null $champion
+ * @property-read Collection<int, Item> $items
  * @property-read int|null $items_count
- * @property-read \App\Models\LolMatch|null $match
+ * @property-read LolMatch|null $match
  * @property-read Collection<int, SummonerMatch> $otherParticipants
  * @property-read int|null $other_participants_count
- * @property-read \App\Models\Summoner|null $summoner
+ * @property-read Summoner|null $summoner
  *
  * @method static Builder|SummonerMatch championsCalc()
  * @method static Builder|SummonerMatch loadAll()

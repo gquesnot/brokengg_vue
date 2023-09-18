@@ -29,7 +29,9 @@ const champion_options = getChampionOptions();
 const queue_options = getQueueOptions();
 
 onMounted(() => {
+  //@ts-ignore
     window.Echo.channel('summoner.'+summoner.id).listen('SummonerUpdated', (e: any) => {
+      e.preventDefault()
         router.reload({
             preserveState: true,
             preserveScroll: true,

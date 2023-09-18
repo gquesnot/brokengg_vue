@@ -14,8 +14,6 @@ use App\Models\Summoner;
 use App\Models\SummonerMatch;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Broadcast;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 
 trait SummonerApi
