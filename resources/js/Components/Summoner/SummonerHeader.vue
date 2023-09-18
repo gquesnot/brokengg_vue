@@ -19,6 +19,7 @@ import {urlProfilIconHelper} from "@/helpers/url_helpers";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import Echo from 'laravel-echo'
+import {debounce} from "lodash";
 
 const props = defineProps<{
     tab: string
@@ -32,11 +33,13 @@ const queue_options = getQueueOptions();
 
 onMounted(() => {
   window.Echo.channel('summoner-'+summoner.id).listen('.summoner-updated', (e: any) => {
-    router.reload({
-      preserveState: true,
-      preserveScroll:true,
-      only: getOnly()
-    })
+    debounce(() => {
+      router.reload({
+        preserveState: true,
+        preserveScroll:true,
+        only: getOnly()
+      })
+    }, 300)
   })
 })
 
