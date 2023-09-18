@@ -175,15 +175,13 @@ trait SummonerApi
             $matches = $query->whereIn('match_id', $match_ids)->get();
         }
         foreach ($matches as $match) {
-            SummonerMatch::whereMatchId($match->match_id)->with('items')->get()->each(function ($summoner_match) {
+            SummonerMatch::whereMatchId($match->id)->get()->each(function ($summoner_match) {
                 $summoner_match->items()->delete();
                 $summoner_match->delete();
             });
 
             $api_match = $this->getMatch($match->match_id);
-            if (! $api_match) {
-                $match->update(['is_trashed' => true, 'updated' => true]);
-            } elseif (! $this->updateMatchFromArray($match, $api_match)) {
+            if (! $api_match || ! $this->updateMatchFromArray($match, $api_match)) {
                 $match->update(['is_trashed' => true, 'updated' => true]);
             }
         }
