@@ -31,12 +31,12 @@ const queue_options = getQueueOptions();
 onMounted(() => {
   //@ts-ignore
     window.Echo.channel('summoner.'+summoner.id).listen('SummonerUpdated', (e: any) => {
-      e.preventDefault()
-        router.reload({
-            preserveState: true,
-            preserveScroll: true,
-            only: getOnly()
-        })
+      //@ts-ignore
+      router.visit(route(route().current(), getParamsWithFilters(getFilters(), getRouteParams())), {
+        preserveState: true,
+        preserveScroll:true,
+        only: getOnly()
+      })
     })
 })
 
