@@ -25,7 +25,7 @@ class SummonerUpdated implements ShouldBroadcast
 
     public function broadCastWhen(): bool
     {
-        if ($this->is_after_update || ! Cache::has('summoner-updated-'.$this->summoner_id) ||  Cache::get('summoner-updated-'.$this->summoner_id) < now()->subSeconds(3)) {
+        if ($this->is_after_update || ! Cache::has('summoner-updated-'.$this->summoner_id) ||  Cache::get('summoner-updated-'.$this->summoner_id) < now()->subSeconds(5)) {
             Cache::put('summoner-updated-'.$this->summoner_id, now());
             return true;
         }
@@ -46,12 +46,8 @@ class SummonerUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('summoner-'.$this->summoner_id),
+            new Channel('summoner.'.$this->summoner_id),
         ];
     }
 
-    public function broadcastAs(): string
-    {
-        return 'summoner-updated';
-    }
 }

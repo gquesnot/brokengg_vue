@@ -31,7 +31,7 @@ const queue_options = getQueueOptions();
 
 
 onMounted(() => {
-    window.Echo.channel('summoner-' + summoner.id).listen('.summoner-updated', (e: any) => {
+    window.Echo.channel('summoner.' + summoner.id).listen('SummonerUpdated', (e: any) => {
         reload_page()
     })
 })
@@ -43,13 +43,9 @@ const reload_page = debounce(() => {
         preserveScroll: true,
         only: getOnly(),
         onSuccess: () => {
-            console.log("success")
-        },
-        onCancel: () => {
-            reload_page()
         },
     })
-},500)
+},400)
 
 
 const form = useForm<{
