@@ -18,8 +18,6 @@ import {
 import {urlProfilIconHelper} from "@/helpers/url_helpers";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
-import Echo from 'laravel-echo'
-import {debounce} from "lodash";
 
 const props = defineProps<{
     tab: string
@@ -32,18 +30,21 @@ const queue_options = getQueueOptions();
 
 
 onMounted(() => {
-  window.Echo.channel('summoner-'+summoner.id).listen('.summoner-updated', (e: any) => {
-    setTimeout(() => {
-      router.reload( {
-        preserveState: true,
-        preserveScroll: true,
-        only: getOnly(),
-      })
-    }, 200)
-
-  })
+    window.Echo.channel('summoner-' + summoner.id).listen('.summoner-updated', (e: any) => {
+        console.log('set timeout')
+        setTimeout(() => {
+            //@ts-ignore
+            router.visit(route(route().current(), getParamsWithFilters(getFilters(), getRouteParams())), {
+                preserveState: true,
+                preserveScroll: true,
+                only: getOnly(),
+                onSuccess: () => {
+                    console.log("success\n")
+                },
+            })
+        }, 300)
+    })
 })
-
 
 
 const form = useForm<{
