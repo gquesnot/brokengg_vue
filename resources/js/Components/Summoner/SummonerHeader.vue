@@ -33,18 +33,13 @@ const queue_options = getQueueOptions();
 
 onMounted(() => {
   window.Echo.channel('summoner-'+summoner.id).listen('.summoner-updated', (e: any) => {
-    console.log('summoner-updated: event')
     setTimeout(() => {
-      console.log('summmoner-updated: timeout')
       router.reload( {
         preserveState: true,
         preserveScroll: true,
         only: getOnly(),
-        onSuccess: () => {
-          console.log('summoner-updated:success reload')
-        },
       })
-    }, 200)
+    }, 100)
 
   })
 })
