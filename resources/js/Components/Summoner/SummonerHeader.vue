@@ -39,7 +39,7 @@ onMounted(() => {
         preserveScroll: true,
         only: getOnly(),
       })
-    }, 100)
+    }, 200)
 
   })
 })
