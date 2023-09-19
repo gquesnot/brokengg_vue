@@ -32,21 +32,24 @@ const queue_options = getQueueOptions();
 
 onMounted(() => {
     window.Echo.channel('summoner-' + summoner.id).listen('.summoner-updated', (e: any) => {
-        debounce(reload_page, 300)
+        reload_page()
     })
 })
 
-const reload_page = () => {
+const reload_page = debounce(() => {
     //@ts-ignore
     router.visit(route(route().current(), getParamsWithFilters(getFilters(), getRouteParams())), {
         preserveState: true,
         preserveScroll: true,
         only: getOnly(),
         onSuccess: () => {
-            console.log("success\n")
+            console.log("success")
+        },
+        onCancel: () => {
+            reload_page()
         },
     })
-}
+},500)
 
 
 const form = useForm<{
