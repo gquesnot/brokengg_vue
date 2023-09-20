@@ -26,13 +26,12 @@ const props = defineProps<{
 }>();
 
 const filters = getFilters();
-const summoner = getSummoner();
 const champion_options = getChampionOptions();
 const queue_options = getQueueOptions();
 
 
 onMounted(() => {
-    window.Echo.channel('summoner.' + summoner.id).listen('SummonerUpdated', (e: any) => {
+    window.Echo.channel('summoner.' + getSummoner().id).listen('SummonerUpdated', (e: any) => {
         reload_page()
     })
 })
@@ -82,7 +81,7 @@ const tabs: Ref<TabInterface[]> = ref([
 
 
 const updateSummoner = () => {
-    router.patch(route('summoner.update', {summoner: summoner.id}))
+    router.patch(route('summoner.update', {summoner: getSummoner().id}))
 }
 
 const applyFilter = () => {
@@ -141,7 +140,7 @@ const switchTab = (label: string) => {
     let tab = getTab(label)
     if (tab) {
         router.visit(route(tab.route, {
-            summoner: summoner.id,
+            summoner: getSummoner().id,
         }), {
             preserveState: true,
         })
@@ -152,7 +151,7 @@ const switchTab = (label: string) => {
 </script>
 
 <template>
-    <Head :title="summoner.name"/>
+    <Head :title="getSummoner().name"/>
     <div class="flex justify-center">
         <a :href="route('home')">
             <div class="text-3xl font-bold mb-8"> BROKEN.GG</div>
@@ -163,11 +162,11 @@ const switchTab = (label: string) => {
             <div class="flex mt-4 ">
                 <div class="w-16">
                     <VImg :width="75" :height="75"
-                          :src="urlProfilIconHelper(summoner.profile_icon_id)"/>
+                          :src="urlProfilIconHelper(getSummoner().profile_icon_id)"/>
 
                 </div>
                 <div class="ml-4">
-                    <div @click="navigateToSummoner(summoner.id)" class="cursor-pointer">
+                    <div @click="navigateToSummoner(getSummoner().id)" class="cursor-pointer">
                         {{ getSummoner().name }}
                     </div>
                     <PrimaryButton @click="updateSummoner">
