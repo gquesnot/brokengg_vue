@@ -24,7 +24,9 @@ export const navigateToMatch = (summoner_id: number, summoner_match_id: number) 
 }
 
 export const navigateToSummoner = (summoner_id: number) => {
-    navigateTo('summoner.matches', {
+    router.visit(route('summoner.matches', {
         summoner: summoner_id,
-    })
+    }), {
+        preserveState: true,
+    });
 }

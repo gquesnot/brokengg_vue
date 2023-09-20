@@ -27,24 +27,26 @@ const searchSummoner = () => {
 
 <template>
     <Head title="Accueil"/>
-    <div class="flex justify-center items-center min-h-screen bg-dots-darker bg-center bg-gray-200">
-        <v-card
-            class="p-6 w-1/2"
-        >
+    <div class="flex justify-center items-center min-h-screen bg-dots-darker bg-center">
+        <v-card class="w-1/2 p-8">
+
+          <div class="bg-gray-1">
             <v-card-title class="text-center"><span class="text-4xl">BROKEN.GG</span></v-card-title>
             <v-card-text class=" flex flex-col items-center justify-center">
-                <InputLabel for="summoner_name" value="Search Summoner" class="mb-2"/>
-                <TextInput id="summoner_name" ref="inputTextSummonerName" v-model="form.summoner_name"
-                           class="p-2 border  w-1/2"/>
-                <InputError :message="form.errors.summoner_name" class="mt-2"/>
+              <InputLabel for="summoner_name" value="Search Summoner" class="mb-2"/>
+              <TextInput id="summoner_name" ref="inputTextSummonerName" v-model="form.summoner_name"
+                         class="p-2 border  w-1/2"/>
+              <InputError :message="form.errors.summoner_name" class="mt-2"/>
             </v-card-text>
             <v-card-actions class="flex justify-center">
-                <PrimaryButton
-                    class="mt-4 text-2xl"
-                    @click="searchSummoner">
-                    Search
-                </PrimaryButton>
+              <PrimaryButton
+                  class="mt-4 text-2xl"
+                  @click="searchSummoner">
+                Search
+              </PrimaryButton>
             </v-card-actions>
+
+          </div>
 
         </v-card>
     </div>

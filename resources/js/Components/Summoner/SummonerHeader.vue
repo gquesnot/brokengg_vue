@@ -19,6 +19,7 @@ import {urlProfilIconHelper} from "@/helpers/url_helpers";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import {debounce} from "lodash";
+import {navigateToSummoner} from "@/helpers/router_helpers";
 
 const props = defineProps<{
     tab: string
@@ -166,8 +167,8 @@ const switchTab = (label: string) => {
 
                 </div>
                 <div class="ml-4">
-                    <div>
-                        {{ summoner.name }}
+                    <div @click="navigateToSummoner(summoner.id)" class="cursor-pointer">
+                        {{ getSummoner().name }}
                     </div>
                     <PrimaryButton @click="updateSummoner">
                         Update
