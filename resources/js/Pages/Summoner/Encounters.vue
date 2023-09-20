@@ -35,7 +35,7 @@ watch(search, debounce(function (value: string) {
 </script>
 
 <template>
-    <div class="w-7/12 mx-auto my-6">
+    <div class="w-7/12 mx-auto my-6 text-gray-5">
 
         <SummonerHeader
             tab="Encounters"
@@ -60,7 +60,7 @@ watch(search, debounce(function (value: string) {
             </template>
             <template v-else>
                 <tr v-for="(encounter, idx) in encounters.data" :key="encounter.summoner_id"
-                    :class="(idx % 2 === 0 ? 'bg-gray-200' : '' ) + ' hover:bg-gray-300'">
+                    :class="(idx % 2 === 0 ? 'bg-zinc-800' : '' ) + ' hover:bg-zinc-900'">
                     <EncountersRow
                         :key="encounter.summoner_id"
                         :encounter="encounter"/>

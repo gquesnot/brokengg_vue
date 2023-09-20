@@ -13,9 +13,15 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import {aliases, fa} from 'vuetify/iconsets/fa4'
 
+import { Doughnut } from 'vue-chartjs'
+import { Chart as ChartJS ,ArcElement,Tooltip, Legend } from 'chart.js'
+
 const vuetify = createVuetify({
     components,
     directives,
+    theme:{
+      defaultTheme: 'dark',
+    },
     icons: {
         defaultSet: 'fa',
         aliases,
@@ -24,6 +30,8 @@ const vuetify = createVuetify({
         },
     },
 })
+
+ChartJS.register(ArcElement,Tooltip, Legend)
 
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
@@ -42,3 +50,4 @@ createInertiaApp({
         color: '#4B5563',
     },
 });
+

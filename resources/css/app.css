@@ -4,61 +4,67 @@
 
 
 .v-switch__track{
-    @apply bg-gray-100 !important;
+    @apply bg-gray-100;
 }
 
 .text-gray-5{
-    @apply text-gray-200 !important;
+    @apply text-gray-200;
 }
 .text-gray-4{
-    @apply text-gray-600 !important;
+    @apply text-gray-600;
 }
 
 .bg-gray-1{
-    @apply bg-gray-700 !important;
+    @apply bg-gray-800;
 }
+
+
 
 .bg-red-1{
-    @apply bg-red-950 !important;
+    @apply bg-red-950;
 }
 
+
+
 .bg-red-2{
-    @apply bg-red-800 !important;
+    @apply bg-red-800;
 }
 
 .bg-red-3{
-    @apply bg-red-700 !important;
+    @apply bg-red-700;
 }
 
 .bg-blue-1{
-    @apply bg-blue-950 !important;
+    @apply bg-blue-950;
 }
 
 .bg-blue-2{
-    @apply bg-blue-800 !important;
+    @apply bg-blue-800;
 }
 
 .bg-blue-3{
-    @apply bg-blue-700 !important;
+    @apply bg-blue-700;
 }
 
 .text-red-3{
-    @apply text-red-700 !important;
+    @apply text-red-700;
 }
 .text-red-4{
-    @apply text-red-400 !important;
+    @apply text-red-400;
 }
 
 
 .text-blue-3{
-    @apply text-blue-700 !important;
+    @apply text-blue-700;
 }
 
 .text-blue-4{
-    @apply text-blue-400 !important;
+    @apply text-blue-400;
 }
 
-
+input[type="text"]{
+    @apply bg-gray-600;
+}
 
 
 

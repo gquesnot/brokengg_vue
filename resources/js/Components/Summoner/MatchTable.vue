@@ -39,7 +39,7 @@ for (let participant of props.participants) {
 </script>
 
 <template>
-    <table class="text-gray-5 ">
+    <table class="text-gray-5">
         <thead>
         <tr>
             <th :class="`${won ? 'text-blue-3' : 'text-red-3' } font-bold p-2`">
@@ -117,14 +117,14 @@ for (let participant of props.participants) {
                             {{ participant.total_damage_dealt_to_champions }}
                             <VProgressLinear
                                 :model-value="Math.round((participant.total_damage_dealt_to_champions / max_total_damage_dealt) * 100)"
-                                color="error"
+                                color="red-lighten-2"
                                 :height="10"/>
                         </div>
                         <div class="ml-4 w-24">
                             {{ participant.total_damage_taken }}
                             <VProgressLinear
                                 :model-value="Math.round((participant.total_damage_taken / max_total_damage_taken) * 100)"
-                                color="dark-blue"
+                                color="blue-grey-lighten-1"
                                 :height="10"/>
                         </div>
 

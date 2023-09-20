@@ -174,7 +174,7 @@ const switchTab = (label: string) => {
                     </PrimaryButton>
                 </div>
             </div>
-            <div class="bg-gray-700 w-1/2 p-4 text-gray-200 rounded">
+            <div class="bg-gray-1 w-1/2 p-4 text-gray-200 rounded">
                 <div class="flex">
                     <div class="w-1/2">
                         <div>
@@ -216,7 +216,7 @@ const switchTab = (label: string) => {
                                 v-model="form.filters.start_date"
                                 id="start_time"
                                 name="start_time"
-                                class="text-black"
+                                class="text-gray-5"
                                 clearable
                                 :format="['YYYY-MM-DD']"
                                 :input-props="{placeholder: 'YYYY-MM-DD'}"
@@ -228,7 +228,7 @@ const switchTab = (label: string) => {
                                 v-model="form.filters.end_date"
                                 id="end_time"
                                 name="end_time"
-                                class="text-black"
+                                class="text-gray-5"
                                 clearable
                                 :format="['YYYY-MM-DD']"
                                 :input-props="{placeholder: 'YYYY-MM-DD'}"

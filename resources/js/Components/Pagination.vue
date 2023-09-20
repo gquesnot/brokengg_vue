@@ -46,7 +46,7 @@ const switchPage = (url: string | null) => {
 
                 <Link
                     v-else
-                    :class="(link.active ? 'bg-white' :'') + ' mr-1 mb-1 px-4 py-3 bg-gray-300 text-sm leading-4 border rounded hover:bg-white focus:border-primary focus:text-primary'"
+                    :class="(link.active ? 'bg-gray-900' :'bg-gray-1') + ' mr-1 mb-1 px-4 py-3 text-sm leading-4 border rounded hover:bg-white focus:border-primary focus:text-primary'"
                     href="#"
                     @click.prevent="switchPage(link.url)"
                     v-html="link.label"
