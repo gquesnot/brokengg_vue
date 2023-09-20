@@ -12,14 +12,23 @@ const props = defineProps<{
   height?: string,
 }>();
 
+const getParticipantStat = (participant : SummonerMatchInterface): number  => {
+  let stat  = participant[props.key_stat as keyof SummonerMatchInterface]
+  if (typeof  stat == 'number'){
+    return stat
+  } else {
+    return 0
+  }
+}
+
 let my_team_stat: number = 0;
 let other_team_stat: number = 0;
 
 for (let participant of props.participants) {
   if (participant.won === props.has_won) {
-    my_team_stat += participant[props.key_stat]
+    my_team_stat += getParticipantStat(participant)
   } else {
-    other_team_stat += participant[props.key_stat]
+    other_team_stat += getParticipantStat(participant)
   }
 }
 

@@ -23,13 +23,26 @@ const handleSplitNumberToNumber = (number:number) => {
 }
 
 
-const handleSplitNumberToString = (number:number) => {
-  if (props.split_number) {
-    return number.toString().replace('.', ',')
-  } else {
-    return number
+const handleSplitNumberToString = (number:any) => {
+  // if number is number
+  if (typeof number === 'number') {
+    if (props.split_number) {
+      return number.toString().replace('.', ',')
+    } else {
+      return number.toString()
+    }
   }
 }
+
+const getParticipantStat = (participant : SummonerMatchInterface): number  => {
+  let stat  = participant[props.key_stat as keyof SummonerMatchInterface]
+  if (typeof  stat == 'number'){
+    return stat
+  } else {
+    return 0
+  }
+}
+
 
 
 let max_stat: number = 0;
@@ -37,15 +50,16 @@ let won_stat:number = 0;
 let lose_stat:number = 0;
 
 for (let participant of props.participants) {
-  if (participant[props.key_stat] > max_stat) {
-    max_stat = participant[props.key_stat]
+  if (getParticipantStat(participant) > max_stat) {
+    max_stat = getParticipantStat(participant)
   }
   if (participant.won) {
-    won_stat += participant[props.key_stat]
+    won_stat += getParticipantStat(participant)
   } else {
-    lose_stat += participant[props.key_stat]
+    lose_stat += getParticipantStat(participant)
   }
 }
+
 
 
 
@@ -80,10 +94,10 @@ let chart_data: ChartData<"doughnut", number[], unknown> = {
             </div>
             <div class="w-full ml-1">
               <VProgressLinear
-                  :model-value="(participant[key_stat] / max_stat) * 100"
+                  :model-value="(getParticipantStat(participant) / max_stat) * 100"
                   color="blue-lighten-2"
                   :height="25">
-                <strong class="ml-auto mr-3">{{ handleSplitNumberToString(participant[key_stat]) }}</strong>
+                <strong class="ml-auto mr-3">{{ handleSplitNumberToString(getParticipantStat(participant)) }}</strong>
               </VProgressLinear>
             </div>
 
@@ -104,10 +118,10 @@ let chart_data: ChartData<"doughnut", number[], unknown> = {
             </div>
             <div class="w-full ml-1">
               <VProgressLinear
-                  :model-value="(participant[key_stat] / max_stat) * 100"
+                  :model-value="(getParticipantStat(participant) / max_stat) * 100"
                   color="red-lighten-2"
                   :height="25">
-                <strong class="ml-auto mr-3">{{ handleSplitNumberToString(participant[key_stat]) }}</strong>
+                <strong class="ml-auto mr-3">{{ handleSplitNumberToString(getParticipantStat(participant)) }}</strong>
               </VProgressLinear>
             </div>
 
