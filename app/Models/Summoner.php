@@ -29,7 +29,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property string|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LolMatch> $matches
  * @property-read int|null $matches_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatch> $summonerMatches
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatch> $summoner_matches
  * @property-read int|null $summoner_matches_count
  *
  * @method static Builder|Summoner newModelQuery()

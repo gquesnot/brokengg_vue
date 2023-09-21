@@ -42,6 +42,8 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property int $summoner_spell1_id
  * @property int $summoner_spell2_id
  * @property-read \App\Models\Champion|null $champion
+ * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $death_events
+ * @property-read int|null $death_events_count
  * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $events
  * @property-read int|null $events_count
  * @property-read Collection<int, \App\Models\SummonerMatchFrame> $frames
@@ -50,6 +52,8 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property-read int|null $item_events_count
  * @property-read Collection<int, \App\Models\Item> $items
  * @property-read int|null $items_count
+ * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $kills_events
+ * @property-read int|null $kills_events_count
  * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $level_up_skill_events
  * @property-read int|null $level_up_skill_events_count
  * @property-read \App\Models\LolMatch|null $match
@@ -148,7 +152,7 @@ final class SummonerMatch extends Model
             'match.participants.champion:id,name,img_url',
             'match.participants.items:id,img_url',
             'match.participants.summoner_spell1:id,img_url',
-            'match.participants.summoner_spell_2:id,img_url',
+            'match.participants.summoner_spell2:id,img_url',
             'match.participants.perks:summoner_match_id,primary_style1_id,sub_style_id',
             'match.participants.perks.primary_style1:id,img_url',
             'match.participants.perks.sub_style:id,img_url',
@@ -194,9 +198,10 @@ final class SummonerMatch extends Model
     public function scopeWithDetail(Builder $query)
     {
         $query->with([
-            'item_events:id,item_id,after_id,before_id,gold_gain',
-            'item_events.item:id,name,img_url',
-            'level_up_skill_events:id,skill_slot,level_up_type',
+            'frames:id,match_id,summoner_match_id,current_timestamp',
+            'frames.item_events:id,item_id,type,summoner_match_id,summoner_match_frame_id',
+            'frames.item_events.item:id,name,img_url',
+            'frames.level_up_skill_events:id,skill_slot,level_up_type,summoner_match_id,summoner_match_frame_id',
             'perks.defense:id,img_url',
             'perks.offense:id,img_url',
             'perks.flex:id,img_url',
@@ -402,17 +407,32 @@ final class SummonerMatch extends Model
 
     public function events(): HasMany
     {
-        return $this->hasMany(SummonerMatchFrameEvent::class, 'summoner_match_id');
+        return $this->hasMany(SummonerMatchFrameEvent::class, 'summoner_match_id', 'id');
     }
 
     public function item_events(): HasMany
     {
-        return $this->events()->whereIn('type', FrameEventType::itemTypes());
+        return $this->events()->whereIn('summoner_match_frame_events.type', [
+            FrameEventType::ITEM_PURCHASED,
+            FrameEventType::ITEM_SOLD,
+        ]);
     }
 
     public function level_up_skill_events(): HasMany
     {
-        return $this->events()->where('type', FrameEventType::SKILL_LEVEL_UP);
+
+        return $this->events()->where('summoner_match_frame_events.type', FrameEventType::SKILL_LEVEL_UP);
+    }
+
+    public function kills_events(): HasMany
+    {
+        return $this->events()->where('summoner_match_frame_events.type', FrameEventType::CHAMPION_KILL);
+    }
+
+    public function death_events(): HasMany
+    {
+        return $this->hasMany(SummonerMatchFrameEvent::class, 'summoner_match_victim_id', 'id')
+            ->where('summoner_match_frame_events.type', FrameEventType::CHAMPION_KILL);
     }
 
     public function has_detail(): bool

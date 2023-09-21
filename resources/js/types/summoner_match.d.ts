@@ -2,8 +2,9 @@ import {PaginationLinkInterface} from "@/types/pagination_link";
 import {LolMatchInterface} from "@/types/lol-match";
 import {SummonerSpellInterface} from "@/types/summoner_spell";
 import {SummonerMatchPerksInterface} from "@/types/summoner_match_perks";
+import {SummonerMatchFrameInterface} from "@/types/summoner_match_frame";
 
-type SummonerMatchInterface = {
+export interface SummonerMatchInterface {
     id: number;
     won: boolean;
     kill_participation: number;
@@ -35,6 +36,10 @@ type SummonerMatchInterface = {
     champion: ChampionInterface;
     summoner: SummonerInterface;
     items: ItemInterface[];
+    frames: SummonerMatchFrameInterface[];
+
+
+
 }
 
 

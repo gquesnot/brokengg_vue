@@ -18,11 +18,6 @@ return new class extends Migration
             //item purchases && sold && destroyed
             $table->foreignIdFor(\App\Models\Item::class, 'item_id')->nullable();
 
-            // item undo
-            $table->foreignIdFor(\App\Models\Item::class, 'before_id')->nullable();
-            $table->foreignIdFor(\App\Models\Item::class, 'after_id')->nullable();
-            $table->integer('gold_gain')->nullable();
-
             // kills && victims
             $table->foreignIdFor(\App\Models\SummonerMatch::class, 'summoner_match_victim_id')->nullable();
             $table->foreignIdFor(\App\Models\SummonerMatchFrame::class, 'summoner_match_frame_victim_id')->nullable();

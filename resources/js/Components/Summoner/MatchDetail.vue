@@ -29,7 +29,7 @@ watch(tab, function (value){
           summoner: getSummoner().id
         }))
             .then(response => {
-                match_detail.value = response.data.match_detail
+                match_detail.value = response.data.match_participants_detail
             })
             .catch(error => console.log('error', error))
     }

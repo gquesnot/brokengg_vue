@@ -329,10 +329,20 @@ trait SummonerApi
 
     public function loadMatchDetail(LolMatch $match)
     {
+
         $match_detail_array = $this->getMatchDetail($match->match_id);
         if (! $match_detail_array) {
             return null;
         }
+
+        SummonerMatchFrame::where('match_id', $match->id)->delete();
+        SummonerMatchFrameEvent::whereIn('summoner_match_id', SummonerMatch::whereMatchId($match->id)->pluck('id'))->delete();
+        $untracked_items = Item::where('tags', '!=', '[]')
+            ->whereJsonContains('tags', 'Trinket')
+            ->whereJsonContains('tags', 'Consumable')
+            ->whereJsonContains('tags', 'Vision')
+            ->pluck('id')->toArray();
+
         $participants = $match->participants()->with('summoner:id,puuid')->get();
         $summoner_match_ids = $participants->pluck('id')->toArray();
         $participant_ordered = [];
@@ -342,6 +352,7 @@ trait SummonerApi
                 $participant_ordered[$idx + 1] = [
                     'summoner_match_id' => $summoner_match->id,
                     'summoner_match_frame_id' => null,
+                    'item_events' => [],
 
                 ];
             }
@@ -350,7 +361,6 @@ trait SummonerApi
 
         foreach ($frames as $frame) {
             $frames_to_add = [];
-            $timestamp = Carbon::createFromTimestampMs($frame['timestamp']);
             foreach ($frame['participantFrames'] as $idx => $participant_frame) {
                 $idx = intval($idx);
                 $frames_to_add[] = [
@@ -376,10 +386,9 @@ trait SummonerApi
                 ->whereIn('summoner_match_id', $summoner_match_ids)
                 ->get();
 
-            foreach ($participant_ordered as $idx => $participant) {
-                $participant_ordered[$idx]['summoner_match_frame_id'] = $summoner_match_frames->where('summoner_match_id', $participant['summoner_match_id'])->first()->id;
+            foreach ($participant_ordered as $participant_idx => $participant) {
+                $participant_ordered[$participant_idx]['summoner_match_frame_id'] = $summoner_match_frames->where('summoner_match_id', $participant['summoner_match_id'])->first()->id;
             }
-
             $events_to_add = [];
 
             foreach ($frame['events'] as $event) {
@@ -387,13 +396,20 @@ trait SummonerApi
                     continue;
                 }
                 $type = FrameEventType::from($event['type']);
+                $item_id = Arr::get($event, 'itemId', null);
+                $before_id = Arr::get($event, 'beforeId', null);
+                $after_id = Arr::get($event, 'afterId', null);
+                if (
+                    $item_id && in_array($item_id, $untracked_items)
+                    || $before_id && in_array($before_id, $untracked_items)
+                    || $after_id && in_array($after_id, $untracked_items)
+                ) {
+                    continue;
+                }
                 $base = [
                     'current_timestamp' => $event['timestamp'],
                     'type' => $type,
-                    'item_id' => Arr::get($event, 'itemId', null),
-                    'before_id' => Arr::get($event, 'beforeId', null),
-                    'after_id' => Arr::get($event, 'afterId', null),
-                    'gold_gain' => Arr::get($event, 'goldGain', null),
+                    'item_id' => $item_id,
                     'skill_slot' => Arr::get($event, 'skillSlot', null),
                     'level_up_type' => Arr::get($event, 'levelUpType', null),
                     'level' => Arr::get($event, 'level', null),
@@ -401,10 +417,7 @@ trait SummonerApi
                     'position_y' => Arr::get($event, 'position.y', null),
                     'summoner_match_victim_id' => null,
                     'summoner_match_frame_victim_id' => null,
-                    'summoner_match_id' => null,
-                    'summoner_match_frame_id' => null,
                 ];
-
                 if ($type == FrameEventType::CHAMPION_KILL) {
                     $base['summoner_match_id'] = $participant_ordered[$event['killerId']]['summoner_match_id'];
                     $base['summoner_match_frame_id'] = $participant_ordered[$event['killerId']]['summoner_match_frame_id'];
@@ -414,11 +427,56 @@ trait SummonerApi
                     $base['summoner_match_id'] = $participant_ordered[$event['participantId']]['summoner_match_id'];
                     $base['summoner_match_frame_id'] = $participant_ordered[$event['participantId']]['summoner_match_frame_id'];
                 }
-                $events_to_add[] = $base;
-            }
-            SummonerMatchFrameEvent::upsert($events_to_add, ['current_timestamp', 'type', 'summoner_match_id', 'summoner_match_frame_id'], ['summoner_match_victim_id', 'summoner_match_frame_victim_id', 'position_x', 'position_y', 'item_id', 'before_id', 'after_id', 'gold_gain', 'skill_slot', 'level_up_type', 'level']);
 
+                if (in_array($type, FrameEventType::itemTypes())) {
+                    $base['before_id'] = $before_id;
+                    $base['after_id'] = $after_id;
+                    $participant_ordered[$event['participantId']]['item_events'][] = $base;
+                } else {
+                    $events_to_add[] = $base;
+                }
+            }
+            SummonerMatchFrameEvent::upsert($events_to_add, ['current_timestamp', 'type', 'summoner_match_id', 'summoner_match_frame_id'], ['summoner_match_victim_id', 'summoner_match_frame_victim_id', 'position_x', 'position_y', 'item_id', 'skill_slot', 'level_up_type', 'level']);
         }
+
+        $all_item_events = [];
+        foreach ($participant_ordered as $participant_idx => $participant) {
+            $participant_items_events = [];
+            foreach ($participant['item_events'] as $item_event) {
+                if ($item_event['type'] == FrameEventType::ITEM_UNDO) {
+                    $this->applyUndoItemEvent($participant_items_events, $item_event);
+                } else {
+                    unset($item_event['before_id']);
+                    unset($item_event['after_id']);
+                    $participant_items_events[] = $item_event;
+                }
+            }
+            $all_item_events = array_merge($all_item_events, $participant_items_events);
+        }
+        SummonerMatchFrameEvent::upsert($all_item_events, ['current_timestamp', 'type', 'summoner_match_id', 'summoner_match_frame_id'], ['summoner_match_victim_id', 'summoner_match_frame_victim_id', 'position_x', 'position_y', 'item_id', 'skill_slot', 'level_up_type', 'level']);
+
+    }
+
+    public function applyUndoItemEvent(array &$all_items_events, array $item_event)
+    {
+        // get last array index item without count
+        $last_item_idx = array_key_last($all_items_events);
+        if ($item_event['before_id'] && $item_event['before_id'] != 0) {
+            if ($all_items_events[$last_item_idx]['type'] == FrameEventType::ITEM_PURCHASED && $all_items_events[$last_item_idx]['item_id'] == $item_event['before_id']) {
+                unset($all_items_events[$last_item_idx]);
+            } else {
+                dd('before', $all_items_events, $item_event, $last_item_idx);
+            }
+        }
+        $last_item_idx = array_key_last($all_items_events);
+        if ($item_event['after_id'] && $item_event['after_id'] != 0) {
+            if ($all_items_events[$last_item_idx]['type'] == FrameEventType::ITEM_SOLD && $all_items_events[$last_item_idx]['item_id'] == $item_event['after_id']) {
+                unset($all_items_events[$last_item_idx]);
+            } else {
+                dd('after', $all_items_events, $item_event, $last_item_idx);
+            }
+        }
+
     }
 
     public function getMatchDetail(string $match_id)

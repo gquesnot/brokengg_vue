@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\FrameEventType;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * App\Models\SummonerMatchFrame
@@ -24,20 +25,18 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $time_enemy_spent_controlled
  * @property int $summoner_match_id
  * @property int $match_id
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatchFrameEvent> $death_events
+ * @property-read int|null $death_events_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatchFrameEvent> $events
  * @property-read int|null $events_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatchFrameEvent> $item_events
  * @property-read int|null $item_events_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatchFrameEvent> $kill_events
- * @property-read int|null $kill_events_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatchFrameEvent> $level_up_events
- * @property-read int|null $level_up_events_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatchFrameEvent> $kills_events
+ * @property-read int|null $kills_events_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatchFrameEvent> $level_up_skill_events
+ * @property-read int|null $level_up_skill_events_count
  * @property-read \App\Models\LolMatch|null $match
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatchFrameEvent> $skill_level_up_events
- * @property-read int|null $skill_level_up_events_count
  * @property-read \App\Models\SummonerMatch|null $summoner_match
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatchFrameEvent> $victim_events
- * @property-read int|null $victim_events_count
  *
  * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame newQuery()
@@ -98,33 +97,33 @@ class SummonerMatchFrame extends Model
         return $this->belongsTo(LolMatch::class);
     }
 
-    public function events(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function events(): HasMany
     {
-        return $this->hasMany(SummonerMatchFrameEvent::class);
+        return $this->hasMany(SummonerMatchFrameEvent::class, 'summoner_match_frame_id');
     }
 
-    public function item_events(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function item_events(): HasMany
     {
-        return $this->hasMany(SummonerMatchFrameEvent::class)->whereIn('type', FrameEventType::itemTypes());
+        return $this->events()->whereIn('summoner_match_frame_events.type', [
+            FrameEventType::ITEM_PURCHASED,
+            FrameEventType::ITEM_SOLD,
+        ]);
     }
 
-    public function skill_level_up_events(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function level_up_skill_events(): HasMany
     {
-        return $this->hasMany(SummonerMatchFrameEvent::class)->where('type', FrameEventType::SKILL_LEVEL_UP);
+
+        return $this->events()->where('summoner_match_frame_events.type', FrameEventType::SKILL_LEVEL_UP);
     }
 
-    public function level_up_events(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function kills_events(): HasMany
     {
-        return $this->hasMany(SummonerMatchFrameEvent::class)->where('type', FrameEventType::LEVEL_UP);
+        return $this->events()->where('summoner_match_frame_events.type', FrameEventType::CHAMPION_KILL);
     }
 
-    public function kill_events(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function death_events(): HasMany
     {
-        return $this->hasMany(SummonerMatchFrameEvent::class)->where('type', FrameEventType::CHAMPION_KILL);
-    }
-
-    public function victim_events(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(SummonerMatchFrameEvent::class, 'summoner_match_frame_victim_id')->where('type', FrameEventType::CHAMPION_KILL);
+        return $this->hasMany(SummonerMatchFrameEvent::class, 'summoner_match_frame_victim_id', 'id')
+            ->where('summoner_match_frame_events.type', FrameEventType::CHAMPION_KILL);
     }
 }

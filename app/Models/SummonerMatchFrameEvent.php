@@ -15,9 +15,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $current_timestamp
  * @property FrameEventType $type
  * @property int|null $item_id
- * @property int|null $before_id
- * @property int|null $after_id
- * @property int|null $gold_gain
  * @property int|null $summoner_match_victim_id
  * @property int|null $summoner_match_frame_victim_id
  * @property int|null $position_x
@@ -26,8 +23,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property LevelUpType|null $level_up_type
  * @property int|null $level
  * @property-read \App\Models\Item|null $item
- * @property-read \App\Models\Item|null $item_after
- * @property-read \App\Models\Item|null $item_before
  * @property-read \App\Models\SummonerMatch|null $summoner_match
  * @property-read \App\Models\SummonerMatchFrame|null $summoner_match_frame
  * @property-read \App\Models\SummonerMatchFrame|null $summoner_match_frame_victim
@@ -36,10 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent query()
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent whereAfterId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent whereBeforeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent whereCurrentTimestamp($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent whereGoldGain($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent whereItemId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent whereLevel($value)
@@ -76,9 +68,6 @@ class SummonerMatchFrameEvent extends Model
         'level',
 
         'item_id',
-        'before_id',
-        'after_id',
-        'gold_gain',
     ];
 
     protected $casts = [
@@ -109,16 +98,6 @@ class SummonerMatchFrameEvent extends Model
 
     public function item(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Item::class);
-    }
-
-    public function item_after(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(Item::class, 'after_id');
-    }
-
-    public function item_before(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(Item::class, 'before_id');
+        return $this->belongsTo(Item::class, 'item_id');
     }
 }
