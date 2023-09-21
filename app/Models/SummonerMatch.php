@@ -38,7 +38,6 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property int $gold_earned
  * @property int $total_damage_taken
  * @property int|null $wards_placed
- * @property \App\Models\SummonerMatchPerk|null $perks
  * @property int $summoner_spell1_id
  * @property int $summoner_spell2_id
  * @property-read \App\Models\Champion|null $champion
@@ -47,6 +46,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property-read \App\Models\LolMatch|null $match
  * @property-read Collection<int, SummonerMatch> $otherParticipants
  * @property-read int|null $other_participants_count
+ * @property-read \App\Models\SummonerMatchPerk|null $perks
  * @property-read \App\Models\Summoner|null $summoner
  * @property-read \App\Models\SummonerSpell|null $summonerSpell1
  * @property-read \App\Models\SummonerSpell|null $summonerSpell2
@@ -71,7 +71,6 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @method static Builder|SummonerMatch whereMatchId($value)
  * @method static Builder|SummonerMatch whereMinionsKilled($value)
  * @method static Builder|SummonerMatch wherePentaKills($value)
- * @method static Builder|SummonerMatch wherePerks($value)
  * @method static Builder|SummonerMatch whereQuadraKills($value)
  * @method static Builder|SummonerMatch whereSummonerId($value)
  * @method static Builder|SummonerMatch whereSummonerSpell1Id($value)
@@ -123,13 +122,13 @@ final class SummonerMatch extends Model
     public function scopeLoadAll(Builder $query)
     {
         $query->select([
-            "summoner_spell1_id",
-            "summoner_spell2_id",
-            "id",
-            "won",
-            "match_id",
-            "summoner_id",
-            "champion_id",
+            'summoner_spell1_id',
+            'summoner_spell2_id',
+            'id',
+            'won',
+            'match_id',
+            'summoner_id',
+            'champion_id',
         ]);
         $query->with([
             'match:id,match_id,match_duration,match_end,mode_id,map_id,queue_id',
@@ -151,20 +150,20 @@ final class SummonerMatch extends Model
     public function scopeLoadPartial(Builder $query)
     {
         $query->select([
-            "champ_level",
-            "summoner_spell1_id",
-            "summoner_spell2_id",
-            "id",
-            "won",
-            "match_id",
-            "summoner_id",
-            "champion_id",
-            "kda",
-            "kills",
-            "deaths",
-            "assists",
-            "minions_killed",
-            "wards_placed"
+            'champ_level',
+            'summoner_spell1_id',
+            'summoner_spell2_id',
+            'id',
+            'won',
+            'match_id',
+            'summoner_id',
+            'champion_id',
+            'kda',
+            'kills',
+            'deaths',
+            'assists',
+            'minions_killed',
+            'wards_placed',
         ]);
         $query->with([
             'summonerSpell1:id,img_url',

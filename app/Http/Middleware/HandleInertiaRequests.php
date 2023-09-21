@@ -113,8 +113,8 @@ class HandleInertiaRequests extends Middleware
                 ]);
             },
             'filters' => $new_filters,
-            'champion_options' => function (){
-                return  Champion::select(['name', 'id'])->orderBy('name')
+            'champion_options' => function () {
+                return Champion::select(['name', 'id'])->orderBy('name')
                     ->get()
                     ->map(fn (Champion $champion) => [
                         'value' => $champion->id,
