@@ -2,7 +2,7 @@
 
 
 import moment from 'moment';
-import {urlChampionHelper, urlItemHelper} from "@/helpers/url_helpers";
+import {urlChampionHelper, urlItemHelper, urlPerkHelper, urlSummonerSpellHelper} from "@/helpers/url_helpers";
 import MatchesRowPart from "@/Components/Summoner/MatchesRowPart.vue";
 import {SummonerMatchInterface} from "@/types/summoner_match";
 import {getSummoner} from "@/helpers/root_props_helpers";
@@ -60,11 +60,32 @@ const toggleIsOpen = () => {
     </div>
     <div class="ml-4 w-64 flex flex-col justify-center my-2">
       <div class="w-full flex">
-        <div class="w-16 h-16">
+        <div class="w-16 h-16 relative">
           <VImg
               :src="urlChampionHelper(summoner_match.champion?.img_url)"
-              class="w-16 h-16"/>
+              class="w-16 h-16 rounded-full"/>
+            <div class="absolute -bottom-1 right-0 bg-gray-1 rounded-full px-0.5">
+                {{summoner_match.champ_level}}
+            </div>
         </div>
+          <div class="flex flex-col ml-1">
+              <VImg
+                  :src="urlSummonerSpellHelper(summoner_match.summoner_spell1.img_url)"
+                  class="w-7 h-7 rounded"/>
+              <VImg
+                  :src="urlSummonerSpellHelper(summoner_match.summoner_spell2.img_url)"
+                  class="w-7 h-7 rounded mt-1"/>
+
+
+          </div>
+          <div class="flex flex-col ml-1">
+              <VImg
+                  :src="urlPerkHelper(summoner_match.perks.primary_style1.img_url)"
+                  class="w-7 h-7 bg-black rounded-full"/>
+              <VImg
+                  :src="urlPerkHelper(summoner_match.perks.sub_style.img_url)"
+                  class="w-7 h-7 mt-1 "/>
+          </div>
         <div class="ml-4 text-xl flex justify-center items-center flex-col">
           <div class="flex">
             <div class="text-gray-5 font-bold">{{ summoner_match.kills }}</div>
@@ -154,7 +175,7 @@ const toggleIsOpen = () => {
       <v-progress-circular
           :size="70"
           :width="7"
-          color="primary"
+          color="black"
           indeterminate
       ></v-progress-circular>
 

@@ -31,6 +31,7 @@ const summoner = getSummoner();
     >
       <v-tab value="overview">Overview</v-tab>
       <v-tab value="team_analysis">Team analysis</v-tab>
+        <v-tab value="build" >Build</v-tab>
     </v-tabs>
     <v-window v-model="tab">
       <v-window-item value="overview">
@@ -66,12 +67,14 @@ const summoner = getSummoner();
           <CircularStat description="Champion Kill" :split_number="false" :participants="summoner_match.match.participants"  key_stat="kills"/>
           <CircularStat description="Gold Earned" :split_number="true" :participants="summoner_match.match.participants"  key_stat="gold_earned"/>
           <CircularStat description="Damage Dealt to Champions" :split_number="true" :participants="summoner_match.match.participants"  key_stat="total_damage_dealt_to_champions"/>
-          <CircularStat description="Wards Placed" :split_number="false" :participants="summoner_match.match.participants"  key_stat="kills"/>
+          <CircularStat description="Wards Placed" :split_number="false" :participants="summoner_match.match.participants"  key_stat="wards_placed"/>
           <CircularStat description="Damage Taken" :split_number="true" :participants="summoner_match.match.participants"  key_stat="total_damage_taken"/>
           <CircularStat description="CS" :split_number="false" :participants="summoner_match.match.participants"  key_stat="minions_killed"/>
         </div>
-
       </v-window-item>
+        <v-window-item value="build">
+
+        </v-window-item>
     </v-window>
 
   </div>

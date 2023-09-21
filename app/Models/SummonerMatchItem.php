@@ -9,27 +9,27 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 /**
- * App\Models\ItemSummonerMatch
+ * App\Models\SummonerMatchItem
  *
  * @property int $item_id
  * @property int $summoner_match_id
  * @property int $position
- * @property-read Item|null $item
- * @property-read SummonerMatch|null $summonerMatch
+ * @property-read \App\Models\Item|null $item
+ * @property-read \App\Models\SummonerMatch|null $summonerMatch
  *
- * @method static Builder|ItemSummonerMatch newModelQuery()
- * @method static Builder|ItemSummonerMatch newQuery()
- * @method static Builder|ItemSummonerMatch query()
- * @method static Builder|ItemSummonerMatch whereItemId($value)
- * @method static Builder|ItemSummonerMatch wherePosition($value)
- * @method static Builder|ItemSummonerMatch whereSummonerMatchId($value)
+ * @method static Builder|SummonerMatchItem newModelQuery()
+ * @method static Builder|SummonerMatchItem newQuery()
+ * @method static Builder|SummonerMatchItem query()
+ * @method static Builder|SummonerMatchItem whereItemId($value)
+ * @method static Builder|SummonerMatchItem wherePosition($value)
+ * @method static Builder|SummonerMatchItem whereSummonerMatchId($value)
  *
  * @mixin Eloquent
  */
 #[TypeScript]
-final class ItemSummonerMatch extends Model
+final class SummonerMatchItem extends Model
 {
-    protected $table = 'item_summoner_matchs';
+    protected $table = 'summoner_match_items';
 
     public $timestamps = false;
 

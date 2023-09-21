@@ -37,13 +37,19 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property int $total_damage_dealt_to_champions
  * @property int $gold_earned
  * @property int $total_damage_taken
- * @property-read Champion|null $champion
- * @property-read Collection<int, Item> $items
+ * @property int|null $wards_placed
+ * @property \App\Models\SummonerMatchPerk|null $perks
+ * @property int $summoner_spell1_id
+ * @property int $summoner_spell2_id
+ * @property-read \App\Models\Champion|null $champion
+ * @property-read Collection<int, \App\Models\Item> $items
  * @property-read int|null $items_count
- * @property-read LolMatch|null $match
+ * @property-read \App\Models\LolMatch|null $match
  * @property-read Collection<int, SummonerMatch> $otherParticipants
  * @property-read int|null $other_participants_count
- * @property-read Summoner|null $summoner
+ * @property-read \App\Models\Summoner|null $summoner
+ * @property-read \App\Models\SummonerSpell|null $summonerSpell1
+ * @property-read \App\Models\SummonerSpell|null $summonerSpell2
  *
  * @method static Builder|SummonerMatch championsCalc()
  * @method static Builder|SummonerMatch loadAll()
@@ -65,11 +71,15 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @method static Builder|SummonerMatch whereMatchId($value)
  * @method static Builder|SummonerMatch whereMinionsKilled($value)
  * @method static Builder|SummonerMatch wherePentaKills($value)
+ * @method static Builder|SummonerMatch wherePerks($value)
  * @method static Builder|SummonerMatch whereQuadraKills($value)
  * @method static Builder|SummonerMatch whereSummonerId($value)
+ * @method static Builder|SummonerMatch whereSummonerSpell1Id($value)
+ * @method static Builder|SummonerMatch whereSummonerSpell2Id($value)
  * @method static Builder|SummonerMatch whereTotalDamageDealtToChampions($value)
  * @method static Builder|SummonerMatch whereTotalDamageTaken($value)
  * @method static Builder|SummonerMatch whereTripleKills($value)
+ * @method static Builder|SummonerMatch whereWardsPlaced($value)
  * @method static Builder|SummonerMatch whereWon($value)
  *
  * @mixin Eloquent
@@ -98,9 +108,12 @@ final class SummonerMatch extends Model
         'triple_kills',
         'quadra_kills',
         'penta_kills',
+        'wards_placed',
         'total_damage_dealt_to_champions',
         'gold_earned',
         'total_damage_taken',
+        'summoner_spell1_id',
+        'summoner_spell2_id',
     ];
 
     public $casts = [
@@ -109,21 +122,56 @@ final class SummonerMatch extends Model
 
     public function scopeLoadAll(Builder $query)
     {
+        $query->select([
+            "summoner_spell1_id",
+            "summoner_spell2_id",
+            "id",
+            "won",
+            "match_id",
+            "summoner_id",
+            "champion_id",
+        ]);
         $query->with([
             'match:id,match_id,match_duration,match_end,mode_id,map_id,queue_id',
             'match.queue:id,description',
             'match.map:id,description',
             'match.mode:id,description',
-            'match.participants:id,summoner_id,champion_id,match_id,won,kda,kills,deaths,assists,minions_killed,total_damage_dealt_to_champions,total_damage_taken,gold_earned',
+            'match.participants:id,summoner_id,champion_id,match_id,won,kda,kills,deaths,assists,minions_killed,total_damage_dealt_to_champions,total_damage_taken,gold_earned,wards_placed,summoner_spell1_id,summoner_spell2_id,champ_level',
             'match.participants.summoner:id,name',
             'match.participants.champion:id,name,img_url',
             'match.participants.items:id,img_url',
+            'match.participants.summonerSpell1:id,img_url',
+            'match.participants.summonerSpell2:id,img_url',
+            'match.participants.perks:summoner_match_id,primary_style1_id,sub_style_id',
+            'match.participants.perks.primaryStyle1:id,img_url',
+            'match.participants.perks.subStyle:id,img_url',
         ]);
     }
 
     public function scopeLoadPartial(Builder $query)
     {
+        $query->select([
+            "champ_level",
+            "summoner_spell1_id",
+            "summoner_spell2_id",
+            "id",
+            "won",
+            "match_id",
+            "summoner_id",
+            "champion_id",
+            "kda",
+            "kills",
+            "deaths",
+            "assists",
+            "minions_killed",
+            "wards_placed"
+        ]);
         $query->with([
+            'summonerSpell1:id,img_url',
+            'summonerSpell2:id,img_url',
+            'perks:summoner_match_id,primary_style1_id,sub_style_id',
+            'perks.primaryStyle1:id,img_url',
+            'perks.subStyle:id,img_url',
             'match:id,match_id,match_duration,match_end,mode_id,map_id,queue_id',
             'match.queue:id,description',
             'match.map:id,description',
@@ -286,7 +334,7 @@ final class SummonerMatch extends Model
     #[TypeScript]
     public function items(): HasManyThrough
     {
-        return $this->hasManyThrough(Item::class, ItemSummonerMatch::class, 'summoner_match_id', 'id', 'id', 'item_id')->orderBy('position');
+        return $this->hasManyThrough(Item::class, SummonerMatchItem::class, 'summoner_match_id', 'id', 'id', 'item_id')->orderBy('position');
     }
 
     #[TypeScript]
@@ -311,5 +359,20 @@ final class SummonerMatch extends Model
     public function champion(): HasOne
     {
         return $this->hasOne(Champion::class, 'id', 'champion_id');
+    }
+
+    public function perks(): HasOne
+    {
+        return $this->hasOne(SummonerMatchPerk::class, 'summoner_match_id', 'id');
+    }
+
+    public function summonerSpell1(): HasOne
+    {
+        return $this->hasOne(SummonerSpell::class, 'id', 'summoner_spell1_id');
+    }
+
+    public function summonerSpell2(): HasOne
+    {
+        return $this->hasOne(SummonerSpell::class, 'id', 'summoner_spell2_id');
     }
 }

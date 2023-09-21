@@ -2,8 +2,8 @@
 
 import {SummonerMatchInterface} from "@/types/summoner_match";
 import {getSummoner} from "@/helpers/root_props_helpers";
-import {urlChampionHelper, urlItemHelper} from "@/helpers/url_helpers";
-import {navigateToEncounter} from "@/helpers/router_helpers";
+import {urlChampionHelper, urlItemHelper, urlPerkHelper, urlSummonerSpellHelper} from "@/helpers/url_helpers";
+import {navigateToEncounter, navigateToSummoner} from "@/helpers/router_helpers";
 import {SummonerEncounterCountInterface} from "@/types/summoner_encounter_count";
 
 
@@ -58,26 +58,40 @@ for (let participant of props.participants) {
                 v-if="participant.won === won">
                 <td class="w-64  px-3">
                     <div class="flex items-center justify-start  pl-2 space-x-2">
-                        <div class="w-fit">
+                        <div class="w-12 h-12 relative">
                             <VImg
-                                :alt="participant.champion?.name ?? ''"
-                                :src="urlChampionHelper( participant.champion?.img_url)"
+                                :src="urlChampionHelper(participant.champion?.img_url)"
                                 class="w-12 h-12 rounded-full"/>
+                            <div class="absolute -bottom-1 right-0 bg-gray-1 rounded-full px-0.5">
+                                {{participant.champ_level}}
+                            </div>
                         </div>
-                        <div>
-                            <!--                                summoner spells-->
+                        <div class="flex flex-col ml-1">
+                            <VImg
+                                :src="urlSummonerSpellHelper(participant.summoner_spell1.img_url)"
+                                class="w-6 h-6 rounded"/>
+                            <VImg
+                                :src="urlSummonerSpellHelper(participant.summoner_spell2.img_url)"
+                                class="w-6 h-6 rounded mt-1"/>
+
+
+                        </div>
+                        <div class="flex flex-col ml-1">
+                            <VImg
+                                :src="urlPerkHelper(participant.perks.primary_style1.img_url)"
+                                class="w-6 h-6 bg-black rounded-full"/>
+                            <VImg
+                                :src="urlPerkHelper(participant.perks.sub_style.img_url)"
+                                class="w-6 h-6 mt-1 "/>
                         </div>
                         <div class="flex flex-col font-medium">
-                            <div>{{ participant?.summoner?.name }}</div>
-                            <div>
-                                {{ participant?.summoner?.summoner_level }}
-                            </div>
+                            <div class="cursor-pointer" @click="navigateToSummoner(participant.summoner_id)">{{ participant?.summoner?.name }}</div>
                         </div>
                     </div>
                 </td>
-                <td>
+                <td class="text-center">
                     <template v-if="participant.summoner_id === summoner.id">
-                        <div class="w-3 h-3 flex items-center justify-center">
+                        <div class="flex items-center justify-center">
                             <VIcon icon="fa fa-user-o" class="w-3 h-3"/>
                         </div>
 

@@ -5,13 +5,14 @@ namespace App\Traits;
 use App\Events\SummonerUpdated;
 use App\Models\Champion;
 use App\Models\Item;
-use App\Models\ItemSummonerMatch;
 use App\Models\LolMatch;
 use App\Models\Map;
 use App\Models\Mode;
 use App\Models\Queue;
 use App\Models\Summoner;
 use App\Models\SummonerMatch;
+use App\Models\SummonerMatchItem;
+use App\Models\SummonerMatchPerk;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
@@ -176,7 +177,8 @@ trait SummonerApi
         }
         foreach ($matches as $match) {
             $summoner_match_ids = SummonerMatch::whereMatchId($match->id)->pluck('id');
-            ItemSummonerMatch::whereIn('summoner_match_id', $summoner_match_ids)->delete();
+            SummonerMatchPerk::whereIn('summoner_match_id', $summoner_match_ids)->delete();
+            SummonerMatchItem::whereIn('summoner_match_id', $summoner_match_ids)->delete();
             SummonerMatch::whereMatchId($match->id)->delete();
             $api_match = $this->getMatch($match->match_id);
             if (! $api_match || ! $this->updateMatchFromArray($match, $api_match)) {
@@ -215,6 +217,25 @@ trait SummonerApi
                 ]);
             }
 
+            $perk_primary_selections = collect($participant['perks']['styles'][0]['selections'])->map(function ($perk) {
+                return $perk['perk'];
+            })->toArray();
+            $perk_sub_selections = collect($participant['perks']['styles'][1]['selections'])->map(function ($perk) {
+                return $perk['perk'];
+            })->toArray();
+            $perks = [
+                'primary_style_id' => $participant['perks']['styles'][0]['style'],
+                'primary_style1_id' => $perk_primary_selections[0],
+                'primary_style2_id' => $perk_primary_selections[1],
+                'primary_style3_id' => $perk_primary_selections[2],
+                'sub_style_id' => $participant['perks']['styles'][1]['style'],
+                'sub_style1_id' => $perk_sub_selections[0],
+                'sub_style2_id' => $perk_sub_selections[1],
+                'offense_id' => $participant['perks']['statPerks']['offense'],
+                'flex_id' => $participant['perks']['statPerks']['flex'],
+                'defense_id' => $participant['perks']['statPerks']['defense'],
+            ];
+
             $champion = Champion::find($champion_id);
             $save_data = [
                 'match_id' => $match->id,
@@ -234,6 +255,10 @@ trait SummonerApi
                 'total_damage_dealt_to_champions' => $participant['totalDamageDealtToChampions'],
                 'gold_earned' => $participant['goldEarned'],
                 'total_damage_taken' => $participant['totalDamageTaken'],
+                'wards_placed' => $participant['wardsPlaced'],
+                'summoner_spell1_id' => $participant['summoner1Id'],
+                'summoner_spell2_id' => $participant['summoner2Id'],
+                'perks' => $perks,
             ];
 
             if (array_key_exists('challenges', $participant)) {
@@ -269,17 +294,20 @@ trait SummonerApi
             $matches_to_add[] = [
                 $save_data,
                 $save_items,
+                $perks,
             ];
 
         }
-        foreach ($matches_to_add as [$summoner_match, $items]) {
+        foreach ($matches_to_add as [$summoner_match, $items, $perks]) {
             $summoner_match = SummonerMatch::create($summoner_match);
-
             foreach ($items as $item) {
-                ItemSummonerMatch::create(array_merge($item, [
+                SummonerMatchItem::create(array_merge($item, [
                     'summoner_match_id' => $summoner_match->id,
                 ]));
             }
+            SummonerMatchPerk::create(array_merge($perks, [
+                'summoner_match_id' => $summoner_match->id,
+            ]));
         }
 
         $match->match_creation = Carbon::createFromTimestampMs($api_match['info']['gameCreation']);

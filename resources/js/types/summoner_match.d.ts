@@ -1,5 +1,7 @@
 import {PaginationLinkInterface} from "@/types/pagination_link";
 import {LolMatchInterface} from "@/types/lol-match";
+import {SummonerSpellInterface} from "@/types/summoner_spell";
+import {SummonerMatchPerksInterface} from "@/types/summoner_match_perks";
 
 type SummonerMatchInterface = {
     id: number;
@@ -22,6 +24,13 @@ type SummonerMatchInterface = {
     total_damage_dealt_to_champions: number;
     gold_earned: number;
     total_damage_taken: number;
+    wards_placed: number;
+    summoner_spell1_id: number;
+    summoner_spell2_id: number;
+
+    summoner_spell1: SummonerSpellInterface;
+    summoner_spell2: SummonerSpellInterface;
+    perks:SummonerMatchPerksInterface;
     match: LolMatchInterface;
     champion: ChampionInterface;
     summoner: SummonerInterface;

@@ -74,32 +74,22 @@ class HandleInertiaRequests extends Middleware
         $queue_options = [];
         $summoner = null;
         if ($summoner_id) {
-            $summoner = Summoner::find($summoner_id);
-            $champion_options = Champion::orderBy('name')
-                ->get()
-                ->map(fn (Champion $champion) => [
-                    'value' => $champion->id,
-                    'label' => $champion->name,
-                ])->toArray();
+            $summoner = Summoner::select(['id', 'name', 'profile_icon_id'])->find($summoner_id);
             $match_ids = $summoner
                 ->summonerMatches()
                 ->pluck('match_id');
             $queue_ids = LolMatch::whereIn('id', $match_ids)
+                ->whereNotNull('queue_id')
                 ->groupBy('queue_id')
-                ->pluck('queue_id')
-                ->filter(fn ($id) => $id !== null);
+                ->pluck('queue_id');
             $queue_options = Queue::whereIn('id', $queue_ids)
                 ->orderBy('description')
+                ->select(['id', 'description'])
                 ->get()
                 ->map(fn ($queue) => [
                     'value' => $queue->id,
                     'label' => $queue->description,
                 ])->toArray();
-            $summoner = $summoner->only([
-                'id',
-                'name',
-                'profile_icon_id',
-            ]);
         }
 
         $route_name = $request->route()->getName();
@@ -123,7 +113,14 @@ class HandleInertiaRequests extends Middleware
                 ]);
             },
             'filters' => $new_filters,
-            'champion_options' => fn () => $champion_options,
+            'champion_options' => function (){
+                return  Champion::select(['name', 'id'])->orderBy('name')
+                    ->get()
+                    ->map(fn (Champion $champion) => [
+                        'value' => $champion->id,
+                        'label' => $champion->name,
+                    ])->toArray();
+            },
             'queue_options' => $queue_options,
             'summoner' => $summoner,
             'version' => fn () => Version::orderByDesc('version')->first()->version,

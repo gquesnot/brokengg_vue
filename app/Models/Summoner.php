@@ -27,9 +27,9 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property bool $auto_update
  * @property string|null $created_at
  * @property string|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, LolMatch> $matches
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LolMatch> $matches
  * @property-read int|null $matches_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, SummonerMatch> $summonerMatches
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatch> $summonerMatches
  * @property-read int|null $summoner_matches_count
  *
  * @method static Builder|Summoner newModelQuery()
