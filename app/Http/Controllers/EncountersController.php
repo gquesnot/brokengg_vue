@@ -13,8 +13,8 @@ class EncountersController extends Controller
     {
         [$filters, $filters_cpy] = FilterHelper::parseFilters($request);
         $search = $request->input('search');
-        [$query, $encounter_query] = $summoner->getSummonerMatchQuery($filters);
-        $encounters_query = $summoner->getEncountersCountQuery($query->pluck('match_id'))
+        [$query, $encounter_query] = $summoner->get_summoner_match_query($filters);
+        $encounters_query = $summoner->get_encounters_count_query($query->pluck('match_id'))
             ->when($search != null && $search != '', function ($query) use ($search) {
                 $query->where('summoners.name', 'like', '%'.$search.'%');
             });

@@ -211,7 +211,7 @@ const switchTab = (label: string) => {
                     </div>
                     <div class="w-1/2 ml-4">
                         <div>
-                            <label for="start_time">Start Time</label>
+                            <label for="start_time">Start Date</label>
                             <Datepicker
                                 v-model="form.filters.start_date"
                                 id="start_time"
@@ -223,7 +223,7 @@ const switchTab = (label: string) => {
                             />
                         </div>
                         <div>
-                            <label for="end_time">End Time</label>
+                            <label for="end_time">End Date</label>
                             <Datepicker
                                 v-model="form.filters.end_date"
                                 id="end_time"

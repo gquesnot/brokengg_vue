@@ -5,10 +5,11 @@ import {getSummoner} from "@/helpers/root_props_helpers";
 import MatchTable from "@/Components/Summoner/MatchTable.vue";
 import {getDurationMinutes} from "@/helpers/duration_helpers";
 import {SummonerEncounterCountInterface} from "@/types/summoner_encounter_count";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import LinearStat from "@/Components/LinearStat.vue";
 import CircularStat from "@/Components/CircularStat.vue";
-
+import MatchDetailBuild from "@/Components/Summoner/MatchDetailBuild.vue";
+import axios from "axios";
 
 const props = defineProps<{
   summoner_match: SummonerMatchInterface,
@@ -19,6 +20,20 @@ const props = defineProps<{
 const tab = ref('Overview')
 
 const summoner = getSummoner();
+const match_detail  = ref<any | null>(null);
+
+watch(tab, function (value){
+    if (value === 'build' && match_detail.value === null){
+        axios.get(route('summoner.match.detail', {
+          summoner_match: props.summoner_match.id,
+          summoner: getSummoner().id
+        }))
+            .then(response => {
+                match_detail.value = response.data.match_detail
+            })
+            .catch(error => console.log('error', error))
+    }
+})
 
 
 </script>
@@ -73,7 +88,17 @@ const summoner = getSummoner();
         </div>
       </v-window-item>
         <v-window-item value="build">
-
+            <MatchDetailBuild v-if="match_detail !== null" :summoner_match="summoner_match"  :match_detail="match_detail"/>
+            <template v-else>
+                <div class="w-full h-32 flex justify-center items-center bg-gray-1">
+                    <v-progress-circular
+                            :size="70"
+                            :width="7"
+                            color="black"
+                            indeterminate
+                    ></v-progress-circular>
+                </div>
+            </template>
         </v-window-item>
     </v-window>
 

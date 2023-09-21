@@ -76,25 +76,25 @@ class Summoner extends Model
         'auto_update' => 'boolean',
     ];
 
-    public function matches()
+    public function matches(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
     {
         return $this->hasManyThrough(LolMatch::class, SummonerMatch::class, 'summoner_id', 'id', 'id', 'match_id');
     }
 
-    public function summonerMatches()
+    public function summoner_matches(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(SummonerMatch::class, 'summoner_id', 'id');
     }
 
-    public function getEncountersCountForSummoner(Summoner $summoner)
+    public function get_encounters_count_for_summoner(Summoner $summoner)
     {
 
-        $match_ids = $this->summonerMatches()->pluck('match_id');
+        $match_ids = $this->summoner_matches()->pluck('match_id');
 
-        return $summoner->getEncountersCountQuery($match_ids)->where('summoner_matchs.summoner_id', $summoner->id)->first();
+        return $summoner->get_encounters_count_query($match_ids)->where('summoner_matchs.summoner_id', $summoner->id)->first();
     }
 
-    public function getSummonerMatchQuery($filters, $limit = null)
+    public function get_summoner_match_query($filters, $limit = null): array
     {
         $query = SummonerMatch::whereSummonerId($this->id);
         if ($limit != null) {
@@ -128,7 +128,7 @@ class Summoner extends Model
 
     }
 
-    public function getEncountersCount($match_ids): array
+    public function get_encounters_count($match_ids): array
     {
 
         return SummonerMatch::where('summoner_id', '!=', $this->id)
@@ -141,7 +141,7 @@ class Summoner extends Model
 
     }
 
-    public function getEncountersCountQuery($match_ids)
+    public function get_encounters_count_query($match_ids): Builder|SummonerMatch|\Illuminate\Database\Query\Builder
     {
         return SummonerMatch::where('summoner_matchs.summoner_id', '!=', $this->id)
             ->join('summoners', 'summoners.id', '=', 'summoner_matchs.summoner_id')
@@ -165,7 +165,7 @@ class Summoner extends Model
         }])->first();
     }
 
-    public function getLiveGameFromLobbySearch(string $lobby_search, Collection $encounter_counts)
+    public function get_live_game_from_lobby_search(string $lobby_search, Collection $encounter_counts): array
     {
         $summoner_names = explode("\n", $lobby_search);
         $live_game = ['participants' => [], 'is_live' => false];
@@ -185,10 +185,10 @@ class Summoner extends Model
         return $live_game;
     }
 
-    public function getSummonerStats(Collection $match_ids)
+    public function get_summoner_stats(Collection $match_ids): mixed
     {
 
-        $query = $this->summonerMatches()->whereIn('match_id', $match_ids);
+        $query = $this->summoner_matches()->whereIn('match_id', $match_ids);
         $query->select([
             DB::raw('avg(kills) as avg_kills'),
             DB::raw('avg(deaths) as avg_deaths'),

@@ -43,9 +43,4 @@ final class Item extends Model
     public $casts = [
         'tags' => 'array',
     ];
-
-    public static function url(string $version, string $url): string
-    {
-        return "https://ddragon.leagueoflegends.com/cdn/{$version}/img/item/{$url}";
-    }
 }

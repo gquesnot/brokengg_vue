@@ -76,7 +76,7 @@ class HandleInertiaRequests extends Middleware
         if ($summoner_id) {
             $summoner = Summoner::select(['id', 'name', 'profile_icon_id'])->find($summoner_id);
             $match_ids = $summoner
-                ->summonerMatches()
+                ->summoner_matches()
                 ->pluck('match_id');
             $queue_ids = LolMatch::whereIn('id', $match_ids)
                 ->whereNotNull('queue_id')

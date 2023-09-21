@@ -13,7 +13,7 @@ class EncounterController extends Controller
     public function index(Request $request, Summoner $summoner, Summoner $encounter)
     {
         [$filters, $filters_cpy] = FilterHelper::parseFilters($request);
-        [$query, $encounter_query] = $summoner->getSummonerMatchQuery($filters);
+        [$query, $encounter_query] = $summoner->get_summoner_match_query($filters);
         $filtered_match_ids = $query->pluck('match_id')->toArray();
 
         return Inertia::render('Summoner/Encounter', [
@@ -29,8 +29,8 @@ class EncounterController extends Controller
 
         return [
             'matches' => $this->getMatches($summoner, $encounter, $match_ids),
-            'summoner_stats' => $summoner->getSummonerStats($match_ids),
-            'encounter_stats' => $encounter->getSummonerStats($match_ids),
+            'summoner_stats' => $summoner->get_summoner_stats($match_ids),
+            'encounter_stats' => $encounter->get_summoner_stats($match_ids),
         ];
     }
 
@@ -38,7 +38,7 @@ class EncounterController extends Controller
     {
         $operator = $with ? '=' : '!=';
 
-        return $summoner->summonerMatches()
+        return $summoner->summoner_matches()
             ->whereIn('summoner_matchs.match_id', $filtered_match_ids)
             ->join('summoner_matchs as e', function ($join) use ($encounter) {
                 $join->on('e.match_id', '=', 'summoner_matchs.match_id')

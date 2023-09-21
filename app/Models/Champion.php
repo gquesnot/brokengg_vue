@@ -43,9 +43,4 @@ final class Champion extends Model
     public $casts = [
         'stats' => 'array',
     ];
-
-    public static function url(string $version, string $url)
-    {
-        return "https://ddragon.leagueoflegends.com/cdn/{$version}/img/champion/{$url}";
-    }
 }

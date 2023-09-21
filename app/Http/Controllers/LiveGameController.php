@@ -28,8 +28,8 @@ class LiveGameController extends Controller
                 $live_game['queue'] = Queue::find(intval($live_game['gameQueueConfigId']));
                 $seconds = Carbon::createFromTimestamp($live_game['gameStartTime'] / 1000)->diffInSeconds(now());
                 $live_game['duration'] = gmdate('H:i:s', $seconds);
-                $match_ids = $summoner->summonerMatches()->pluck('match_id');
-                $encounter_counts = $summoner->getEncountersCountQuery($match_ids)->pluck('encounter_count', 'summoner_id');
+                $match_ids = $summoner->summoner_matches()->pluck('match_id');
+                $encounter_counts = $summoner->get_encounters_count_query($match_ids)->pluck('encounter_count', 'summoner_id');
                 foreach ($live_game['participants'] as $key => $participant) {
                     $participant_summoner = Summoner::updateOrCreateSummonerByName($participant['summonerName']);
                     $live_game['participants'][$key]['summoner'] = $participant_summoner;
@@ -38,9 +38,9 @@ class LiveGameController extends Controller
                 }
             }
         } else {
-            $match_ids = $summoner->summonerMatches()->pluck('match_id');
-            $encounter_counts = $summoner->getEncountersCountQuery($match_ids)->pluck('encounter_count', 'summoner_id');
-            $fake_live_game = $summoner->getLiveGameFromLobbySearch($lobby_search, $encounter_counts);
+            $match_ids = $summoner->summoner_matches()->pluck('match_id');
+            $encounter_counts = $summoner->get_encounters_count_query($match_ids)->pluck('encounter_count', 'summoner_id');
+            $fake_live_game = $summoner->get_live_game_from_lobby_search($lobby_search, $encounter_counts);
         }
 
         return Inertia::render('Summoner/LiveGame', [

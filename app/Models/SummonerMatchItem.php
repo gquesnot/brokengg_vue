@@ -15,7 +15,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property int $summoner_match_id
  * @property int $position
  * @property-read \App\Models\Item|null $item
- * @property-read \App\Models\SummonerMatch|null $summonerMatch
+ * @property-read \App\Models\SummonerMatch|null $summoner_match
  *
  * @method static Builder|SummonerMatchItem newModelQuery()
  * @method static Builder|SummonerMatchItem newQuery()
@@ -44,7 +44,7 @@ final class SummonerMatchItem extends Model
         return $this->belongsTo(Item::class);
     }
 
-    public function summonerMatch(): BelongsTo
+    public function summoner_match(): BelongsTo
     {
         return $this->belongsTo(SummonerMatch::class);
     }

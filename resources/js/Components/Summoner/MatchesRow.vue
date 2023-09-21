@@ -37,7 +37,10 @@ const loaded_summoner_match = ref<SummonerMatchInterface | null>(null);
 const toggleIsOpen = () => {
   is_open.value = !is_open.value
   if (is_open.value && !loaded_summoner_match.value) {
-    axios.get(route('get-summoner-match-loaded', {summoner_match: props.summoner_match.id}))
+    axios.get(route('summoner.match.loaded', {
+      summoner_match: props.summoner_match.id,
+      summoner: getSummoner().id
+    }))
         .then(response => {
           loaded_summoner_match.value = response.data.summoner_match
         })
@@ -107,7 +110,7 @@ const toggleIsOpen = () => {
         </div>
       </div>
     </div>
-    <div class="w-64 flex flex-col justify-center space-y-1 my-2">
+    <div class="w-48 flex flex-col justify-center space-y-1 my-2 ml-6">
       <div>P/Kill {{ (summoner_match?.kill_participation * 100).toFixed(0) }}%</div>
       <div>Control Ward nc</div>
       <div>CS {{ summoner_match.minions_killed }}
@@ -178,8 +181,6 @@ const toggleIsOpen = () => {
           color="black"
           indeterminate
       ></v-progress-circular>
-
-
     </div>
   </template>
 </template>

@@ -27,7 +27,8 @@ Route::get('/summoner/{summoner}/champions', [\App\Http\Controllers\ChampionsCon
 Route::get('/summoner/{summoner}/champions/{champion}', [\App\Http\Controllers\ChampionController::class, 'index'])->name('summoner.champion');
 Route::get('/summoner/{summoner}/live-game', [\App\Http\Controllers\LiveGameController::class, 'index'])->name('summoner.live-game');
 
-Route::get('/summoner-match/{summoner_match}', [\App\Http\Controllers\MatchController::class, 'getSummonerMatchLoaded'])->name('get-summoner-match-loaded');
+Route::get('/summoner/{summoner}/matches/{summoner_match}/fully_loaded', [\App\Http\Controllers\MatchController::class, 'getSummonerMatchLoaded'])->name('summoner.match.loaded');
+Route::get('/summoner/{summoner}/matches/{summoner_match}/detail', [\App\Http\Controllers\MatchController::class, 'getSummonerMatchDetail'])->name('summoner.match.detail');
 
 Route::get('/', [App\Http\Controllers\SummonerController::class, 'index'])->name('home');
 

@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Enums\FrameEventType;
 use App\Events\SummonerUpdated;
 use App\Models\Champion;
 use App\Models\Item;
@@ -11,6 +12,8 @@ use App\Models\Mode;
 use App\Models\Queue;
 use App\Models\Summoner;
 use App\Models\SummonerMatch;
+use App\Models\SummonerMatchFrame;
+use App\Models\SummonerMatchFrameEvent;
 use App\Models\SummonerMatchItem;
 use App\Models\SummonerMatchPerk;
 use Carbon\Carbon;
@@ -322,6 +325,119 @@ trait SummonerApi
         SummonerUpdated::dispatch($this->id);
 
         return true;
+    }
+
+    public function loadMatchDetail(LolMatch $match)
+    {
+        $match_detail_array = $this->getMatchDetail($match->match_id);
+        if (! $match_detail_array) {
+            return null;
+        }
+        $participants = $match->participants()->with('summoner:id,puuid')->get();
+        $summoner_match_ids = $participants->pluck('id')->toArray();
+        $participant_ordered = [];
+        foreach ($match_detail_array['metadata']['participants'] as $idx => $puuid) {
+            $summoner_match = $participants->where('summoner.puuid', $puuid)->first();
+            if ($summoner_match) {
+                $participant_ordered[$idx + 1] = [
+                    'summoner_match_id' => $summoner_match->id,
+                    'summoner_match_frame_id' => null,
+
+                ];
+            }
+        }
+        $frames = $match_detail_array['info']['frames'];
+
+        foreach ($frames as $frame) {
+            $frames_to_add = [];
+            $timestamp = Carbon::createFromTimestampMs($frame['timestamp']);
+            foreach ($frame['participantFrames'] as $idx => $participant_frame) {
+                $idx = intval($idx);
+                $frames_to_add[] = [
+                    'match_id' => $match->id,
+                    'summoner_match_id' => $participant_ordered[$idx]['summoner_match_id'],
+                    'current_timestamp' => $frame['timestamp'],
+                    'champion_stats' => json_encode($participant_frame['championStats']),
+                    'damage_stats' => json_encode($participant_frame['damageStats']),
+                    'current_gold' => $participant_frame['currentGold'],
+                    'gold_per_second' => $participant_frame['goldPerSecond'],
+                    'jungle_minions_killed' => $participant_frame['jungleMinionsKilled'],
+                    'level' => $participant_frame['level'],
+                    'minions_killed' => $participant_frame['minionsKilled'],
+                    'position_x' => $participant_frame['position']['x'],
+                    'position_y' => $participant_frame['position']['y'],
+                    'total_gold' => $participant_frame['totalGold'],
+                    'xp' => $participant_frame['xp'],
+                    'time_enemy_spent_controlled' => $participant_frame['timeEnemySpentControlled'],
+                ];
+            }
+            SummonerMatchFrame::upsert($frames_to_add, ['match_id', 'summoner_match_id', 'current_timestamp'], ['champion_stats', 'damage_stats', 'current_gold', 'gold_per_second', 'jungle_minions_killed', 'level', 'minions_killed', 'position_x', 'position_y', 'total_gold', 'xp', 'time_enemy_spent_controlled']);
+            $summoner_match_frames = SummonerMatchFrame::where('current_timestamp', $frame['timestamp'])
+                ->whereIn('summoner_match_id', $summoner_match_ids)
+                ->get();
+
+            foreach ($participant_ordered as $idx => $participant) {
+                $participant_ordered[$idx]['summoner_match_frame_id'] = $summoner_match_frames->where('summoner_match_id', $participant['summoner_match_id'])->first()->id;
+            }
+
+            $events_to_add = [];
+
+            foreach ($frame['events'] as $event) {
+                if (! isset($event['participantId'])) {
+                    continue;
+                }
+                $type = FrameEventType::from($event['type']);
+                $base = [
+                    'current_timestamp' => $event['timestamp'],
+                    'type' => $type,
+                    'item_id' => Arr::get($event, 'itemId', null),
+                    'before_id' => Arr::get($event, 'beforeId', null),
+                    'after_id' => Arr::get($event, 'afterId', null),
+                    'gold_gain' => Arr::get($event, 'goldGain', null),
+                    'skill_slot' => Arr::get($event, 'skillSlot', null),
+                    'level_up_type' => Arr::get($event, 'levelUpType', null),
+                    'level' => Arr::get($event, 'level', null),
+                    'position_x' => Arr::get($event, 'position.x', null),
+                    'position_y' => Arr::get($event, 'position.y', null),
+                    'summoner_match_victim_id' => null,
+                    'summoner_match_frame_victim_id' => null,
+                    'summoner_match_id' => null,
+                    'summoner_match_frame_id' => null,
+                ];
+
+                if ($type == FrameEventType::CHAMPION_KILL) {
+                    $base['summoner_match_id'] = $participant_ordered[$event['killerId']]['summoner_match_id'];
+                    $base['summoner_match_frame_id'] = $participant_ordered[$event['killerId']]['summoner_match_frame_id'];
+                    $base['summoner_match_victim_id'] = $participant_ordered[$event['victimId']]['summoner_match_id'];
+                    $base['summoner_match_frame_victim_id'] = $participant_ordered[$event['victimId']]['summoner_match_frame_id'];
+                } else {
+                    $base['summoner_match_id'] = $participant_ordered[$event['participantId']]['summoner_match_id'];
+                    $base['summoner_match_frame_id'] = $participant_ordered[$event['participantId']]['summoner_match_frame_id'];
+                }
+                $events_to_add[] = $base;
+            }
+            SummonerMatchFrameEvent::upsert($events_to_add, ['current_timestamp', 'type', 'summoner_match_id', 'summoner_match_frame_id'], ['summoner_match_victim_id', 'summoner_match_frame_victim_id', 'position_x', 'position_y', 'item_id', 'before_id', 'after_id', 'gold_gain', 'skill_slot', 'level_up_type', 'level']);
+
+        }
+    }
+
+    public function getMatchDetail(string $match_id)
+    {
+        $url = "https://europe.api.riotgames.com/lol/match/v5/matches/{$match_id}/timeline";
+        $response = Http::withoutVerifying()->withHeaders([
+            'X-Riot-Token' => config('services.riot.api_key'),
+        ])->get($url);
+        $data = $response->json();
+        if (self::responseLimitExceeded($data)) {
+            sleep(20);
+
+            return $this->getMatchDetail($match_id);
+        }
+        if (self::responseNotFound($data) || self::responseIsForbidden($data)) {
+            return null;
+        }
+
+        return $data;
     }
 
     public function getMatch(string $match_id)

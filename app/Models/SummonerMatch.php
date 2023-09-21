@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\FrameEventType;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -41,19 +42,23 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property int $summoner_spell1_id
  * @property int $summoner_spell2_id
  * @property-read \App\Models\Champion|null $champion
+ * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $events
+ * @property-read int|null $events_count
+ * @property-read Collection<int, \App\Models\SummonerMatchFrame> $frames
+ * @property-read int|null $frames_count
+ * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $item_events
+ * @property-read int|null $item_events_count
  * @property-read Collection<int, \App\Models\Item> $items
  * @property-read int|null $items_count
+ * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $level_up_skill_events
+ * @property-read int|null $level_up_skill_events_count
  * @property-read \App\Models\LolMatch|null $match
- * @property-read Collection<int, SummonerMatch> $otherParticipants
- * @property-read int|null $other_participants_count
  * @property-read \App\Models\SummonerMatchPerk|null $perks
  * @property-read \App\Models\Summoner|null $summoner
- * @property-read \App\Models\SummonerSpell|null $summonerSpell1
- * @property-read \App\Models\SummonerSpell|null $summonerSpell2
+ * @property-read \App\Models\SummonerSpell|null $summoner_spell1
+ * @property-read \App\Models\SummonerSpell|null $summoner_spell2
  *
  * @method static Builder|SummonerMatch championsCalc()
- * @method static Builder|SummonerMatch loadAll()
- * @method static Builder|SummonerMatch loadPartial()
  * @method static Builder|SummonerMatch newModelQuery()
  * @method static Builder|SummonerMatch newQuery()
  * @method static Builder|SummonerMatch query()
@@ -80,6 +85,9 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @method static Builder|SummonerMatch whereTripleKills($value)
  * @method static Builder|SummonerMatch whereWardsPlaced($value)
  * @method static Builder|SummonerMatch whereWon($value)
+ * @method static Builder|SummonerMatch withAll()
+ * @method static Builder|SummonerMatch withDetail()
+ * @method static Builder|SummonerMatch withPartial()
  *
  * @mixin Eloquent
  */
@@ -119,7 +127,7 @@ final class SummonerMatch extends Model
         'won' => 'boolean',
     ];
 
-    public function scopeLoadAll(Builder $query)
+    public function scopeWithAll(Builder $query)
     {
         $query->select([
             'summoner_spell1_id',
@@ -139,15 +147,15 @@ final class SummonerMatch extends Model
             'match.participants.summoner:id,name',
             'match.participants.champion:id,name,img_url',
             'match.participants.items:id,img_url',
-            'match.participants.summonerSpell1:id,img_url',
-            'match.participants.summonerSpell2:id,img_url',
+            'match.participants.summoner_spell1:id,img_url',
+            'match.participants.summoner_spell_2:id,img_url',
             'match.participants.perks:summoner_match_id,primary_style1_id,sub_style_id',
-            'match.participants.perks.primaryStyle1:id,img_url',
-            'match.participants.perks.subStyle:id,img_url',
+            'match.participants.perks.primary_style1:id,img_url',
+            'match.participants.perks.sub_style:id,img_url',
         ]);
     }
 
-    public function scopeLoadPartial(Builder $query)
+    public function scopeWithPartial(Builder $query)
     {
         $query->select([
             'champ_level',
@@ -166,11 +174,11 @@ final class SummonerMatch extends Model
             'wards_placed',
         ]);
         $query->with([
-            'summonerSpell1:id,img_url',
-            'summonerSpell2:id,img_url',
+            'summoner_spell1:id,img_url',
+            'summoner_spell2:id,img_url',
             'perks:summoner_match_id,primary_style1_id,sub_style_id',
-            'perks.primaryStyle1:id,img_url',
-            'perks.subStyle:id,img_url',
+            'perks.primary_style1:id,img_url',
+            'perks.sub_style:id,img_url',
             'match:id,match_id,match_duration,match_end,mode_id,map_id,queue_id',
             'match.queue:id,description',
             'match.map:id,description',
@@ -180,6 +188,24 @@ final class SummonerMatch extends Model
             'match.participants:id,summoner_id,champion_id,match_id,won',
             'match.participants.summoner:id,name',
             'match.participants.champion:id,name,img_url',
+        ]);
+    }
+
+    public function scopeWithDetail(Builder $query)
+    {
+        $query->with([
+            'item_events:id,item_id,after_id,before_id,gold_gain',
+            'item_events.item:id,name,img_url',
+            'level_up_skill_events:id,skill_slot,level_up_type',
+            'perks.defense:id,img_url',
+            'perks.offense:id,img_url',
+            'perks.flex:id,img_url',
+            'perks.primary_style:id,img_url',
+            'perks.primary_style1:id,img_url',
+            'perks.primary_style2:id,img_url',
+            'perks.sub_style:id,img_url',
+            'perks.sub_style1:id,img_url',
+            'perks.sub_style2:id,img_url',
         ]);
     }
 
@@ -349,12 +375,6 @@ final class SummonerMatch extends Model
     }
 
     #[TypeScript]
-    public function otherParticipants(): HasMany
-    {
-        return $this->hasMany(SummonerMatch::class, 'match_id', 'match_id');
-    }
-
-    #[TypeScript]
     public function champion(): HasOne
     {
         return $this->hasOne(Champion::class, 'id', 'champion_id');
@@ -365,13 +385,38 @@ final class SummonerMatch extends Model
         return $this->hasOne(SummonerMatchPerk::class, 'summoner_match_id', 'id');
     }
 
-    public function summonerSpell1(): HasOne
+    public function summoner_spell1(): HasOne
     {
         return $this->hasOne(SummonerSpell::class, 'id', 'summoner_spell1_id');
     }
 
-    public function summonerSpell2(): HasOne
+    public function summoner_spell2(): HasOne
     {
         return $this->hasOne(SummonerSpell::class, 'id', 'summoner_spell2_id');
+    }
+
+    public function frames(): HasMany
+    {
+        return $this->hasMany(SummonerMatchFrame::class, 'summoner_match_id', 'id');
+    }
+
+    public function events(): HasMany
+    {
+        return $this->hasMany(SummonerMatchFrameEvent::class, 'summoner_match_id');
+    }
+
+    public function item_events(): HasMany
+    {
+        return $this->events()->whereIn('type', FrameEventType::itemTypes());
+    }
+
+    public function level_up_skill_events(): HasMany
+    {
+        return $this->events()->where('type', FrameEventType::SKILL_LEVEL_UP);
+    }
+
+    public function has_detail(): bool
+    {
+        return $this->frames()->count() > 0;
     }
 }

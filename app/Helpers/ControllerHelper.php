@@ -24,7 +24,7 @@ class ControllerHelper
                 ])->toArray(),
             'queue_options' => function () use ($summoner) {
                 $match_ids = $summoner
-                    ->summonerMatches()
+                    ->summoner_matches()
                     ->pluck('match_id');
                 $queue_ids = LolMatch::whereIn('id', $match_ids)
                     ->groupBy('queue_id')

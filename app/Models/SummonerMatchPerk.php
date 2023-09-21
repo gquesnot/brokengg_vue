@@ -22,14 +22,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\Perk|null $defense
  * @property-read \App\Models\Perk|null $flex
  * @property-read \App\Models\Perk|null $offense
- * @property-read \App\Models\Perk|null $primaryStyle
- * @property-read \App\Models\Perk|null $primaryStyle1
- * @property-read \App\Models\Perk|null $primaryStyle2
- * @property-read \App\Models\Perk|null $primaryStyle3
- * @property-read \App\Models\Perk|null $subStyle
- * @property-read \App\Models\Perk|null $subStyle1
- * @property-read \App\Models\Perk|null $subStyle2
- * @property-read \App\Models\SummonerMatch|null $summonerMatch
+ * @property-read \App\Models\Perk|null $primary_style
+ * @property-read \App\Models\Perk|null $primary_style1
+ * @property-read \App\Models\Perk|null $primary_style2
+ * @property-read \App\Models\Perk|null $primary_style3
+ * @property-read \App\Models\Perk|null $sub_style
+ * @property-read \App\Models\Perk|null $sub_style1
+ * @property-read \App\Models\Perk|null $sub_style2
+ * @property-read \App\Models\SummonerMatch|null $summoner_match
  *
  * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk newQuery()
@@ -67,57 +67,57 @@ class SummonerMatchPerk extends Model
         'sub_style2_id',
     ];
 
-    public function summonerMatch()
+    public function summoner_match(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(SummonerMatch::class);
     }
 
-    public function defense()
+    public function defense(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Perk::class, 'defense_id');
     }
 
-    public function flex()
+    public function flex(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Perk::class, 'flex_id');
     }
 
-    public function offense()
+    public function offense(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Perk::class, 'offense_id');
     }
 
-    public function primaryStyle()
+    public function primary_style(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Perk::class, 'primary_style_id');
     }
 
-    public function primaryStyle1()
+    public function primary_style1(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Perk::class, 'primary_style1_id');
     }
 
-    public function primaryStyle2()
+    public function primary_style2(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Perk::class, 'primary_style2_id');
     }
 
-    public function primaryStyle3()
+    public function primary_style3(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Perk::class, 'primary_style3_id');
     }
 
-    public function subStyle()
+    public function sub_style(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Perk::class, 'sub_style_id');
     }
 
-    public function subStyle1()
+    public function sub_style1(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Perk::class, 'sub_style1_id');
     }
 
-    public function subStyle2()
+    public function sub_style2(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Perk::class, 'sub_style2_id');
     }
