@@ -20,6 +20,7 @@ enum FrameEventType: string
     case ITEM_PURCHASED = 'ITEM_PURCHASED';
     case SKILL_LEVEL_UP = 'SKILL_LEVEL_UP';
     case ITEM_SOLD = 'ITEM_SOLD';
+    case CHAMPION_TRANSFORM = 'CHAMPION_TRANSFORM';
 
     public function isRelatedToItems(): bool
     {

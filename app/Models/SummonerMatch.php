@@ -205,10 +205,11 @@ final class SummonerMatch extends Model
             'perks.defense:id,img_url',
             'perks.offense:id,img_url',
             'perks.flex:id,img_url',
-            'perks.primary_style:id,img_url',
+            'perks.primary_style:id,img_url,name',
             'perks.primary_style1:id,img_url',
             'perks.primary_style2:id,img_url',
-            'perks.sub_style:id,img_url',
+            'perks.primary_style3:id,img_url',
+            'perks.sub_style:id,img_url,name',
             'perks.sub_style1:id,img_url',
             'perks.sub_style2:id,img_url',
         ]);
@@ -402,12 +403,12 @@ final class SummonerMatch extends Model
 
     public function frames(): HasMany
     {
-        return $this->hasMany(SummonerMatchFrame::class, 'summoner_match_id', 'id');
+        return $this->hasMany(SummonerMatchFrame::class, 'summoner_match_id', 'id')->orderBy('current_timestamp');
     }
 
     public function events(): HasMany
     {
-        return $this->hasMany(SummonerMatchFrameEvent::class, 'summoner_match_id', 'id');
+        return $this->hasMany(SummonerMatchFrameEvent::class, 'summoner_match_id', 'id')->orderBy('current_timestamp');
     }
 
     public function item_events(): HasMany

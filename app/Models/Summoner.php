@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use App\Traits\HandleMatchDataUpdate;
+use App\Traits\HandleMatchDetailUpdate;
+use App\Traits\HandleMatchIdsUpdate;
+use App\Traits\HandleSummonerDataUpdate;
 use App\Traits\SummonerApi;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -54,6 +58,10 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 #[TypeScript]
 class Summoner extends Model
 {
+    use HandleMatchDataUpdate;
+    use HandleMatchDetailUpdate;
+    use HandleMatchIdsUpdate;
+    use HandleSummonerDataUpdate;
     use SummonerApi;
 
     public $timestamps = false;
@@ -75,6 +83,12 @@ class Summoner extends Model
         'complete' => 'boolean',
         'auto_update' => 'boolean',
     ];
+
+    public function updateMatches()
+    {
+        $this->updateSummonerMatchIds();
+        $this->updateSummonerMatches();
+    }
 
     public function matches(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
     {

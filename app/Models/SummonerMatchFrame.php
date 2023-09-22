@@ -99,7 +99,7 @@ class SummonerMatchFrame extends Model
 
     public function events(): HasMany
     {
-        return $this->hasMany(SummonerMatchFrameEvent::class, 'summoner_match_frame_id');
+        return $this->hasMany(SummonerMatchFrameEvent::class, 'summoner_match_frame_id')->orderBy('current_timestamp');
     }
 
     public function item_events(): HasMany
