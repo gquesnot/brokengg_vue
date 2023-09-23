@@ -73,6 +73,7 @@ selected_participant_id.value = props.summoner_match.id
                 label="Select a participant"
                 item-value="value"
                 item-title="label"
+                class="w-80"
                 density="comfortable"
             />
         </div>

@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Models;
 
 use App\Enums\FrameEventType;
@@ -41,27 +42,26 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property int|null $wards_placed
  * @property int $summoner_spell1_id
  * @property int $summoner_spell2_id
- * @property-read \App\Models\Champion|null $champion
- * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $death_events
+ * @property-read Champion|null $champion
+ * @property-read Collection<int, SummonerMatchFrameEvent> $death_events
  * @property-read int|null $death_events_count
- * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $events
+ * @property-read Collection<int, SummonerMatchFrameEvent> $events
  * @property-read int|null $events_count
- * @property-read Collection<int, \App\Models\SummonerMatchFrame> $frames
+ * @property-read Collection<int, SummonerMatchFrame> $frames
  * @property-read int|null $frames_count
- * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $item_events
+ * @property-read Collection<int, SummonerMatchFrameEvent> $item_events
  * @property-read int|null $item_events_count
- * @property-read Collection<int, \App\Models\Item> $items
+ * @property-read Collection<int, Item> $items
  * @property-read int|null $items_count
- * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $kills_events
+ * @property-read Collection<int, SummonerMatchFrameEvent> $kills_events
  * @property-read int|null $kills_events_count
- * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $level_up_skill_events
+ * @property-read Collection<int, SummonerMatchFrameEvent> $level_up_skill_events
  * @property-read int|null $level_up_skill_events_count
- * @property-read \App\Models\LolMatch|null $match
- * @property-read \App\Models\SummonerMatchPerk|null $perks
- * @property-read \App\Models\Summoner|null $summoner
- * @property-read \App\Models\SummonerSpell|null $summoner_spell1
- * @property-read \App\Models\SummonerSpell|null $summoner_spell2
- *
+ * @property-read LolMatch|null $match
+ * @property-read SummonerMatchPerk|null $perks
+ * @property-read Summoner|null $summoner
+ * @property-read SummonerSpell|null $summoner_spell1
+ * @property-read SummonerSpell|null $summoner_spell2
  * @method static Builder|SummonerMatch championsCalc()
  * @method static Builder|SummonerMatch newModelQuery()
  * @method static Builder|SummonerMatch newQuery()
@@ -92,14 +92,11 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @method static Builder|SummonerMatch withAll()
  * @method static Builder|SummonerMatch withDetail()
  * @method static Builder|SummonerMatch withPartial()
- *
  * @mixin Eloquent
  */
 #[TypeScript]
 final class SummonerMatch extends Model
 {
-    protected $table = 'summoner_matchs';
-
     public $timestamps = false;
 
     public $fillable = [
@@ -130,8 +127,9 @@ final class SummonerMatch extends Model
     public $casts = [
         'won' => 'boolean',
     ];
+    protected $table = 'summoner_matchs';
 
-    public function scopeWithAll(Builder $query)
+    public function scopeWithAll(Builder $query): void
     {
         $query->select([
             'summoner_spell1_id',
@@ -159,7 +157,7 @@ final class SummonerMatch extends Model
         ]);
     }
 
-    public function scopeWithPartial(Builder $query)
+    public function scopeWithPartial(Builder $query): void
     {
         $query->select([
             'champ_level',
@@ -195,11 +193,19 @@ final class SummonerMatch extends Model
         ]);
     }
 
-    public function scopeWithDetail(Builder $query)
+    public function scopeWithDetail(Builder $query): void
     {
         $query->with([
             'frames:id,match_id,summoner_match_id,current_timestamp',
-            'frames.item_events:id,item_id,type,summoner_match_id,summoner_match_frame_id',
+            'frames.item_events' => function ($query): void {
+                $query->select(
+                    ['summoner_match_frame_id',
+                        'item_id',
+                        'type',
+                        DB::raw('count(id) as item_count')
+                    ]
+                )->groupBy(['summoner_match_frame_id', 'item_id', 'type']);
+            },
             'frames.item_events.item:id,name,img_url',
             'frames.level_up_skill_events:id,skill_slot,level_up_type,summoner_match_id,summoner_match_frame_id',
             'perks.defense:id,img_url',
@@ -243,9 +249,8 @@ final class SummonerMatch extends Model
     public function avgKda(): Attribute
     {
         return Attribute::make(
-
             get: function () {
-                $avg_death = $this->avg_deaths == 0 ? 1 : $this->avg_deaths;
+                $avg_death = 0 === $this->avg_deaths ? 1 : $this->avg_deaths;
 
                 return round(($this->avg_kills + $this->avg_assists) / $avg_death, 2);
             }
@@ -255,84 +260,84 @@ final class SummonerMatch extends Model
     public function wins(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => intval($value),
+            get: fn($value) => (int)$value,
         );
     }
 
     public function avgKills(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => round(floatval($value), 2),
+            get: fn($value) => round((float)$value, 2),
         );
     }
 
     public function avgDeaths(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => round(floatval($value), 2),
+            get: fn($value) => round((float)$value, 2),
         );
     }
 
     public function avgAssists(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => round(floatval($value), 2),
+            get: fn($value) => round((float)$value, 2),
         );
     }
 
     public function avgCs(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => intval($value),
+            get: fn($value) => (int)$value,
         );
     }
 
     public function avgDamageDealtToChampions(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => intval($value),
+            get: fn($value) => (int)$value,
         );
     }
 
     public function avgGold(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => intval($value),
+            get: fn($value) => (int)$value,
         );
     }
 
     public function avgDamageTaken(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => intval($value),
+            get: fn($value) => (int)$value,
         );
     }
 
     public function totalDoubleKills(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => intval($value),
+            get: fn($value) => (int)$value,
         );
     }
 
     public function totalTripleKills(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => intval($value),
+            get: fn($value) => (int)$value,
         );
     }
 
     public function totalQuadraKills(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => intval($value),
+            get: fn($value) => (int)$value,
         );
     }
 
     public function totalPentaKills(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => intval($value),
+            get: fn($value) => (int)$value,
         );
     }
 

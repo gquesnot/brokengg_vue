@@ -15,7 +15,7 @@ const props = defineProps<{
         Runes
     </div>
     <div class="mt-2 flex w-1/2 ">
-      <div class="w-1/3 flex flex-col justify-end space-y-2 items-center">
+      <div class="w-1/4 flex flex-col justify-end space-y-2 items-center">
         <div class="flex items-center">
           <VImg :src="urlPerkHelper(selected_participant.perks.primary_style.img_url)" class="w-10 h-10 bg-gray-950 rounded-full"/>
         </div>
@@ -32,7 +32,7 @@ const props = defineProps<{
               {{ selected_participant.perks.primary_style.name }}
         </div>
       </div>
-      <div class="w-1/3 flex flex-col justify-end space-y-2 items-center">
+      <div class="w-1/4 flex flex-col justify-end space-y-2 items-center">
         <div class="flex items-center">
           <VImg :src="urlPerkHelper(selected_participant.perks.sub_style.img_url)" class="w-10 h-10 bg-gray-950 rounded-full"/>
         </div>
@@ -46,7 +46,7 @@ const props = defineProps<{
               {{ selected_participant.perks.sub_style.name }}
         </div>
       </div>
-      <div class="w-1/3 flex flex-col justify-end space-y-2 items-center">
+      <div class="w-1/4 flex flex-col justify-end space-y-2 items-center">
         <div class="flex items-center">
           <VImg :src="urlPerkHelper(selected_participant.perks.offense.img_url)" class="w-8 h-8 bg-gray-950 rounded-full"/>
         </div>

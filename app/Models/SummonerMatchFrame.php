@@ -1,9 +1,14 @@
 <?php
 
+
 namespace App\Models;
 
 use App\Enums\FrameEventType;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -25,42 +30,40 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $time_enemy_spent_controlled
  * @property int $summoner_match_id
  * @property int $match_id
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatchFrameEvent> $death_events
+ * @property-read Collection<int, SummonerMatchFrameEvent> $death_events
  * @property-read int|null $death_events_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatchFrameEvent> $events
+ * @property-read Collection<int, SummonerMatchFrameEvent> $events
  * @property-read int|null $events_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatchFrameEvent> $item_events
+ * @property-read Collection<int, SummonerMatchFrameEvent> $item_events
  * @property-read int|null $item_events_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatchFrameEvent> $kills_events
+ * @property-read Collection<int, SummonerMatchFrameEvent> $kills_events
  * @property-read int|null $kills_events_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatchFrameEvent> $level_up_skill_events
+ * @property-read Collection<int, SummonerMatchFrameEvent> $level_up_skill_events
  * @property-read int|null $level_up_skill_events_count
- * @property-read \App\Models\LolMatch|null $match
- * @property-read \App\Models\SummonerMatch|null $summoner_match
- *
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame query()
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame whereChampionStats($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame whereCurrentGold($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame whereCurrentTimestamp($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame whereDamageStats($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame whereGoldPerSecond($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame whereJungleMinionsKilled($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame whereLevel($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame whereMatchId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame whereMinionsKilled($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame wherePositionX($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame wherePositionY($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame whereSummonerMatchId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame whereTimeEnemySpentControlled($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame whereTotalGold($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrame whereXp($value)
- *
- * @mixin \Eloquent
+ * @property-read LolMatch|null $match
+ * @property-read SummonerMatch|null $summoner_match
+ * @method static Builder|SummonerMatchFrame newModelQuery()
+ * @method static Builder|SummonerMatchFrame newQuery()
+ * @method static Builder|SummonerMatchFrame query()
+ * @method static Builder|SummonerMatchFrame whereChampionStats($value)
+ * @method static Builder|SummonerMatchFrame whereCurrentGold($value)
+ * @method static Builder|SummonerMatchFrame whereCurrentTimestamp($value)
+ * @method static Builder|SummonerMatchFrame whereDamageStats($value)
+ * @method static Builder|SummonerMatchFrame whereGoldPerSecond($value)
+ * @method static Builder|SummonerMatchFrame whereId($value)
+ * @method static Builder|SummonerMatchFrame whereJungleMinionsKilled($value)
+ * @method static Builder|SummonerMatchFrame whereLevel($value)
+ * @method static Builder|SummonerMatchFrame whereMatchId($value)
+ * @method static Builder|SummonerMatchFrame whereMinionsKilled($value)
+ * @method static Builder|SummonerMatchFrame wherePositionX($value)
+ * @method static Builder|SummonerMatchFrame wherePositionY($value)
+ * @method static Builder|SummonerMatchFrame whereSummonerMatchId($value)
+ * @method static Builder|SummonerMatchFrame whereTimeEnemySpentControlled($value)
+ * @method static Builder|SummonerMatchFrame whereTotalGold($value)
+ * @method static Builder|SummonerMatchFrame whereXp($value)
+ * @mixin Eloquent
  */
-class SummonerMatchFrame extends Model
+final class SummonerMatchFrame extends Model
 {
     public $timestamps = false;
 
@@ -87,20 +90,21 @@ class SummonerMatchFrame extends Model
         'damage_stats' => 'object',
     ];
 
-    public function summoner_match(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function summoner_match(): BelongsTo
     {
         return $this->belongsTo(SummonerMatch::class);
     }
 
-    public function match(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function match(): BelongsTo
     {
         return $this->belongsTo(LolMatch::class);
     }
 
     public function events(): HasMany
     {
-        return $this->hasMany(SummonerMatchFrameEvent::class, 'summoner_match_frame_id')->orderBy('current_timestamp');
+        return $this->hasMany(SummonerMatchFrameEvent::class, 'summoner_match_frame_id');
     }
+
 
     public function item_events(): HasMany
     {
