@@ -205,14 +205,15 @@ trait HandleMatchDetailUpdate
 
     private function checkAndUnset(array &$all_items_events, array $item_event, $id_key, $eventType)
     {
+        if (!$item_event[$id_key] || $item_event[$id_key] == 0) {
+            return;
+        }
         for ($i = count($all_items_events) - 1; $i >= 0; $i--) {
-            if ($item_event[$id_key] && $item_event[$id_key] != 0) {
-                $currentEvent = $all_items_events[$i];
-                if ($currentEvent['type'] == $eventType && $currentEvent['item_id'] == $item_event[$id_key]) {
-                    unset($all_items_events[$i]);
-                    $all_items_events = array_values($all_items_events);
-                    break;  // exit loop once a matching item has been found and unset
-                }
+            $currentEvent = $all_items_events[$i];
+            if ($currentEvent['type'] == $eventType && $currentEvent['item_id'] == $item_event[$id_key]) {
+                unset($all_items_events[$i]);
+                $all_items_events = array_values($all_items_events);
+                break;  // exit loop once a matching item has been found and unset
             }
         }
     }
