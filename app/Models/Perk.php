@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -11,14 +13,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $img_url
  * @property string $name
  *
- * @method static \Illuminate\Database\Eloquent\Builder|Perk newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Perk newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Perk query()
- * @method static \Illuminate\Database\Eloquent\Builder|Perk whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Perk whereImgUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Perk whereName($value)
+ * @method static Builder|Perk newModelQuery()
+ * @method static Builder|Perk newQuery()
+ * @method static Builder|Perk query()
+ * @method static Builder|Perk whereId($value)
+ * @method static Builder|Perk whereImgUrl($value)
+ * @method static Builder|Perk whereName($value)
  *
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class Perk extends Model
 {

@@ -20,8 +20,9 @@ class UpdateSummonerJob implements ShouldQueue
 
     public function handle(): void
     {
+        SummonerUpdated::dispatch($this->summoner->id, true);
         $this->summoner->updateSummonerByPuuid();
         $this->summoner->updateMatches();
-        SummonerUpdated::dispatch($this->summoner->id, true);
+        SummonerUpdated::dispatch($this->summoner->id, false);
     }
 }

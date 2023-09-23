@@ -15,8 +15,8 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property int $item_id
  * @property int $summoner_match_id
  * @property int $position
- * @property-read \App\Models\Item|null $item
- * @property-read \App\Models\SummonerMatch|null $summoner_match
+ * @property-read Item|null $item
+ * @property-read SummonerMatch|null $summoner_match
  *
  * @method static Builder|SummonerMatchItem newModelQuery()
  * @method static Builder|SummonerMatchItem newQuery()

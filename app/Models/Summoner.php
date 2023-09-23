@@ -10,6 +10,8 @@ use App\Traits\SummonerApi;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -31,9 +33,9 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property bool $auto_update
  * @property string|null $created_at
  * @property string|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LolMatch> $matches
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, LolMatch> $matches
  * @property-read int|null $matches_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatch> $summoner_matches
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, SummonerMatch> $summoner_matches
  * @property-read int|null $summoner_matches_count
  *
  * @method static Builder|Summoner newModelQuery()
@@ -90,12 +92,12 @@ class Summoner extends Model
         $this->updateSummonerMatches();
     }
 
-    public function matches(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    public function matches(): HasManyThrough
     {
         return $this->hasManyThrough(LolMatch::class, SummonerMatch::class, 'summoner_id', 'id', 'id', 'match_id');
     }
 
-    public function summoner_matches(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function summoner_matches(): HasMany
     {
         return $this->hasMany(SummonerMatch::class, 'summoner_id', 'id');
     }

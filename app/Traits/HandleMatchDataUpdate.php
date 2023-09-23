@@ -166,7 +166,7 @@ trait HandleMatchDataUpdate
         $match->updated = true;
 
         $match->save();
-        SummonerUpdated::dispatch($this->id);
+        SummonerUpdated::dispatch($this->id, true);
 
         return true;
     }

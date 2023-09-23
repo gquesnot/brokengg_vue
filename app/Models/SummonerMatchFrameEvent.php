@@ -4,7 +4,10 @@ namespace App\Models;
 
 use App\Enums\FrameEventType;
 use App\Enums\LevelUpType;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Models\SummonerMatchFrameEvent
@@ -22,30 +25,30 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $skill_slot
  * @property LevelUpType|null $level_up_type
  * @property int|null $level
- * @property-read \App\Models\Item|null $item
- * @property-read \App\Models\SummonerMatch|null $summoner_match
- * @property-read \App\Models\SummonerMatchFrame|null $summoner_match_frame
- * @property-read \App\Models\SummonerMatchFrame|null $summoner_match_frame_victim
- * @property-read \App\Models\SummonerMatch|null $summoner_match_victim
+ * @property-read Item|null $item
+ * @property-read SummonerMatch|null $summoner_match
+ * @property-read SummonerMatchFrame|null $summoner_match_frame
+ * @property-read SummonerMatchFrame|null $summoner_match_frame_victim
+ * @property-read SummonerMatch|null $summoner_match_victim
  *
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent query()
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent whereCurrentTimestamp($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent whereItemId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent whereLevel($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent whereLevelUpType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent wherePositionX($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent wherePositionY($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent whereSkillSlot($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent whereSummonerMatchFrameId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent whereSummonerMatchFrameVictimId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent whereSummonerMatchId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent whereSummonerMatchVictimId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchFrameEvent whereType($value)
+ * @method static Builder|SummonerMatchFrameEvent newModelQuery()
+ * @method static Builder|SummonerMatchFrameEvent newQuery()
+ * @method static Builder|SummonerMatchFrameEvent query()
+ * @method static Builder|SummonerMatchFrameEvent whereCurrentTimestamp($value)
+ * @method static Builder|SummonerMatchFrameEvent whereId($value)
+ * @method static Builder|SummonerMatchFrameEvent whereItemId($value)
+ * @method static Builder|SummonerMatchFrameEvent whereLevel($value)
+ * @method static Builder|SummonerMatchFrameEvent whereLevelUpType($value)
+ * @method static Builder|SummonerMatchFrameEvent wherePositionX($value)
+ * @method static Builder|SummonerMatchFrameEvent wherePositionY($value)
+ * @method static Builder|SummonerMatchFrameEvent whereSkillSlot($value)
+ * @method static Builder|SummonerMatchFrameEvent whereSummonerMatchFrameId($value)
+ * @method static Builder|SummonerMatchFrameEvent whereSummonerMatchFrameVictimId($value)
+ * @method static Builder|SummonerMatchFrameEvent whereSummonerMatchId($value)
+ * @method static Builder|SummonerMatchFrameEvent whereSummonerMatchVictimId($value)
+ * @method static Builder|SummonerMatchFrameEvent whereType($value)
  *
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class SummonerMatchFrameEvent extends Model
 {
@@ -76,27 +79,27 @@ class SummonerMatchFrameEvent extends Model
 
     ];
 
-    public function summoner_match(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function summoner_match(): BelongsTo
     {
         return $this->belongsTo(SummonerMatch::class);
     }
 
-    public function summoner_match_frame(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function summoner_match_frame(): BelongsTo
     {
         return $this->belongsTo(SummonerMatchFrame::class);
     }
 
-    public function summoner_match_victim(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function summoner_match_victim(): BelongsTo
     {
         return $this->belongsTo(SummonerMatch::class, 'summoner_match_victim_id');
     }
 
-    public function summoner_match_frame_victim(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function summoner_match_frame_victim(): BelongsTo
     {
         return $this->belongsTo(SummonerMatchFrame::class, 'summoner_match_frame_victim_id');
     }
 
-    public function item(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class, 'item_id');
     }

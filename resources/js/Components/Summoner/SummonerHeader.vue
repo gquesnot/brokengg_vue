@@ -18,7 +18,6 @@ import {
 import {urlProfilIconHelper} from "@/helpers/url_helpers";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
-import {debounce} from "lodash";
 import {navigateToSummoner} from "@/helpers/router_helpers";
 import moment from "moment";
 
@@ -29,15 +28,13 @@ const props = defineProps<{
 const filters = getFilters();
 const champion_options = getChampionOptions();
 const queue_options = getQueueOptions();
+let refresh_interval: any = null
 
+interface SummonerUpdatedEventInterface {
+    should_start_refresh: boolean
+}
 
-onMounted(() => {
-    window.Echo.channel('summoner.' + getSummoner().id).listen('SummonerUpdated', (e: any) => {
-        reload_page()
-    })
-})
-
-const reload_page = debounce(() => {
+export const refresh_summoner = () => {
     //@ts-ignore
     router.visit(route(route().current(), getParamsWithFilters(getFilters(), getRouteParams())), {
         preserveState: true,
@@ -45,8 +42,19 @@ const reload_page = debounce(() => {
         only: getOnly(),
         onSuccess: () => {
         },
+    });
+}
+
+onMounted(() => {
+    window.Echo.channel('summoner.' + getSummoner().id).listen('SummonerUpdated', ({should_start_refresh}: SummonerUpdatedEventInterface) => {
+        if (should_start_refresh) {
+            refresh_summoner()
+            refresh_interval = setInterval(refresh_summoner, 3000)
+        } else {
+            clearInterval(refresh_interval)
+        }
     })
-},400)
+})
 
 
 const form = useForm<{
@@ -128,10 +136,10 @@ const formToFilters = () => {
         should_filter_encounters: form.filters.should_filter_encounters ? form.filters.should_filter_encounters : false,
     }
     if (filters.start_date !== undefined) {
-      filters.start_date = moment(filters.start_date.split('T')[0]).add(1, 'days').format('YYYY-MM-DD')
+        filters.start_date = moment(filters.start_date.split('T')[0]).add(1, 'days').format('YYYY-MM-DD')
     }
     if (filters.end_date !== undefined) {
-      filters.end_date = moment(filters.end_date.split('T')[0]).add(1, 'days').format('YYYY-MM-DD')
+        filters.end_date = moment(filters.end_date.split('T')[0]).add(1, 'days').format('YYYY-MM-DD')
     }
     return filters
 }
@@ -141,7 +149,7 @@ const switchTab = (label: string) => {
     let tab = getTab(label)
     if (tab) {
         router.visit(route(tab.route, {
-          summoner_id: getSummoner().id,
+            summoner_id: getSummoner().id,
         }), {
             preserveState: true,
         })

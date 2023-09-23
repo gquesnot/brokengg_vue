@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -11,14 +13,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $img_url
  * @property string $name
  *
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerSpell newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerSpell newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerSpell query()
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerSpell whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerSpell whereImgUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerSpell whereName($value)
+ * @method static Builder|SummonerSpell newModelQuery()
+ * @method static Builder|SummonerSpell newQuery()
+ * @method static Builder|SummonerSpell query()
+ * @method static Builder|SummonerSpell whereId($value)
+ * @method static Builder|SummonerSpell whereImgUrl($value)
+ * @method static Builder|SummonerSpell whereName($value)
  *
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class SummonerSpell extends Model
 {

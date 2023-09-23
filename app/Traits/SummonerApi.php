@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Events\SummonerUpdated;
 use App\Models\Summoner;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
@@ -57,6 +58,7 @@ trait SummonerApi
         ])->get($url);
         $data = $response->json();
         if (self::responseLimitExceeded($data)) {
+            SummonerUpdated::dispatch($this->id, false);
             sleep(20);
 
             return $this->getMatch($match_id);
