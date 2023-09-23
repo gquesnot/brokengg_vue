@@ -58,7 +58,7 @@ const timestamp_to_hours_minutes_seconds = (timestamp: number): string => {
                                  v-else-if="item_event.type === EventType.ITEM_SOLD">
                                 <VImg :src="urlItemHelper(item_event.item.img_url)"
                                       class="w-8 h-8 opacity-75"/>
-                                <div class="absolute bottom-0 right-0">
+                          <div class="absolute -bottom-0.5 -right-0.5">
                                     <VIcon icon="fa fa-times" class="text-red "/>
                                 </div>
                           <div v-if="item_event.item_count > 1"
