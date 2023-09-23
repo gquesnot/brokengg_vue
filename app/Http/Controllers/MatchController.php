@@ -39,7 +39,7 @@ class MatchController extends Controller
         return response()->json([
             'match_participants_detail' => SummonerMatch::whereMatchId($summoner_match->match_id)
                 ->withDetail()
-                ->get()
+                ->get(),
         ]);
     }
 }

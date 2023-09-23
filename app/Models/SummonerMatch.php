@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Models;
 
 use App\Enums\FrameEventType;
@@ -42,26 +41,27 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property int|null $wards_placed
  * @property int $summoner_spell1_id
  * @property int $summoner_spell2_id
- * @property-read Champion|null $champion
- * @property-read Collection<int, SummonerMatchFrameEvent> $death_events
+ * @property-read \App\Models\Champion|null $champion
+ * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $death_events
  * @property-read int|null $death_events_count
- * @property-read Collection<int, SummonerMatchFrameEvent> $events
+ * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $events
  * @property-read int|null $events_count
- * @property-read Collection<int, SummonerMatchFrame> $frames
+ * @property-read Collection<int, \App\Models\SummonerMatchFrame> $frames
  * @property-read int|null $frames_count
- * @property-read Collection<int, SummonerMatchFrameEvent> $item_events
+ * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $item_events
  * @property-read int|null $item_events_count
- * @property-read Collection<int, Item> $items
+ * @property-read Collection<int, \App\Models\Item> $items
  * @property-read int|null $items_count
- * @property-read Collection<int, SummonerMatchFrameEvent> $kills_events
+ * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $kills_events
  * @property-read int|null $kills_events_count
- * @property-read Collection<int, SummonerMatchFrameEvent> $level_up_skill_events
+ * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $level_up_skill_events
  * @property-read int|null $level_up_skill_events_count
- * @property-read LolMatch|null $match
- * @property-read SummonerMatchPerk|null $perks
- * @property-read Summoner|null $summoner
- * @property-read SummonerSpell|null $summoner_spell1
- * @property-read SummonerSpell|null $summoner_spell2
+ * @property-read \App\Models\LolMatch|null $match
+ * @property-read \App\Models\SummonerMatchPerk|null $perks
+ * @property-read \App\Models\Summoner|null $summoner
+ * @property-read \App\Models\SummonerSpell|null $summoner_spell1
+ * @property-read \App\Models\SummonerSpell|null $summoner_spell2
+ *
  * @method static Builder|SummonerMatch championsCalc()
  * @method static Builder|SummonerMatch newModelQuery()
  * @method static Builder|SummonerMatch newQuery()
@@ -92,6 +92,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @method static Builder|SummonerMatch withAll()
  * @method static Builder|SummonerMatch withDetail()
  * @method static Builder|SummonerMatch withPartial()
+ *
  * @mixin Eloquent
  */
 #[TypeScript]
@@ -127,6 +128,7 @@ final class SummonerMatch extends Model
     public $casts = [
         'won' => 'boolean',
     ];
+
     protected $table = 'summoner_matchs';
 
     public function scopeWithAll(Builder $query): void
@@ -202,7 +204,7 @@ final class SummonerMatch extends Model
                     ['summoner_match_frame_id',
                         'item_id',
                         'type',
-                        DB::raw('count(id) as item_count')
+                        DB::raw('count(id) as item_count'),
                     ]
                 )->groupBy(['summoner_match_frame_id', 'item_id', 'type']);
             },
@@ -250,7 +252,7 @@ final class SummonerMatch extends Model
     {
         return Attribute::make(
             get: function () {
-                $avg_death = 0 === $this->avg_deaths ? 1 : $this->avg_deaths;
+                $avg_death = $this->avg_deaths === 0 ? 1 : $this->avg_deaths;
 
                 return round(($this->avg_kills + $this->avg_assists) / $avg_death, 2);
             }

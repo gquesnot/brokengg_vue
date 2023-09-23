@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Models;
 
 use App\Enums\FrameEventType;
@@ -30,18 +29,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $time_enemy_spent_controlled
  * @property int $summoner_match_id
  * @property int $match_id
- * @property-read Collection<int, SummonerMatchFrameEvent> $death_events
+ * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $death_events
  * @property-read int|null $death_events_count
- * @property-read Collection<int, SummonerMatchFrameEvent> $events
+ * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $events
  * @property-read int|null $events_count
- * @property-read Collection<int, SummonerMatchFrameEvent> $item_events
+ * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $item_events
  * @property-read int|null $item_events_count
- * @property-read Collection<int, SummonerMatchFrameEvent> $kills_events
+ * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $kills_events
  * @property-read int|null $kills_events_count
- * @property-read Collection<int, SummonerMatchFrameEvent> $level_up_skill_events
+ * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $level_up_skill_events
  * @property-read int|null $level_up_skill_events_count
- * @property-read LolMatch|null $match
- * @property-read SummonerMatch|null $summoner_match
+ * @property-read \App\Models\LolMatch|null $match
+ * @property-read \App\Models\SummonerMatch|null $summoner_match
+ *
  * @method static Builder|SummonerMatchFrame newModelQuery()
  * @method static Builder|SummonerMatchFrame newQuery()
  * @method static Builder|SummonerMatchFrame query()
@@ -61,6 +61,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static Builder|SummonerMatchFrame whereTimeEnemySpentControlled($value)
  * @method static Builder|SummonerMatchFrame whereTotalGold($value)
  * @method static Builder|SummonerMatchFrame whereXp($value)
+ *
  * @mixin Eloquent
  */
 final class SummonerMatchFrame extends Model
@@ -104,7 +105,6 @@ final class SummonerMatchFrame extends Model
     {
         return $this->hasMany(SummonerMatchFrameEvent::class, 'summoner_match_frame_id');
     }
-
 
     public function item_events(): HasMany
     {
