@@ -149,7 +149,7 @@ class Summoner extends Model
             ->whereIn('match_id', $match_ids)
             ->groupBy('summoner_id')
             ->selectRaw('summoner_id, count(id) as encounter_count')
-            ->having("encounter_count", '>', 1)
+            ->having('encounter_count', '>', 1)
             ->orderByDesc('encounter_count')
             ->pluck('encounter_count', 'summoner_id')->toArray();
 
@@ -214,6 +214,7 @@ class Summoner extends Model
         ]);
         $first = $query->first();
         $first['avg_kill_participation'] = round($first['avg_kill_participation'], 2);
+
         return $first['avg_kills'] != null ? $first : null;
     }
 }

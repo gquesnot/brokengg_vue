@@ -131,7 +131,6 @@ final class SummonerMatch extends Model
 
     protected $table = 'summoner_matchs';
 
-
     public function scopeWithAll(Builder $query): void
     {
         $query->select([
@@ -177,7 +176,7 @@ final class SummonerMatch extends Model
             'assists',
             'minions_killed',
             'wards_placed',
-            'kill_participation'
+            'kill_participation',
         ]);
         $query->with([
             'summoner_spell1:id,img_url',

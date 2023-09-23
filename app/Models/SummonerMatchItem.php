@@ -11,6 +11,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 /**
  * App\Models\SummonerMatchItem
  *
+ * @property int $id
  * @property int $item_id
  * @property int $summoner_match_id
  * @property int $position
@@ -20,6 +21,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @method static Builder|SummonerMatchItem newModelQuery()
  * @method static Builder|SummonerMatchItem newQuery()
  * @method static Builder|SummonerMatchItem query()
+ * @method static Builder|SummonerMatchItem whereId($value)
  * @method static Builder|SummonerMatchItem whereItemId($value)
  * @method static Builder|SummonerMatchItem wherePosition($value)
  * @method static Builder|SummonerMatchItem whereSummonerMatchId($value)

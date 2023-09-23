@@ -24,8 +24,8 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property string|null $match_end
  * @property string|null $match_duration
  * @property int $is_trashed
- * @property string|null $created_at
- * @property string|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Map|null $map
  * @property-read \App\Models\Mode|null $mode
  * @property-read Collection<int, \App\Models\SummonerMatch> $participants
@@ -55,7 +55,6 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 final class LolMatch extends Model
 {
     protected $table = 'lol_matchs';
-
 
     public $fillable = [
         'updated',
