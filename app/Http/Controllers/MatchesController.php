@@ -6,13 +6,19 @@ use App\Helpers\FilterHelper;
 use App\Models\LolMatch;
 use App\Models\Summoner;
 use App\Models\SummonerMatch;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class MatchesController extends Controller
 {
-    public function index(Request $request, Summoner $summoner)
+    public function index(Request $request, int $summoner_id)
     {
+        try {
+            $summoner = Summoner::findOrFail($summoner_id);
+        } catch (ModelNotFoundException $e) {
+            return to_route('home');
+        }
         [$filters, $filters_cpy] = FilterHelper::parseFilters($request);
         [$query, $encounter_query] = $summoner->get_summoner_match_query($filters);
 

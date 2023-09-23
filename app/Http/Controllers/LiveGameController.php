@@ -8,13 +8,19 @@ use App\Models\Map;
 use App\Models\Queue;
 use App\Models\Summoner;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class LiveGameController extends Controller
 {
-    public function index(Request $request, Summoner $summoner)
+    public function index(Request $request, int $summoner_id)
     {
+        try {
+            $summoner = Summoner::findOrFail($summoner_id);
+        } catch (ModelNotFoundException $e) {
+            return to_route('home');
+        }
         [$filters, $filters_cpy] = FilterHelper::parseFilters($request);
         $lobby_search = $request->validate([
             'lobby_search' => 'nullable|string',

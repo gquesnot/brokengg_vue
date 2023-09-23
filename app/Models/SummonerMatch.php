@@ -153,8 +153,8 @@ final class SummonerMatch extends Model
             'match.participants.items:id,img_url',
             'match.participants.summoner_spell1:id,img_url',
             'match.participants.summoner_spell2:id,img_url',
-            'match.participants.perks:summoner_match_id,primary_style1_id,sub_style_id',
-            'match.participants.perks.primary_style1:id,img_url',
+            'match.participants.perks:summoner_match_id,primary_selection_id,sub_style_id',
+            'match.participants.perks.primary_selection:id,img_url',
             'match.participants.perks.sub_style:id,img_url',
         ]);
     }
@@ -180,8 +180,8 @@ final class SummonerMatch extends Model
         $query->with([
             'summoner_spell1:id,img_url',
             'summoner_spell2:id,img_url',
-            'perks:summoner_match_id,primary_style1_id,sub_style_id',
-            'perks.primary_style1:id,img_url',
+            'perks:summoner_match_id,primary_selection_id,sub_style_id',
+            'perks.primary_selection:id,img_url',
             'perks.sub_style:id,img_url',
             'match:id,match_id,match_duration,match_end,mode_id,map_id,queue_id',
             'match.queue:id,description',
@@ -214,12 +214,13 @@ final class SummonerMatch extends Model
             'perks.offense:id,img_url',
             'perks.flex:id,img_url',
             'perks.primary_style:id,img_url,name',
-            'perks.primary_style1:id,img_url',
-            'perks.primary_style2:id,img_url',
-            'perks.primary_style3:id,img_url',
+            'perks.primary_selection:id,img_url,name',
+            'perks.primary_selection1:id,img_url',
+            'perks.primary_selection2:id,img_url',
+            'perks.primary_selection3:id,img_url',
             'perks.sub_style:id,img_url,name',
-            'perks.sub_style1:id,img_url',
-            'perks.sub_style2:id,img_url',
+            'perks.sub_selection1:id,img_url',
+            'perks.sub_selection2:id,img_url',
         ]);
     }
 

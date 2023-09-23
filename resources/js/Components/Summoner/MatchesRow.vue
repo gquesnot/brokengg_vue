@@ -38,8 +38,8 @@ const toggleIsOpen = () => {
   is_open.value = !is_open.value
   if (is_open.value && !loaded_summoner_match.value) {
     axios.get(route('summoner.match.loaded', {
-      summoner_match: props.summoner_match.id,
-      summoner: getSummoner().id
+      summoner_match_id: props.summoner_match.id,
+      summoner_id: getSummoner().id
     }))
         .then(response => {
           loaded_summoner_match.value = response.data.summoner_match
@@ -83,7 +83,7 @@ const toggleIsOpen = () => {
           </div>
           <div class="flex flex-col ml-1">
               <VImg
-                  :src="urlPerkHelper(summoner_match.perks.primary_style1.img_url)"
+                  :src="urlPerkHelper(summoner_match.perks.primary_selection.img_url)"
                   class="w-7 h-7 bg-black rounded-full"/>
               <VImg
                   :src="urlPerkHelper(summoner_match.perks.sub_style.img_url)"

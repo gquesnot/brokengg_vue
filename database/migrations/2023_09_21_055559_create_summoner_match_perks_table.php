@@ -15,12 +15,13 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Perk::class, 'flex_id');
             $table->foreignIdFor(\App\Models\Perk::class, 'offense_id');
             $table->foreignIdFor(\App\Models\Perk::class, 'primary_style_id');
-            $table->foreignIdFor(\App\Models\Perk::class, 'primary_style1_id');
-            $table->foreignIdFor(\App\Models\Perk::class, 'primary_style2_id');
-            $table->foreignIdFor(\App\Models\Perk::class, 'primary_style3_id');
+            $table->foreignIdFor(\App\Models\Perk::class, 'primary_selection_id');
+            $table->foreignIdFor(\App\Models\Perk::class, 'primary_selection1_id');
+            $table->foreignIdFor(\App\Models\Perk::class, 'primary_selection2_id');
+            $table->foreignIdFor(\App\Models\Perk::class, 'primary_selection3_id');
             $table->foreignIdFor(\App\Models\Perk::class, 'sub_style_id');
-            $table->foreignIdFor(\App\Models\Perk::class, 'sub_style1_id');
-            $table->foreignIdFor(\App\Models\Perk::class, 'sub_style2_id');
+            $table->foreignIdFor(\App\Models\Perk::class, 'sub_selection1_id');
+            $table->foreignIdFor(\App\Models\Perk::class, 'sub_selection2_id');
         });
     }
 

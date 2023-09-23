@@ -13,22 +13,24 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $flex_id
  * @property int $offense_id
  * @property int $primary_style_id
- * @property int $primary_style1_id
- * @property int $primary_style2_id
- * @property int $primary_style3_id
+ * @property int $primary_selection_id
+ * @property int $primary_selection1_id
+ * @property int $primary_selection2_id
+ * @property int $primary_selection3_id
  * @property int $sub_style_id
- * @property int $sub_style1_id
- * @property int $sub_style2_id
+ * @property int $sub_selection1_id
+ * @property int $sub_selection2_id
  * @property-read \App\Models\Perk|null $defense
  * @property-read \App\Models\Perk|null $flex
  * @property-read \App\Models\Perk|null $offense
+ * @property-read \App\Models\Perk|null $primary_selection
+ * @property-read \App\Models\Perk|null $primary_selection1
+ * @property-read \App\Models\Perk|null $primary_selection2
+ * @property-read \App\Models\Perk|null $primary_selection3
  * @property-read \App\Models\Perk|null $primary_style
- * @property-read \App\Models\Perk|null $primary_style1
- * @property-read \App\Models\Perk|null $primary_style2
- * @property-read \App\Models\Perk|null $primary_style3
+ * @property-read \App\Models\Perk|null $sub_selection1
+ * @property-read \App\Models\Perk|null $sub_selection2
  * @property-read \App\Models\Perk|null $sub_style
- * @property-read \App\Models\Perk|null $sub_style1
- * @property-read \App\Models\Perk|null $sub_style2
  * @property-read \App\Models\SummonerMatch|null $summoner_match
  *
  * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk newModelQuery()
@@ -38,12 +40,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk whereFlexId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk whereOffenseId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk wherePrimaryStyle1Id($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk wherePrimaryStyle2Id($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk wherePrimaryStyle3Id($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk wherePrimarySelection1Id($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk wherePrimarySelection2Id($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk wherePrimarySelection3Id($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk wherePrimarySelectionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk wherePrimaryStyleId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk whereSubStyle1Id($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk whereSubStyle2Id($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk whereSubSelection1Id($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk whereSubSelection2Id($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk whereSubStyleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SummonerMatchPerk whereSummonerMatchId($value)
  *
@@ -59,12 +62,13 @@ class SummonerMatchPerk extends Model
         'flex_id',
         'offense_id',
         'primary_style_id',
-        'primary_style1_id',
-        'primary_style2_id',
-        'primary_style3_id',
+        'primary_selection_id',
+        'primary_selection1_id',
+        'primary_selection2_id',
+        'primary_selection3_id',
         'sub_style_id',
-        'sub_style1_id',
-        'sub_style2_id',
+        'sub_selection1_id',
+        'sub_selection2_id',
     ];
 
     public function summoner_match(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -92,33 +96,38 @@ class SummonerMatchPerk extends Model
         return $this->belongsTo(Perk::class, 'primary_style_id');
     }
 
-    public function primary_style1(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(Perk::class, 'primary_style1_id');
-    }
-
-    public function primary_style2(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(Perk::class, 'primary_style2_id');
-    }
-
-    public function primary_style3(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(Perk::class, 'primary_style3_id');
-    }
-
     public function sub_style(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Perk::class, 'sub_style_id');
     }
 
-    public function sub_style1(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function primary_selection(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Perk::class, 'sub_style1_id');
+        return $this->belongsTo(Perk::class, 'primary_selection_id');
     }
 
-    public function sub_style2(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function primary_selection1(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Perk::class, 'sub_style2_id');
+        return $this->belongsTo(Perk::class, 'primary_selection1_id');
+    }
+
+    public function primary_selection2(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Perk::class, 'primary_selection2_id');
+    }
+
+    public function primary_selection3(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Perk::class, 'primary_selection3_id');
+    }
+
+    public function sub_selection1(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Perk::class, 'sub_selection1_id');
+    }
+
+    public function sub_selection2(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Perk::class, 'sub_selection2_id');
     }
 }

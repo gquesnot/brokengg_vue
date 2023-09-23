@@ -22,7 +22,7 @@ const summoner = getSummoner();
 
 watch(search, debounce(function (value: string) {
     router.visit(route('summoner.encounters', getParamsWithFilters(getFilters(), {
-        summoner: summoner.id.toString(),
+      summoner_id: summoner.id.toString(),
         search: value
     })), {
         preserveState: true,

@@ -18,8 +18,8 @@ const loses = computed(() => (props.champion.total - props.champion.wins));
 
 const navigateToChampion = () => {
     router.visit(route('summoner.champion', {
-        summoner: getSummoner().id,
-        champion: props.champion.champion_id,
+      summoner_id: getSummoner().id,
+      champion_id: props.champion.champion_id,
     }), {
         preserveState: true,
     })

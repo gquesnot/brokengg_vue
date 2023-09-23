@@ -78,7 +78,7 @@ for (let participant of props.participants) {
                         </div>
                         <div class="flex flex-col ml-1">
                             <VImg
-                                :src="urlPerkHelper(participant.perks.primary_style1.img_url)"
+                                :src="urlPerkHelper(participant.perks.primary_selection.img_url)"
                                 class="w-6 h-6 bg-black rounded-full"/>
                             <VImg
                                 :src="urlPerkHelper(participant.perks.sub_style.img_url)"

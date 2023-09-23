@@ -75,12 +75,13 @@ trait HandleMatchDataUpdate
             })->toArray();
             $perks = [
                 'primary_style_id' => $participant['perks']['styles'][0]['style'],
-                'primary_style1_id' => $perk_primary_selections[0],
-                'primary_style2_id' => $perk_primary_selections[1],
-                'primary_style3_id' => $perk_primary_selections[2],
+                'primary_selection_id' => $perk_primary_selections[0],
+                'primary_selection1_id' => $perk_primary_selections[1],
+                'primary_selection2_id' => $perk_primary_selections[2],
+                'primary_selection3_id' => $perk_primary_selections[3],
                 'sub_style_id' => $participant['perks']['styles'][1]['style'],
-                'sub_style1_id' => $perk_sub_selections[0],
-                'sub_style2_id' => $perk_sub_selections[1],
+                'sub_selection1_id' => $perk_sub_selections[0],
+                'sub_selection2_id' => $perk_sub_selections[1],
                 'offense_id' => $participant['perks']['statPerks']['offense'],
                 'flex_id' => $participant['perks']['statPerks']['flex'],
                 'defense_id' => $participant['perks']['statPerks']['defense'],

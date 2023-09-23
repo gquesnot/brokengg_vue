@@ -25,8 +25,8 @@ const match_detail  = ref<any | null>(null);
 watch(tab, function (value){
     if (value === 'build' && match_detail.value === null){
         axios.get(route('summoner.match.detail', {
-          summoner_match: props.summoner_match.id,
-          summoner: getSummoner().id
+          summoner_match_id: props.summoner_match.id,
+          summoner_id: getSummoner().id
         }))
             .then(response => {
                 match_detail.value = response.data.match_participants_detail

@@ -140,7 +140,7 @@ const switchTab = (label: string) => {
     let tab = getTab(label)
     if (tab) {
         router.visit(route(tab.route, {
-            summoner: getSummoner().id,
+          summoner_id: getSummoner().id,
         }), {
             preserveState: true,
         })

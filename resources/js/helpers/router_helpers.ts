@@ -10,22 +10,22 @@ export const navigateTo = (route_name: string, params: Record<string, number | s
 
 export const navigateToEncounter = (summoner_id: number, encounter_id: number) => {
     navigateTo('summoner.encounter', {
-        summoner: summoner_id,
-        encounter: encounter_id,
+        summoner_id: summoner_id,
+        encounter_id: encounter_id,
     })
 }
 
 
 export const navigateToMatch = (summoner_id: number, summoner_match_id: number) => {
     navigateTo('summoner.match', {
-        summoner: summoner_id,
-        summoner_match: summoner_match_id,
+        summoner_id: summoner_id,
+        summoner_match_id: summoner_match_id,
     })
 }
 
 export const navigateToSummoner = (summoner_id: number) => {
     router.visit(route('summoner.matches', {
-        summoner: summoner_id,
+        summoner_id: summoner_id,
     }), {
         preserveState: true,
     });

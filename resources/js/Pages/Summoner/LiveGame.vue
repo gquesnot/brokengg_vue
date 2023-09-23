@@ -19,7 +19,7 @@ const form = useForm({
 })
 
 const searchLobby = () => {
-    router.visit(route('summoner.live-game', {summoner: summoner.id, lobby_search: form.lobby_search}),
+  router.visit(route('summoner.live-game', {summoner_id: summoner.id, lobby_search: form.lobby_search}),
         {
             preserveState: true,
         })

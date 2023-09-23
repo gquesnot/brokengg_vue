@@ -7,6 +7,7 @@ use App\Models\LolMatch;
 use App\Models\Queue;
 use App\Models\Summoner;
 use App\Models\Version;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Inertia\Middleware;
@@ -29,12 +30,7 @@ class HandleInertiaRequests extends Middleware
         return parent::version($request);
     }
 
-    /**
-     * Define the props that are shared by default.
-     *
-     * @return array<string, mixed>
-     */
-    public function share(Request $request): array
+    public function share(Request $request)
     {
 
         $filters_data = $request->validate([
@@ -68,13 +64,17 @@ class HandleInertiaRequests extends Middleware
         }
 
         $route_params = $request->route()->originalParameters();
-        $summoner_id = Arr::get($route_params, 'summoner');
+        $summoner_id = Arr::get($route_params, 'summoner_id');
 
-        $champion_options = [];
         $queue_options = [];
         $summoner = null;
         if ($summoner_id) {
-            $summoner = Summoner::select(['id', 'name', 'profile_icon_id'])->find($summoner_id);
+            try {
+                $summoner = Summoner::select(['id', 'name', 'profile_icon_id'])->findOrFail($summoner_id);
+            } catch (ModelNotFoundException $e) {
+                return to_route('home');
+            }
+
             $match_ids = $summoner
                 ->summoner_matches()
                 ->pluck('match_id');
