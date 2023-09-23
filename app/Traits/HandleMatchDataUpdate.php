@@ -114,13 +114,12 @@ trait HandleMatchDataUpdate
 
             if (array_key_exists('challenges', $participant)) {
                 if (array_key_exists('killParticipation', $participant['challenges'])) {
-                    $save_data['kill_participation'] = $participant['challenges']['killParticipation'];
+                    $save_data['kill_participation'] = round($participant['challenges']['killParticipation'], 2);
                 }
                 if (array_key_exists('kda', $participant['challenges'])) {
-                    $save_data['kda'] = $participant['challenges']['kda'];
+                    $save_data['kda'] = round($participant['challenges']['kda'], 2);
                 }
             }
-            //$summoner_match = SummonerMatch::create($data);
             $save_items = [];
             $items = [
                 $participant['item0'],
@@ -129,7 +128,6 @@ trait HandleMatchDataUpdate
                 $participant['item3'],
                 $participant['item4'],
                 $participant['item5'],
-                //$participant['item6'],
             ];
             foreach ($items as $idx => $item) {
                 if ($item) {
@@ -152,13 +150,11 @@ trait HandleMatchDataUpdate
         foreach ($matches_to_add as [$summoner_match, $items, $perks]) {
             $summoner_match = SummonerMatch::create($summoner_match);
             foreach ($items as $item) {
-                SummonerMatchItem::create(array_merge($item, [
-                    'summoner_match_id' => $summoner_match->id,
-                ]));
+                $item['summoner_match_id'] = $summoner_match->id;
+                SummonerMatchItem::create($item);
             }
-            SummonerMatchPerk::create(array_merge($perks, [
-                'summoner_match_id' => $summoner_match->id,
-            ]));
+            $perks['summoner_match_id'] = $summoner_match->id;
+            SummonerMatchPerk::create($perks);
         }
 
         $match->match_creation = Carbon::createFromTimestampMs($api_match['info']['gameCreation']);

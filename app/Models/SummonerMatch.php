@@ -131,6 +131,7 @@ final class SummonerMatch extends Model
 
     protected $table = 'summoner_matchs';
 
+
     public function scopeWithAll(Builder $query): void
     {
         $query->select([
@@ -150,7 +151,7 @@ final class SummonerMatch extends Model
             'match.participants:id,summoner_id,champion_id,match_id,won,kda,kills,deaths,assists,minions_killed,total_damage_dealt_to_champions,total_damage_taken,gold_earned,wards_placed,summoner_spell1_id,summoner_spell2_id,champ_level',
             'match.participants.summoner:id,name',
             'match.participants.champion:id,name,img_url',
-            'match.participants.items:id,img_url',
+            'match.participants.items:items.id as id,img_url',
             'match.participants.summoner_spell1:id,img_url',
             'match.participants.summoner_spell2:id,img_url',
             'match.participants.perks:summoner_match_id,primary_selection_id,sub_style_id',
@@ -165,7 +166,7 @@ final class SummonerMatch extends Model
             'champ_level',
             'summoner_spell1_id',
             'summoner_spell2_id',
-            'id',
+            'summoner_matchs.id',
             'won',
             'match_id',
             'summoner_id',
@@ -176,6 +177,7 @@ final class SummonerMatch extends Model
             'assists',
             'minions_killed',
             'wards_placed',
+            'kill_participation'
         ]);
         $query->with([
             'summoner_spell1:id,img_url',
@@ -187,7 +189,7 @@ final class SummonerMatch extends Model
             'match.queue:id,description',
             'match.map:id,description',
             'match.mode:id,description',
-            'items:id,img_url',
+            'items:items.id as id,img_url',
             'champion:id,name,img_url',
             'match.participants:id,summoner_id,champion_id,match_id,won',
             'match.participants.summoner:id,name',
@@ -348,8 +350,8 @@ final class SummonerMatch extends Model
     {
         return $query->select(
             'champion_id',
-            DB::raw('count(*) as total'),
-            DB::raw('sum(won) as wins'),
+            DB::raw('count(id) as total'),
+            DB::raw('sum(won) as total_win'),
             DB::raw('avg(kills) as avg_kills'),
             DB::raw('avg(deaths) as avg_deaths'),
             DB::raw('avg(assists) as avg_assists'),

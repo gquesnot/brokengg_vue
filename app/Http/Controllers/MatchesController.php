@@ -31,6 +31,7 @@ class MatchesController extends Controller
             ->withPartial()
             ->paginate(20);
 
+
         return Inertia::render('Summoner/Matches', [
             'summoner_stats' => $summoner->get_summoner_stats($match_ids),
             'matches' => $matches,

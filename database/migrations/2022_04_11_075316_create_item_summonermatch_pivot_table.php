@@ -14,10 +14,10 @@ class CreateItemSummonermatchPivotTable extends Migration
     public function up()
     {
         Schema::create('summoner_match_items', function (Blueprint $table) {
+            $table->id();
             $table->foreignIdFor(\App\Models\Item::class, 'item_id')->index()->constrained();
             $table->foreignIdFor(\App\Models\SummonerMatch::class, 'summoner_match_id')->index()->constrained('summoner_matchs')->onDelete('cascade');
             $table->integer('position');
-            $table->primary(['item_id', 'summoner_match_id', 'position']);
         });
     }
 

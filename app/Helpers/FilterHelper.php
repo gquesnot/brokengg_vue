@@ -29,7 +29,6 @@ class FilterHelper
         if (Arr::has($filters_cpy, 'should_filter_encounters')) {
             $filters['should_filter_encounters'] = $filters_cpy['should_filter_encounters'] = boolval($filters_cpy['should_filter_encounters']);
         }
-
         return [$filters, $filters_cpy];
     }
 }

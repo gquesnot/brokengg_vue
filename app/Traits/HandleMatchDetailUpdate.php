@@ -34,15 +34,11 @@ trait HandleMatchDetailUpdate
     private function handleFrameData($frame, LolMatch $match, &$participants, $summoner_match_ids, $untrackedItems)
     {
         $frames_to_add = $this->prepareFrameToAdd($frame, $match, $participants);
-        SummonerMatchFrame::upsert(
-            $frames_to_add,
-            ['match_id', 'summoner_match_id', 'current_timestamp'],
-            ['champion_stats', 'damage_stats', 'current_gold', 'gold_per_second', 'jungle_minions_killed', 'level', 'minions_killed', 'position_x', 'position_y', 'total_gold', 'xp', 'time_enemy_spent_controlled']
-        );
+        SummonerMatchFrame::insert($frames_to_add);
         $this->updateParticipantsFrameIds($frame, $summoner_match_ids, $participants);
         $events_to_add = $this->prepareEventsToAdd($frame, $participants, $untrackedItems);
 
-        SummonerMatchFrameEvent::upsert($events_to_add, ['current_timestamp', 'type', 'summoner_match_id', 'summoner_match_frame_id'], ['summoner_match_victim_id', 'summoner_match_frame_victim_id', 'position_x', 'position_y', 'item_id', 'skill_slot', 'level_up_type', 'level']);
+        SummonerMatchFrameEvent::insert($events_to_add);
     }
 
     private function prepareEventsToAdd($frame, &$participants, $untrackedItems)
@@ -144,23 +140,23 @@ trait HandleMatchDetailUpdate
             // reverse array to get correct order
             $allItemEvents = array_merge($allItemEvents, $participantItemsEvents);
         }
-
-        SummonerMatchFrameEvent::upsert($allItemEvents, ['current_timestamp', 'type', 'summoner_match_id', 'summoner_match_frame_id'], ['summoner_match_victim_id', 'summoner_match_frame_victim_id', 'position_x', 'position_y', 'item_id', 'skill_slot', 'level_up_type', 'level']);
+        SummonerMatchFrameEvent::insert($allItemEvents);
     }
 
     private function deleteOldMatchData(LolMatch $match)
     {
-        SummonerMatchFrame::where('match_id', $match->id)->delete();
-        SummonerMatchFrameEvent::whereIn('summoner_match_id', SummonerMatch::whereMatchId($match->id)->pluck('id'))->delete();
+        $summoner_match_ids = SummonerMatch::whereMatchId($match->id)->pluck('id');
+        SummonerMatchFrame::whereIn('summoner_match_id', $summoner_match_ids)->delete();
+        SummonerMatchFrameEvent::whereIn('summoner_match_id', $summoner_match_ids)->delete();
     }
 
     private function getUntrackedItems()
     {
         return Item::where(function ($query) {
-            $query->where('tags', '=', '[]')
-                ->orWhereJsonContains('tags', 'Trinket')
-                ->orWhereJsonContains('tags', 'Consumable')
-                ->orWhereJsonContains('tags', 'Vision');
+            $query->where('tags', 'like', '%[]%')
+                ->orWhere('tags', 'like', '%Trinket%')
+                ->orWhere('tags', 'like', '%Consumable%')
+                ->orWhere('tags', 'like', '%Vision%');
         })->get()->pluck('id')->toArray();
     }
 

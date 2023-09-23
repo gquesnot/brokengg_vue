@@ -13,8 +13,8 @@ const props = defineProps<{
     version: string
 }>();
 
-const winRate = computed(() => (props.champion.wins / props.champion.total * 100).toFixed(0));
-const loses = computed(() => (props.champion.total - props.champion.wins));
+const winRate = computed(() => (props.champion.total_win / props.champion.total * 100).toFixed(0));
+const loses = computed(() => (props.champion.total - props.champion.total_win));
 
 const navigateToChampion = () => {
     router.visit(route('summoner.champion', {
@@ -41,7 +41,7 @@ const navigateToChampion = () => {
     </td>
     <td>
         <div>
-            <div>{{ props.champion.wins }}W</div>
+          <div>{{ props.champion.total_win }}W</div>
             <div> {{ loses }}L</div>
         </div>
     </td>
@@ -49,8 +49,9 @@ const navigateToChampion = () => {
         {{ winRate }}%
     </td>
     <td>
-        <div class="flex flex-col w-36 text-center">
-            <div class="flex">{{ props.champion.avg_kills }} / {{ props.champion.avg_deaths }} /
+      <div class="flex flex-col w-36 items-center">
+        <div class="flex">
+          {{ props.champion.avg_kills }} / {{ props.champion.avg_deaths }} /
                 {{ props.champion.avg_assists }}
             </div>
             <div> {{

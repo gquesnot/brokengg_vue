@@ -20,6 +20,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import {debounce} from "lodash";
 import {navigateToSummoner} from "@/helpers/router_helpers";
+import moment from "moment";
 
 const props = defineProps<{
     tab: string
@@ -127,10 +128,10 @@ const formToFilters = () => {
         should_filter_encounters: form.filters.should_filter_encounters ? form.filters.should_filter_encounters : false,
     }
     if (filters.start_date !== undefined) {
-        filters.start_date = filters.start_date.split('T')[0]
+      filters.start_date = moment(filters.start_date.split('T')[0]).add(1, 'days').format('YYYY-MM-DD')
     }
     if (filters.end_date !== undefined) {
-        filters.end_date = filters.end_date.split('T')[0]
+      filters.end_date = moment(filters.end_date.split('T')[0]).add(1, 'days').format('YYYY-MM-DD')
     }
     return filters
 }

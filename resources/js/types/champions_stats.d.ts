@@ -5,7 +5,7 @@ export interface ChampionStatsInterface {
     id: number;
     champion_id: number;
     total: number;
-    wins: number;
+    total_win: number;
     avg_kills: number;
     avg_deaths: number;
     avg_assists: number;

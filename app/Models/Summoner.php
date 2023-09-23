@@ -148,8 +148,8 @@ class Summoner extends Model
         return SummonerMatch::where('summoner_id', '!=', $this->id)
             ->whereIn('match_id', $match_ids)
             ->groupBy('summoner_id')
-            ->selectRaw('summoner_id, count(*) as encounter_count')
-            ->having('encounter_count', '>', 1)
+            ->selectRaw('summoner_id, count(id) as encounter_count')
+            ->having("encounter_count", '>', 1)
             ->orderByDesc('encounter_count')
             ->pluck('encounter_count', 'summoner_id')->toArray();
 
@@ -160,8 +160,8 @@ class Summoner extends Model
         return SummonerMatch::where('summoner_matchs.summoner_id', '!=', $this->id)
             ->join('summoners', 'summoners.id', '=', 'summoner_matchs.summoner_id')
             ->whereIn('match_id', $match_ids)
-            ->groupBy('summoner_matchs.summoner_id')
-            ->selectRaw('summoner_matchs.summoner_id, summoners.name, count(*) as encounter_count')
+            ->groupBy(['summoner_matchs.summoner_id', 'summoners.name'])
+            ->selectRaw('summoner_matchs.summoner_id, summoners.name, count(summoner_matchs.id) as encounter_count')
             ->orderByDesc('encounter_count');
     }
 
@@ -210,10 +210,10 @@ class Summoner extends Model
             DB::raw('avg(kill_participation) as avg_kill_participation'),
             DB::raw('avg(kda) as avg_kda'),
             DB::raw('sum(won) as total_win'),
-            DB::raw('count(*) as total_game'),
+            DB::raw('count(id) as total_game'),
         ]);
         $first = $query->first();
-
+        $first['avg_kill_participation'] = round($first['avg_kill_participation'], 2);
         return $first['avg_kills'] != null ? $first : null;
     }
 }

@@ -56,7 +56,6 @@ final class LolMatch extends Model
 {
     protected $table = 'lol_matchs';
 
-    public $timestamps = false;
 
     public $fillable = [
         'updated',
