@@ -28,7 +28,7 @@ class SummonerUpdated implements ShouldBroadcast
 
     public function broadcastWhen(): bool
     {
-        $cache_key = 'summoner.' . $this->summoner_id;
+        $cache_key = 'summoner-update.' . $this->summoner_id;
         $previous_value = Cache::get($cache_key, null);
 
         if ($previous_value !== $this->should_start_refresh) {
