@@ -14,10 +14,16 @@ use App\Models\SummonerMatch;
 use App\Models\SummonerMatchItem;
 use App\Models\SummonerMatchPerk;
 use Carbon\Carbon;
+use Saloon\Exceptions\Request\Statuses\ForbiddenException;
+use Saloon\Exceptions\Request\Statuses\NotFoundException;
 
 trait HandleMatchDataUpdate
 {
-    private function updateSummonerMatches(array $match_ids = null)
+    /**
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     */
+    public function updateSummonerMatches(array $match_ids = null): void
     {
         $query = LolMatch::whereUpdated(false)->whereIsTrashed(false);
         if ($match_ids === null) {

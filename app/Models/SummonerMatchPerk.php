@@ -23,18 +23,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $sub_style_id
  * @property int $sub_selection1_id
  * @property int $sub_selection2_id
- * @property-read Perk|null $defense
- * @property-read Perk|null $flex
- * @property-read Perk|null $offense
- * @property-read Perk|null $primary_selection
- * @property-read Perk|null $primary_selection1
- * @property-read Perk|null $primary_selection2
- * @property-read Perk|null $primary_selection3
- * @property-read Perk|null $primary_style
- * @property-read Perk|null $sub_selection1
- * @property-read Perk|null $sub_selection2
- * @property-read Perk|null $sub_style
- * @property-read SummonerMatch|null $summoner_match
+ * @property-read \App\Models\Perk|null $defense
+ * @property-read \App\Models\Perk|null $flex
+ * @property-read \App\Models\Perk|null $offense
+ * @property-read \App\Models\Perk|null $primary_selection
+ * @property-read \App\Models\Perk|null $primary_selection1
+ * @property-read \App\Models\Perk|null $primary_selection2
+ * @property-read \App\Models\Perk|null $primary_selection3
+ * @property-read \App\Models\Perk|null $primary_style
+ * @property-read \App\Models\Perk|null $sub_selection1
+ * @property-read \App\Models\Perk|null $sub_selection2
+ * @property-read \App\Models\Perk|null $sub_style
+ * @property-read \App\Models\SummonerMatch|null $summoner_match
  *
  * @method static Builder|SummonerMatchPerk newModelQuery()
  * @method static Builder|SummonerMatchPerk newQuery()

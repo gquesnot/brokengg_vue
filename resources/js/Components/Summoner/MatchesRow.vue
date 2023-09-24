@@ -13,6 +13,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {navigateToMatch} from "@/helpers/router_helpers";
 import {SummonerEncounterCountInterface} from "@/types/summoner_encounter_count";
 import axios from "axios";
+import {usePage} from "@inertiajs/vue3";
 
 
 const props = defineProps<{
@@ -29,7 +30,6 @@ onMounted(() => {
 
 let is_open = ref(false);
 
-
 const summoner = getSummoner();
 const loaded_summoner_match = ref<SummonerMatchInterface | null>(null);
 
@@ -44,7 +44,8 @@ const toggleIsOpen = () => {
         .then(response => {
           loaded_summoner_match.value = response.data.summoner_match
         })
-        .catch(error => console.log('error', error))
+        .catch(error => {
+        })
   }
 }
 

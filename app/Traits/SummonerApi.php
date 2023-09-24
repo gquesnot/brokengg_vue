@@ -2,143 +2,134 @@
 
 namespace App\Traits;
 
+use App\Enums\PlatformType;
+use App\Enums\RegionType;
 use App\Events\SummonerUpdated;
-use App\Models\Summoner;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Http;
+use App\Http\Integrations\LolApi\LolBaseConnector;
+use App\Http\Integrations\LolApi\LolMatchConnector;
+use App\Http\Integrations\LolApi\Requests\LiveGameRequest;
+use App\Http\Integrations\LolApi\Requests\MatchDetailRequest;
+use App\Http\Integrations\LolApi\Requests\MatchIdsRequest;
+use App\Http\Integrations\LolApi\Requests\MatchRequest;
+use App\Http\Integrations\LolApi\Requests\SummonerByNameRequest;
+use App\Http\Integrations\LolApi\Requests\SummonerByPuuidRequest;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
+use Saloon\Contracts\Response;
+use Saloon\Exceptions\Request\Statuses\ForbiddenException;
+use Saloon\Exceptions\Request\Statuses\NotFoundException;
+use Saloon\Http\Paginators\Paginator;
+use Saloon\RateLimitPlugin\Exceptions\RateLimitReachedException;
 
 trait SummonerApi
 {
-    private function getSummonerMatchIds($start = 0, $count = 100)
+    /**
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     */
+    private function getSummonerMatchIds(): Collection
     {
-        $url = "https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/{$this->puuid}/ids";
-        $response = Http::withoutVerifying()->withHeaders([
-            'X-Riot-Token' => config('services.riot.api_key'),
-        ])->get($url, [
-            'start' => $start,
-            'count' => $count,
-        ]);
+        $max_match_count = config('services.riot.max_match_count');
+        $page = 0;
+        $start_time = null;
+        if ($this->last_time_update) {
+            $start_time = Carbon::createFromTimeString($this->last_time_update)->timestamp;
+        }
+        $api = new LolBaseConnector(RegionType::EUROPE);
+        $match_ids = collect([]);
+        $response = $this->handleJobRequest(fn() => $api->send(new MatchIdsRequest($this, $page, $start_time)));
         $data = $response->json();
-        if (self::responseLimitExceeded($data)) {
-            sleep(20);
 
-            return $this->getSummonerMatchIds($start, $count);
-        }
-        if (self::responseNotFound($data) || self::responseIsForbidden($data)) {
-            return null;
+        while (count($data) == 100) {
+            $match_ids = $match_ids->merge($data);
+            if ($max_match_count != 0 && $match_ids->count() > $max_match_count) {
+                return $match_ids->slice(0, $max_match_count);
+            }
+            $page++;
+            $response = $this->handleJobRequest(fn() => $api->send(new MatchIdsRequest($this, $page, $start_time)));
+            $data = $response->json();
         }
 
-        return $data;
+        return $match_ids->merge($data);
     }
 
-    private function getMatchDetail(string $match_id)
+    /**
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     * @throws RateLimitReachedException
+     */
+    private function getMatchDetail(string $match_id): array
     {
-        $url = "https://europe.api.riotgames.com/lol/match/v5/matches/{$match_id}/timeline";
-        $response = Http::withoutVerifying()->withHeaders([
-            'X-Riot-Token' => config('services.riot.api_key'),
-        ])->get($url);
-        $data = $response->json();
-        if (self::responseLimitExceeded($data)) {
-            sleep(20);
+        $api = new LolBaseConnector(RegionType::EUROPE);
+        $response = $api->send(new MatchDetailRequest($match_id));
 
-            return $this->getMatchDetail($match_id);
-        }
-        if (self::responseNotFound($data) || self::responseIsForbidden($data)) {
-            return null;
-        }
-
-        return $data;
+        return $response->json();
     }
 
-    private function getMatch(string $match_id)
+    /**
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     */
+    private function getMatch(string $match_id): array
     {
-        $url = "https://europe.api.riotgames.com/lol/match/v5/matches/{$match_id}";
-        $response = Http::withoutVerifying()->withHeaders([
-            'X-Riot-Token' => config('services.riot.api_key'),
-        ])->get($url);
-        $data = $response->json();
-        if (self::responseLimitExceeded($data)) {
+        $api = new LolMatchConnector(RegionType::EUROPE);
+        $response = $this->handleJobRequest(fn() => $api->send(new MatchRequest($match_id)));
+
+        return $response->json();
+    }
+
+    /**
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     * @throws RateLimitReachedException
+     */
+    public function getLiveGame(): array
+    {
+        $api = new LolBaseConnector(PlatformType::EUW1);
+        $response = $api->send(new LiveGameRequest($this));
+
+        return $response->json();
+    }
+
+    /**
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     * @throws RateLimitReachedException
+     */
+    public static function getSummonerByName($summoner_name): array
+    {
+        $api = new LolBaseConnector(PlatformType::EUW1);
+        $response = $api->send(new SummonerByNameRequest($summoner_name));
+
+        return $response->json();
+    }
+
+    /**
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     */
+    public function getSummonerByPuuid(): array
+    {
+        $api = new LolBaseConnector(PlatformType::EUW1);
+        $response = $this->handleJobRequest(fn() => $api->send(new SummonerByPuuidRequest($this)));
+
+        return $response->json();
+    }
+
+    /**
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     */
+    private function handleJobRequest(callable $fn_call): Response|Paginator
+    {
+        try {
+            return $fn_call();
+        } catch (RateLimitReachedException $e) {
+            $seconds = $e->getLimit()->getRemainingSeconds();
             SummonerUpdated::dispatch($this->id, false);
-            sleep(20);
+            sleep($seconds + 1);
 
-            return $this->getMatch($match_id);
+            return $this->handleJobRequest($fn_call);
         }
-        if (self::responseNotFound($data) || self::responseIsForbidden($data)) {
-            return null;
-        }
-
-        return $data;
-    }
-
-    public function getLiveGame()
-    {
-        $url = "https://euw1.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/{$this->summoner_id}";
-        $response = Http::withoutVerifying()->withHeaders([
-            'X-Riot-Token' => config('services.riot.api_key'),
-        ])->get($url);
-        $data = $response->json();
-        if (self::responseLimitExceeded($data)) {
-            sleep(20);
-
-            return $this->getLiveGame();
-        }
-        if (self::responseNotFound($data) || self::responseIsForbidden($data)) {
-            return null;
-        }
-
-        return $data;
-    }
-
-    public static function getSummonerByName($summoner_name)
-    {
-        $url = "https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/{$summoner_name}";
-        $response = Http::withoutVerifying()->withHeaders([
-            'X-Riot-Token' => config('services.riot.api_key'),
-        ])->get($url);
-        $data = $response->json();
-        if (self::responseLimitExceeded($data)) {
-            sleep(20);
-
-            return Summoner::getSummonerByName($summoner_name);
-        }
-        if (self::responseNotFound($data) || self::responseIsForbidden($data)) {
-            return null;
-        }
-
-        return $data;
-    }
-
-    private function getSummonerByPuuid()
-    {
-        $url = "https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/{$this->puuid}";
-        $response = Http::withoutVerifying()->withHeaders([
-            'X-Riot-Token' => config('services.riot.api_key'),
-        ])->get($url);
-        $data = $response->json();
-        if (self::responseLimitExceeded($data)) {
-            sleep(20);
-
-            return $this->getSummonerByPuuid();
-        }
-        if (self::responseNotFound($data) || self::responseIsForbidden($data)) {
-            return null;
-        }
-
-        return $data;
-    }
-
-    private static function responseLimitExceeded($data): bool
-    {
-        return Arr::get($data, 'status.status_code') == 429;
-    }
-
-    private static function responseNotFound($data)
-    {
-        return Arr::get($data, 'status.status_code') == 404;
-    }
-
-    private static function responseIsForbidden($data)
-    {
-        return Arr::get($data, 'status.status_code') == 403;
     }
 }

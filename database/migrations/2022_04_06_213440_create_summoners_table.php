@@ -19,7 +19,7 @@ return new class() extends Migration
             $table->unsignedBigInteger('profile_icon_id')->nullable();
             $table->unsignedBigInteger('revision_date')->nullable();
             $table->unsignedBigInteger('summoner_level')->nullable();
-            $table->string('last_scanned_match')->nullable();
+            $table->timestamp('last_time_update')->nullable();
             $table->boolean('complete')->default(false);
             $table->string('summoner_id')->unique()->index()->nullable();
             $table->string('account_id')->unique()->index()->nullable();

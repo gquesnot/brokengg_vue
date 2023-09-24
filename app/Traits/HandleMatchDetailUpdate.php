@@ -9,15 +9,20 @@ use App\Models\SummonerMatch;
 use App\Models\SummonerMatchFrame;
 use App\Models\SummonerMatchFrameEvent;
 use Illuminate\Support\Arr;
+use Saloon\Exceptions\Request\Statuses\ForbiddenException;
+use Saloon\Exceptions\Request\Statuses\NotFoundException;
+use Saloon\RateLimitPlugin\Exceptions\RateLimitReachedException;
 
 trait HandleMatchDetailUpdate
 {
+    /**
+     * @throws RateLimitReachedException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     */
     public function loadMatchDetail(LolMatch $match)
     {
         $matchDetail = $this->getMatchDetail($match->match_id);
-        if (! $matchDetail) {
-            return null;
-        }
 
         $this->deleteOldMatchData($match);
         $untrackedItems = $this->getUntrackedItems();

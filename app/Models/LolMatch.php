@@ -20,18 +20,18 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property int|null $mode_id
  * @property int|null $map_id
  * @property int|null $queue_id
- * @property string|null $match_creation
- * @property string|null $match_end
+ * @property \Illuminate\Support\Carbon|null $match_creation
+ * @property \Illuminate\Support\Carbon|null $match_end
  * @property string|null $match_duration
  * @property int $is_trashed
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read Map|null $map
- * @property-read Mode|null $mode
- * @property-read Collection<int, SummonerMatch> $participants
+ * @property-read \App\Models\Map|null $map
+ * @property-read \App\Models\Mode|null $mode
+ * @property-read Collection<int, \App\Models\SummonerMatch> $participants
  * @property-read int|null $participants_count
- * @property-read Queue|null $queue
- * @property-read Version|null $version
+ * @property-read \App\Models\Queue|null $queue
+ * @property-read \App\Models\Version|null $version
  *
  * @method static Builder|LolMatch newModelQuery()
  * @method static Builder|LolMatch newQuery()
@@ -68,6 +68,11 @@ final class LolMatch extends Model
         'is_trashed',
         'created_at',
         'updated_at',
+    ];
+
+    public $casts = [
+        'match_creation' => 'datetime',
+        'match_end' => 'datetime',
     ];
 
     public function sinceMatchEnd()

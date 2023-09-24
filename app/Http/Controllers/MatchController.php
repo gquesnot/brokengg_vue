@@ -8,6 +8,9 @@ use App\Models\SummonerMatch;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Saloon\Exceptions\Request\Statuses\ForbiddenException;
+use Saloon\Exceptions\Request\Statuses\NotFoundException;
+use Saloon\RateLimitPlugin\Exceptions\RateLimitReachedException;
 
 class MatchController extends Controller
 {
@@ -52,7 +55,16 @@ class MatchController extends Controller
             return to_route('home');
         }
         if (!$summoner_match->has_detail()) {
-            $summoner->loadMatchDetail($summoner_match->match);
+
+            try {
+                $summoner->loadMatchDetail($summoner_match->match);
+            } catch (ForbiddenException|NotFoundException $e) {
+
+                return response()->json(['api' => 'Match not found'], 404);
+            } catch (RateLimitReachedException $e) {
+                return response()->json(['api' => 'Rate limit reached, please try again later'], 404);
+            }
+
         }
 
         return response()->json([

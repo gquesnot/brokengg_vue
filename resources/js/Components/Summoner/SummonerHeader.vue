@@ -1,6 +1,5 @@
 <script setup lang="ts">
 
-
 import {onMounted, Ref, ref} from "vue";
 import {Head, router, useForm, usePage} from "@inertiajs/vue3";
 import Datepicker from "vue3-datepicker";
@@ -20,6 +19,8 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import {navigateToSummoner} from "@/helpers/router_helpers";
 import moment from "moment";
+import SummonerUpdateEventInterface from "@/types/summoner_update_event_interface";
+import AlertApi from "@/Components/AlertApi.vue";
 
 const props = defineProps<{
     tab: string
@@ -30,23 +31,18 @@ const champion_options = getChampionOptions();
 const queue_options = getQueueOptions();
 let refresh_interval: any = null
 
-interface SummonerUpdatedEventInterface {
-    should_start_refresh: boolean
-}
 
-export const refresh_summoner = () => {
+const refresh_summoner = () => {
     //@ts-ignore
     router.visit(route(route().current(), getParamsWithFilters(getFilters(), getRouteParams())), {
         preserveState: true,
         preserveScroll: true,
-        only: getOnly(),
-        onSuccess: () => {
-        },
+      only: getOnly()
     });
 }
 
 onMounted(() => {
-    window.Echo.channel('summoner.' + getSummoner().id).listen('SummonerUpdated', ({should_start_refresh}: SummonerUpdatedEventInterface) => {
+  window.Echo.channel('summoner.' + getSummoner().id).listen('SummonerUpdated', ({should_start_refresh}: SummonerUpdateEventInterface) => {
         if (should_start_refresh) {
             refresh_summoner()
             refresh_interval = setInterval(refresh_summoner, 3000)
@@ -265,6 +261,7 @@ const switchTab = (label: string) => {
             </ResponsiveNavLink>
         </div>
     </div>
+  <AlertApi/>
 </template>
 
 <style>

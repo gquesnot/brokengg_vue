@@ -25,11 +25,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $skill_slot
  * @property LevelUpType|null $level_up_type
  * @property int|null $level
- * @property-read Item|null $item
- * @property-read SummonerMatch|null $summoner_match
- * @property-read SummonerMatchFrame|null $summoner_match_frame
- * @property-read SummonerMatchFrame|null $summoner_match_frame_victim
- * @property-read SummonerMatch|null $summoner_match_victim
+ * @property-read \App\Models\Item|null $item
+ * @property-read \App\Models\SummonerMatch|null $summoner_match
+ * @property-read \App\Models\SummonerMatchFrame|null $summoner_match_frame
+ * @property-read \App\Models\SummonerMatchFrame|null $summoner_match_frame_victim
+ * @property-read \App\Models\SummonerMatch|null $summoner_match_victim
  *
  * @method static Builder|SummonerMatchFrameEvent newModelQuery()
  * @method static Builder|SummonerMatchFrameEvent newQuery()

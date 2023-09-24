@@ -3,36 +3,32 @@
 namespace App\Traits;
 
 use App\Models\Summoner;
+use Saloon\Exceptions\Request\Statuses\ForbiddenException;
+use Saloon\Exceptions\Request\Statuses\NotFoundException;
+use Saloon\RateLimitPlugin\Exceptions\RateLimitReachedException;
 
 trait HandleSummonerDataUpdate
 {
+    /**
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     * @throws RateLimitReachedException
+     */
     public static function updateOrCreateSummonerByName(string $summoner_name): ?Summoner
     {
 
         $summoner_array = Summoner::getSummonerByName($summoner_name);
-        if (! $summoner_array) {
-            return null;
-        }
         if (Summoner::wherePuuid($summoner_array['puuid'])->exists()) {
             $summoner = Summoner::wherePuuid($summoner_array['puuid'])->first();
         } else {
             $summoner = new Summoner();
         }
-        $summoner->updateSummonerWithArray($summoner_array);
+        $summoner->updateSummonerFromArray($summoner_array);
 
         return $summoner;
     }
 
-    public function updateSummonerByPuuid(): void
-    {
-        $summoner_array = $this->getSummonerByPuuid();
-        if (! $summoner_array) {
-            return;
-        }
-        $this->updateSummonerWithArray($summoner_array);
-    }
-
-    private function updateSummonerWithArray(array $summoner_array)
+    public function updateSummonerFromArray(array $summoner_array): void
     {
         $this->name = $summoner_array['name'];
         $this->puuid = $summoner_array['puuid'];

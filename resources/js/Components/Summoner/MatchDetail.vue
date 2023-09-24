@@ -10,6 +10,8 @@ import LinearStat from "@/Components/LinearStat.vue";
 import CircularStat from "@/Components/CircularStat.vue";
 import MatchDetailBuild from "@/Components/Summoner/MatchDetailBuild.vue";
 import axios from "axios";
+import {usePage} from "@inertiajs/vue3";
+import AlertApi from "@/Components/AlertApi.vue";
 
 const props = defineProps<{
   summoner_match: SummonerMatchInterface,
@@ -17,22 +19,27 @@ const props = defineProps<{
 }>();
 
 
-const tab = ref('Overview')
+const tab = ref('overview')
 
-const summoner = getSummoner();
-const match_detail  = ref<any | null>(null);
+const match_detail = ref<any | null>(null);
+const error_message = ref<string | null>(null);
 
-watch(tab, function (value){
-    if (value === 'build' && match_detail.value === null){
-        axios.get(route('summoner.match.detail', {
-          summoner_match_id: props.summoner_match.id,
-          summoner_id: getSummoner().id
-        }))
-            .then(response => {
-                match_detail.value = response.data.match_participants_detail
-            })
-            .catch(error => console.log('error', error))
-    }
+
+watch(tab, function (value) {
+  if (value === 'build' && match_detail.value === null) {
+    axios.get(route('summoner.match.detail', {
+      summoner_match_id: props.summoner_match.id,
+      summoner_id: getSummoner().id
+    }))
+        .then(response => {
+          match_detail.value = response.data.match_participants_detail
+          usePage().props.errors = {}
+
+        })
+        .catch(error => {
+          usePage().props.errors.api = error.response.data.api;
+        })
+  }
 })
 
 
@@ -46,7 +53,7 @@ watch(tab, function (value){
     >
       <v-tab value="overview">Overview</v-tab>
       <v-tab value="team_analysis">Team analysis</v-tab>
-        <v-tab value="build" >Build</v-tab>
+      <v-tab value="build">Build</v-tab>
     </v-tabs>
     <v-window v-model="tab">
       <v-window-item value="overview">
@@ -56,7 +63,8 @@ watch(tab, function (value){
         <div class="flex justify-center flex-col my-4">
           <LinearStat class="mx-auto w-2/3" key_stat="kills" :participants="summoner_match.match.participants"
                       description="Team kill" :has_won="summoner_match.won"/>
-          <LinearStat class="mx-auto w-2/3 mt-2" key_stat="gold_earned" :participants="summoner_match.match.participants"
+          <LinearStat class="mx-auto w-2/3 mt-2" key_stat="gold_earned"
+                      :participants="summoner_match.match.participants"
                       description="Team Gold" :has_won="summoner_match.won"/>
         </div>
         <MatchTable :summoner_encounter_count="summoner_encounter_count"
@@ -79,29 +87,34 @@ watch(tab, function (value){
           </div>
         </div>
         <div class="grid grid-cols-2 gap-4">
-          <CircularStat description="Champion Kill" :split_number="false" :participants="summoner_match.match.participants"  key_stat="kills"/>
-          <CircularStat description="Gold Earned" :split_number="true" :participants="summoner_match.match.participants"  key_stat="gold_earned"/>
-          <CircularStat description="Damage Dealt to Champions" :split_number="true" :participants="summoner_match.match.participants"  key_stat="total_damage_dealt_to_champions"/>
-          <CircularStat description="Wards Placed" :split_number="false" :participants="summoner_match.match.participants"  key_stat="wards_placed"/>
-          <CircularStat description="Damage Taken" :split_number="true" :participants="summoner_match.match.participants"  key_stat="total_damage_taken"/>
-          <CircularStat description="CS" :split_number="false" :participants="summoner_match.match.participants"  key_stat="minions_killed"/>
+          <CircularStat description="Champion Kill" :split_number="false"
+                        :participants="summoner_match.match.participants" key_stat="kills"/>
+          <CircularStat description="Gold Earned" :split_number="true" :participants="summoner_match.match.participants"
+                        key_stat="gold_earned"/>
+          <CircularStat description="Damage Dealt to Champions" :split_number="true"
+                        :participants="summoner_match.match.participants" key_stat="total_damage_dealt_to_champions"/>
+          <CircularStat description="Wards Placed" :split_number="false"
+                        :participants="summoner_match.match.participants" key_stat="wards_placed"/>
+          <CircularStat description="Damage Taken" :split_number="true"
+                        :participants="summoner_match.match.participants" key_stat="total_damage_taken"/>
+          <CircularStat description="CS" :split_number="false" :participants="summoner_match.match.participants"
+                        key_stat="minions_killed"/>
         </div>
       </v-window-item>
-        <v-window-item value="build">
-            <MatchDetailBuild v-if="match_detail !== null" :summoner_match="summoner_match"  :match_detail="match_detail"/>
-            <template v-else>
-                <div class="w-full h-32 flex justify-center items-center bg-gray-1">
-                    <v-progress-circular
-                            :size="70"
-                            :width="7"
-                            color="black"
-                            indeterminate
-                    ></v-progress-circular>
-                </div>
-            </template>
-        </v-window-item>
+      <v-window-item value="build">
+        <MatchDetailBuild v-if="match_detail !== null" :summoner_match="summoner_match" :match_detail="match_detail"/>
+        <template v-else>
+          <div class="w-full h-32 flex justify-center items-center bg-gray-1">
+            <v-progress-circular
+                :size="70"
+                :width="7"
+                color="black"
+                indeterminate
+            ></v-progress-circular>
+          </div>
+        </template>
+      </v-window-item>
     </v-window>
-
   </div>
 </template>
 

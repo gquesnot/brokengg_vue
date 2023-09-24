@@ -7,6 +7,9 @@ use App\Models\Summoner;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Saloon\Exceptions\Request\Statuses\ForbiddenException;
+use Saloon\Exceptions\Request\Statuses\NotFoundException;
+use Saloon\RateLimitPlugin\Exceptions\RateLimitReachedException;
 
 class SummonerController extends Controller
 {
@@ -21,14 +24,20 @@ class SummonerController extends Controller
             'summoner_name' => 'required|string',
         ]);
         $summoner_name = $validated['summoner_name'];
+        $query = Summoner::where('name', 'like', "%{$summoner_name}%");
         // check if summoner exists
-        if (! Summoner::where('name', 'like', "%{$summoner_name}%")->exists()) {
-            $summoner = Summoner::updateOrCreateSummonerByName($summoner_name);
-            if (! $summoner) {
-                return redirect()->back()->withErrors(['summoner_name' => 'Summoner not found']);
+        if (!$query->clone()->exists()) {
+            try {
+                $summoner = Summoner::updateOrCreateSummonerByName($summoner_name);
+            } catch (NotFoundException $e) {
+                return redirect()->back()->withErrors(['api' => 'Summoner not found']);
+            } catch (RateLimitReachedException $e) {
+                return back()->withErrors(['api' => 'Rate limit reached, please try again later']);
+            } catch (ForbiddenException $e) {
+                return back()->withErrors(['api' => 'API key is invalid']);
             }
         } else {
-            $summoner = Summoner::where('name', 'like', "%{$summoner_name}%")->first();
+            $summoner = $query->clone()->first();
         }
 
         return to_route('summoner.matches', ['summoner_id' => $summoner->id]);

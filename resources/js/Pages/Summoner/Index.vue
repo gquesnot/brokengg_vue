@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import {Head, useForm} from '@inertiajs/vue3';
+import {Head, useForm, usePage} from '@inertiajs/vue3';
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import {ref} from "vue";
+import AlertApi from "@/Components/AlertApi.vue";
 
 const props = defineProps<{}>();
 
@@ -11,14 +13,12 @@ const form = useForm({
     summoner_name: 'random iron',
 });
 
+
 const searchSummoner = () => {
     form.post(route('summoner.store'), {
         preserveScroll: true,
-        onSuccess: () => {
-
-        },
-        onError: (response) => {
-        },
+      onError() {
+      }
     });
 };
 
@@ -50,6 +50,8 @@ const searchSummoner = () => {
 
         </v-card>
     </div>
+
+  <AlertApi/>
 
 </template>
 

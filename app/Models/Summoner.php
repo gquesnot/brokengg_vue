@@ -25,7 +25,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property int|null $profile_icon_id
  * @property int|null $revision_date
  * @property int|null $summoner_level
- * @property string|null $last_scanned_match
+ * @property string|null $last_time_update
  * @property bool $complete
  * @property string|null $summoner_id
  * @property string|null $account_id
@@ -33,9 +33,9 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property bool $auto_update
  * @property string|null $created_at
  * @property string|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, LolMatch> $matches
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LolMatch> $matches
  * @property-read int|null $matches_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, SummonerMatch> $summoner_matches
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatch> $summoner_matches
  * @property-read int|null $summoner_matches_count
  *
  * @method static Builder|Summoner newModelQuery()
@@ -46,7 +46,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @method static Builder|Summoner whereComplete($value)
  * @method static Builder|Summoner whereCreatedAt($value)
  * @method static Builder|Summoner whereId($value)
- * @method static Builder|Summoner whereLastScannedMatch($value)
+ * @method static Builder|Summoner whereLastTimeUpdate($value)
  * @method static Builder|Summoner whereName($value)
  * @method static Builder|Summoner whereProfileIconId($value)
  * @method static Builder|Summoner wherePuuid($value)
@@ -73,7 +73,7 @@ class Summoner extends Model
         'profile_icon_id',
         'revision_date',
         'summoner_level',
-        'last_scanned_match',
+        'last_time_update',
         'complete',
         'summoner_id',
         'account_id',
@@ -85,12 +85,6 @@ class Summoner extends Model
         'complete' => 'boolean',
         'auto_update' => 'boolean',
     ];
-
-    public function updateMatches()
-    {
-        $this->updateSummonerMatchIds();
-        $this->updateSummonerMatches();
-    }
 
     public function matches(): HasManyThrough
     {
