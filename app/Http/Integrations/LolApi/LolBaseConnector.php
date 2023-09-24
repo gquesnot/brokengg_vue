@@ -69,7 +69,7 @@ class LolBaseConnector extends Connector
     protected function resolveLimits(): array
     {
         return [
-            Limit::allow(20)->everySeconds(120),
+            Limit::allow(100)->everySeconds(120),
         ];
     }
 
