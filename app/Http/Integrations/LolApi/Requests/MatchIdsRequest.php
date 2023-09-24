@@ -15,8 +15,8 @@ class MatchIdsRequest extends Request
 
     public function __construct(
         protected Summoner $summoner,
-        protected int      $page,
-        protected ?int     $start_time,
+        protected int  $page,
+        protected ?int $start_time,
     )
     {
     }

@@ -10,7 +10,6 @@ use App\Models\Summoner;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
 use Saloon\Exceptions\Request\Statuses\NotFoundException;
@@ -41,7 +40,6 @@ class LiveGameController extends Controller
             $errors = ['api' => 'Rate limit reached, please try again later'];
         }
 
-
         if ($lobby_search && !$live_game) {
             $match_ids = $summoner->summoner_matches()->pluck('match_id');
             $encounter_counts = $summoner->get_encounters_count_query($match_ids)->pluck('encounter_count', 'summoner_id');
@@ -71,13 +69,16 @@ class LiveGameController extends Controller
         $encounter_counts = $summoner->get_encounters_count_query($match_ids)->pluck('encounter_count', 'summoner_id');
         foreach ($live_game['participants'] as $key => $participant) {
             $participant_summoner = Summoner::whereName($participant['summonerName'])->first();
-            if (!$participant_summoner) {
-                $participant_summoner = Summoner::updateOrCreateSummonerByName($participant['summonerName']);
-            }
-            $live_game['participants'][$key]['summoner'] = $participant_summoner;
+            $live_game['participants'][$key]['summoner'] = [
+                'name' => $participant['summonerName'],
+                'id' => $participant_summoner?->id,
+            ];
             $live_game['participants'][$key]['champion'] = Champion::whereId($participant['championId'])->first();
-            $live_game['participants'][$key]['encounter_count'] = $encounter_counts[$participant_summoner->id] ?? 0;
+            if ($participant_summoner?->id) {
+                $live_game['participants'][$key]['encounter_count'] = $encounter_counts[$participant_summoner->id] ?? 0;
+            }
         }
+
         return $live_game;
     }
 }

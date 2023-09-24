@@ -26,7 +26,7 @@ const summoner = getSummoner();
         </div>
         <div class="w-25 truncate ml-4">{{ participant['summoner']['name'] }}</div>
         <div class="ml-4 w-10">
-            <div v-if="participant['encounter_count']">
+            <div v-if="participant['summoner']['id'] != null">
                 <div @click="navigateToEncounter(summoner.id, participant['summoner']['id'])" class="cursor-pointer">
                     {{ participant['encounter_count'] }}
                 </div>
