@@ -125,6 +125,9 @@ trait HandleMatchDataUpdate
                 if (array_key_exists('kda', $participant['challenges'])) {
                     $save_data['kda'] = round($participant['challenges']['kda'], 2);
                 }
+            } else {
+                // old version
+                $save_data['kda'] = round(($participant['kills'] + $participant['assists']) / $participant['deaths'], 2);
             }
             $save_items = [];
             $items = [
