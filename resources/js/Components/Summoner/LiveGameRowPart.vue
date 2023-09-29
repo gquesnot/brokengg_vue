@@ -28,7 +28,7 @@ const summoner = getSummoner();
         <div class="w-25 truncate ml-4">{{ participant['summoner']['name'] }}</div>
         <div class="ml-4 w-10">
             <div v-if="participant['summoner']['id'] != null">
-              <div @click="navigateToEncounter(summoner.id, participant['summoner']['summoner']['id'])"
+              <div @click="navigateToEncounter(summoner.id, participant['summoner']['id'])"
                    class="cursor-pointer">
                     {{ participant['encounter_count'] }}
                 </div>
@@ -37,7 +37,7 @@ const summoner = getSummoner();
                 0
             </div>
         </div>
-      <div class="flex ml-1 justify-center text-xs" v-if="participant['summoner'].pro_player">
+      <div class="flex ml-1 justify-center text-xs" v-if="participant['summoner']?.pro_player">
         <a :href="urlProPlayerHelper(participant['summoner'].pro_player.slug)">
           <div class="bg-purple-800 py-0.5 px-1 rounded">
             PRO
