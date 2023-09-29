@@ -14,6 +14,7 @@ use App\Models\SummonerMatch;
 use App\Models\SummonerMatchItem;
 use App\Models\SummonerMatchPerk;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
 use Saloon\Exceptions\Request\Statuses\NotFoundException;
 
@@ -45,6 +46,8 @@ trait HandleMatchDataUpdate
 
     private function updateMatchFromArray(LolMatch $match, array $api_match)
     {
+        $match_id = $match->match_id;
+        Storage::disk('local')->put("{$match_id}.json", json_encode($api_match));
         $map_id = intval($api_match['info']['mapId']);
         $queue_id = intval($api_match['info']['queueId']);
 

@@ -6,6 +6,7 @@ import SummonerStats from "@/Components/Summoner/SummonerStats.vue";
 import EncounterRow from "@/Components/Summoner/EncounterRow.vue";
 import {navigateToMatch} from "@/helpers/router_helpers";
 import {SummonerEncounterInterface} from "@/types/summoner_encounter";
+import {SummonerInterface} from "@/types/summoner";
 
 
 const props = defineProps<{

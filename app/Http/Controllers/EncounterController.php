@@ -14,8 +14,8 @@ class EncounterController extends Controller
     public function index(Request $request, int $summoner_id, int $encounter_id)
     {
         try {
-            $summoner = Summoner::findOrFail($summoner_id);
-            $encounter = Summoner::findOrFail($encounter_id);
+            $summoner = Summoner::with('pro_player')->findOrFail($summoner_id);
+            $encounter = Summoner::with('pro_player')->findOrFail($encounter_id);
         } catch (ModelNotFoundException $e) {
             return to_route('home');
         }

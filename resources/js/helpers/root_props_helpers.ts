@@ -1,5 +1,6 @@
 import {usePage} from "@inertiajs/vue3";
 import {FiltersInterface} from "@/types/filters";
+import {SummonerInterface} from "@/types/summoner";
 
 
 export const getParamsWithFilters = (filters: any, other_params: Record<string, string> = {}): Record<string, any> => {

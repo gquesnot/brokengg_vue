@@ -35,6 +35,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property string|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LolMatch> $matches
  * @property-read int|null $matches_count
+ * @property-read \App\Models\ProPlayer|null $pro_player
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatch> $summoner_matches
  * @property-read int|null $summoner_matches_count
  *
@@ -79,6 +80,7 @@ class Summoner extends Model
         'account_id',
         'puuid',
         'auto_update',
+        'pro_player_id',
     ];
 
     public $casts = [
@@ -94,6 +96,11 @@ class Summoner extends Model
     public function summoner_matches(): HasMany
     {
         return $this->hasMany(SummonerMatch::class, 'summoner_id', 'id');
+    }
+
+    public function pro_player(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
+    {
+        return $this->hasOneThrough(ProPlayer::class, ProPlayerName::class, 'summoner_name', 'id', 'name', 'pro_player_id');
     }
 
     public function get_encounters_count_for_summoner(Summoner $summoner)

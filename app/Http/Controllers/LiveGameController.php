@@ -69,10 +69,16 @@ class LiveGameController extends Controller
         $encounter_counts = $summoner->get_encounters_count_query($match_ids)->pluck('encounter_count', 'summoner_id');
         foreach ($live_game['participants'] as $key => $participant) {
             $participant_summoner = Summoner::whereName($participant['summonerName'])->first();
-            $live_game['participants'][$key]['summoner'] = [
-                'name' => $participant['summonerName'],
-                'id' => $participant_summoner?->id,
-            ];
+            if (!$participant_summoner) {
+                $participant_summoner = Summoner::create([
+                    'name' => $participant['summonerName'],
+                    'puuid' => $participant['puuid'],
+                    'profile_icon_id' => $participant['profileIconId'],
+                    'summoner_id' => $participant['summonerId'],
+                ]);
+            }
+            $participant_summoner->load('pro_player');
+            $live_game['participants'][$key]['summoner'] = $participant_summoner;
             $live_game['participants'][$key]['champion'] = Champion::whereId($participant['championId'])->first();
             if ($participant_summoner?->id) {
                 $live_game['participants'][$key]['encounter_count'] = $encounter_counts[$participant_summoner->id] ?? 0;

@@ -8,3 +8,6 @@ export const urlProfilIconHelper = (img_id: number): string => `https://ddragon.
 
 export const urlSummonerSpellHelper = (img_url:string) => `http://ddragon.leagueoflegends.com/cdn/${getVersion()}/img/spell/${img_url}`;
 export const urlPerkHelper = (img_url:string) => `https://ddragon.leagueoflegends.com/cdn/img/perk-images/${img_url}`;
+
+
+export const urlProPlayerHelper = (slug: string): string => `https://lolpros.gg/player/${slug}`;

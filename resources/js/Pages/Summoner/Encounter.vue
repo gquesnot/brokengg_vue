@@ -4,6 +4,7 @@ import {ref} from "vue";
 import EncounterPart from "@/Components/Summoner/EncounterPart.vue";
 import {getSummoner} from "@/helpers/root_props_helpers";
 import {SummonerEncounterInterface} from "@/types/summoner_encounter";
+import {SummonerInterface} from "@/types/summoner";
 
 
 const props = defineProps<{

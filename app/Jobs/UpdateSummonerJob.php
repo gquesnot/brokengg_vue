@@ -24,19 +24,29 @@ class UpdateSummonerJob implements ShouldQueue
     public function handle(): void
     {
         SummonerUpdated::dispatch($this->summoner->id, true);
-        try {
-            $this->summoner->updateSummonerFromArray($this->summoner->getSummonerByPuuid());
-            $this->summoner->updateSummonerMatchIds();
-            $this->summoner->updateSummonerMatches();
-            $last_match = $this->summoner->matches()->orderBy('match_id', 'desc')->first();
-            if ($last_match) {
-                $this->summoner->last_time_update = $last_match->match_creation;
-                $this->summoner->save();
-            }
+        $this->summoner->updateSummonerFromArray($this->summoner->getSummonerByPuuid());
+        $this->summoner->updateSummonerMatchIds();
 
-        } catch (NotFoundException|ForbiddenException $e) {
-            Log::alert("Failed UpdateSummonerJob for {$this->summoner->id}:" . $e->getMessage());
+        $this->summoner->updateSummonerMatches();
+        $last_match = $this->summoner->matches()->orderBy('match_id', 'desc')->first();
+        if ($last_match) {
+            $this->summoner->last_time_update = $last_match->match_creation;
+            $this->summoner->save();
         }
+        //        try {
+        //            $this->summoner->updateSummonerFromArray($this->summoner->getSummonerByPuuid());
+        //            $this->summoner->updateSummonerMatchIds();
+        //
+        //            $this->summoner->updateSummonerMatches();
+        //            $last_match = $this->summoner->matches()->orderBy('match_id', 'desc')->first();
+        //            if ($last_match) {
+        //                $this->summoner->last_time_update = $last_match->match_creation;
+        //                $this->summoner->save();
+        //            }
+        //
+        //        } catch (NotFoundException|ForbiddenException $e) {
+        //            Log::alert("Failed UpdateSummonerJob for {$this->summoner->id}:" . $e->getMessage());
+        //        }
         SummonerUpdated::dispatch($this->summoner->id, false);
     }
 }

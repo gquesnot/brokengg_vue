@@ -192,6 +192,7 @@ final class SummonerMatch extends Model
             'champion:id,name,img_url',
             'match.participants:id,summoner_id,champion_id,match_id,won',
             'match.participants.summoner:id,name',
+            'match.participants.summoner.pro_player:pro_players.id as id,slug,team_name,name',
             'match.participants.champion:id,name,img_url',
         ]);
     }
