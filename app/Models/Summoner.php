@@ -161,6 +161,7 @@ class Summoner extends Model
     public function get_encounters_count_query($match_ids): Builder|SummonerMatch|\Illuminate\Database\Query\Builder
     {
         return SummonerMatch::where('summoner_matchs.summoner_id', '!=', $this->id)
+            ->with('summoner.pro_player')
             ->join('summoners', 'summoners.id', '=', 'summoner_matchs.summoner_id')
             ->whereIn('match_id', $match_ids)
             ->groupBy(['summoner_matchs.summoner_id', 'summoners.name'])
