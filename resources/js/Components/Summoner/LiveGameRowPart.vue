@@ -37,7 +37,8 @@ const summoner = getSummoner();
                 0
             </div>
         </div>
-      <div class="flex ml-1 justify-center text-xs" v-if="participant['summoner']?.pro_player">
+      <div class="flex ml-1 justify-center text-xs"
+           v-if="participant['summoner']['id'] != null && participant['summoner']?.pro_player">
         <a :href="urlProPlayerHelper(participant['summoner'].pro_player.slug)">
           <div class="bg-purple-800 py-0.5 px-1 rounded">
             PRO
