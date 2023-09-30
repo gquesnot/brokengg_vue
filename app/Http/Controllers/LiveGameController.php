@@ -81,8 +81,8 @@ class LiveGameController extends Controller
 
             $live_game['participants'][$key]['summoner'] = $participant_summoner;
             $live_game['participants'][$key]['champion'] = Champion::whereId($participant['championId'])->first();
-            if ($participant_summoner?->id) {
-                $live_game['participants'][$key]['encounter_count'] = $encounter_counts[$participant_summoner->id] ?? 0;
+            if ($participant_summoner['id']) {
+                $live_game['participants'][$key]['encounter_count'] = $encounter_counts[$participant_summoner['id']] ?? 0;
             }
         }
 
