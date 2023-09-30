@@ -50,7 +50,7 @@ class SummonerController extends Controller
         } catch (ModelNotFoundException $e) {
             return to_route('home');
         }
-        UpdateSummonerJob::dispatchSync($summoner);
+        UpdateSummonerJob::dispatch($summoner);
 
         return redirect()->back();
     }
