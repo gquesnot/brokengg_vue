@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\FilterHelper;
 use App\Models\Champion;
 use App\Models\Map;
+use App\Models\ProPlayerName;
 use App\Models\Queue;
 use App\Models\Summoner;
 use Carbon\Carbon;
@@ -72,10 +73,13 @@ class LiveGameController extends Controller
             if ($participant_summoner) {
                 $participant_summoner->load('pro_player');
             } else {
+                $pro_player = ProPlayerName::whereName($participant['summonerName'])->with('proPlayer')->first();
+
                 $participant_summoner = [
                     'id' => null,
                     'name' => $participant['summonerName'],
                     'profile_icon_id' => $participant['profileIconId'],
+                    'pro_player' => $pro_player?->proPlayer,
                 ];
             }
 
