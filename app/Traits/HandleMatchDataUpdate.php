@@ -130,7 +130,8 @@ trait HandleMatchDataUpdate
                 }
             } else {
                 // old version
-                $save_data['kda'] = round(($participant['kills'] + $participant['assists']) / $participant['deaths'], 2);
+                $deaths = $participant['deaths'] == 0 ? 1 : $participant['deaths'];
+                $save_data['kda'] = round(($participant['kills'] + $participant['assists']) / $deaths, 2);
             }
             $save_items = [];
             $items = [
