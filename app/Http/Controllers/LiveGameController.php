@@ -25,7 +25,6 @@ class LiveGameController extends Controller
         } catch (ModelNotFoundException $e) {
             return to_route('home');
         }
-        [$filters, $filters_cpy] = FilterHelper::parseFilters($request);
         $lobby_search = $request->validate([
             'lobby_search' => 'nullable|string',
         ])['lobby_search'] ?? null;

@@ -20,7 +20,6 @@ class ChampionController extends Controller
             return to_route('home');
         }
 
-        [$filters, $filters_cpy] = FilterHelper::parseFilters($request);
 
         return Inertia::render('Summoner/Champion', [
             'champion' => $champion,

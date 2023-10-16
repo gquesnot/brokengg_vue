@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\FilterHelper;
+use App\Http\Requests\FiltersRequest;
 use App\Models\Summoner;
 use App\Models\SummonerMatch;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
 use Saloon\Exceptions\Request\Statuses\NotFoundException;
@@ -14,7 +16,7 @@ use Saloon\RateLimitPlugin\Exceptions\RateLimitReachedException;
 
 class MatchController extends Controller
 {
-    public function index(Request $request, int $summoner_id, int $summoner_match_id)
+    public function index(FiltersRequest $request, int $summoner_id, int $summoner_match_id)
     {
         try {
             $summoner = Summoner::findOrFail($summoner_id);
@@ -22,7 +24,7 @@ class MatchController extends Controller
         } catch (ModelNotFoundException $e) {
             return to_route('home');
         }
-        [$filters, $filters_cpy] = FilterHelper::parseFilters($request);
+        $filters = Arr::get($request->validated(), 'filters', []);
         [$query, $encounter_query] = $summoner->get_summoner_match_query($filters);
         $encounter_match_ids = $encounter_query->pluck('match_id');
 

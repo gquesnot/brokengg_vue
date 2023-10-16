@@ -3,23 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\FilterHelper;
+use App\Http\Requests\FiltersRequest;
 use App\Models\LolMatch;
 use App\Models\Summoner;
 use App\Models\SummonerMatch;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Inertia\Inertia;
 
 class MatchesController extends Controller
 {
-    public function index(Request $request, int $summoner_id)
+    public function index(FiltersRequest $request, int $summoner_id)
     {
         try {
             $summoner = Summoner::findOrFail($summoner_id);
         } catch (ModelNotFoundException $e) {
             return to_route('home');
         }
-        [$filters, $filters_cpy] = FilterHelper::parseFilters($request);
+        $filters = Arr::get($request->validated(), 'filters', []);
         [$query, $encounter_query] = $summoner->get_summoner_match_query($filters);
 
         $match_ids = $query->pluck('match_id');

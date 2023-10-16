@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Requests\FiltersRequest;
 use App\Models\Champion;
 use App\Models\LolMatch;
 use App\Models\Queue;
@@ -10,6 +11,7 @@ use App\Models\Version;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
 
@@ -32,36 +34,8 @@ class HandleInertiaRequests extends Middleware
 
     public function share(Request $request)
     {
-
-        $filters_data = $request->validate([
-            'filters.champion_id' => 'nullable|integer',
-            'filters.queue_id' => 'nullable|integer',
-            'filters.start_date' => 'nullable|date',
-            'filters.end_date' => 'nullable|date',
-            'filters.should_filter_encounters' => 'nullable|boolean',
-        ], [
-            'filters.champion_id.string' => 'The selected champion is invalid.',
-            'filters.queue_id.string' => 'The selected queue is invalid.',
-            'filters.start_date.string' => 'The start date is not a valid date.',
-            'filters.end_date.string' => 'The end date is not a valid date.',
-            'filters.should_filter_encounters.boolean' => 'The should filter encounters field must be true or false.',
-        ]);
-        $new_filters = [
-            'champion_id' => null,
-            'queue_id' => null,
-            'start_date' => null,
-            'end_date' => null,
-            'should_filter_encounters' => false,
-        ];
-        if ($filters_data) {
-            foreach ($filters_data['filters'] as $key => $value) {
-                if (in_array($key, ['champion_id', 'queue_id'])) {
-                    $new_filters[$key] = intval($value);
-                } else {
-                    $new_filters[$key] = $value;
-                }
-            }
-        }
+        $filters = Validator::validate($request->all(), FiltersRequest::rules());
+        $filters = Arr::get($filters, 'filters', []);
 
         $route_params = $request->route()->originalParameters();
         $summoner_id = Arr::get($route_params, 'summoner_id');
@@ -112,7 +86,7 @@ class HandleInertiaRequests extends Middleware
                     'location' => $request->url(),
                 ]);
             },
-            'filters' => $new_filters,
+            'filters' => $filters,
             'champion_options' => function () {
                 return Champion::select(['name', 'id'])->orderBy('name')
                     ->get()

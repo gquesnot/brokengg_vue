@@ -25,13 +25,10 @@ const handleSplitNumberToNumber = (number:number) => {
 
 const handleSplitNumberToString = (number:any) => {
   // if number is number
-  if (typeof number === 'number') {
     if (props.split_number) {
-      return number.toString().replace('.', ',')
-    } else {
-      return number.toString()
+        number = (number / 1000).toFixed(2)
     }
-  }
+    return number.toString().replace('.', ',') + (props.split_number ? 'k' : '')
 }
 
 const getParticipantStat = (participant : SummonerMatchInterface): number  => {
@@ -105,7 +102,7 @@ let chart_data: ChartData<"doughnut", number[], unknown> = {
         </template>
 
       </div>
-      <div class="w-1/3">
+        <div class="w-1/3 h-full">
         <Doughnut :data="chart_data" :options="{responsive:true, maintainAspectRatio:false}" />
       </div>
       <div class="w-1/3 flex flex-col space-y-1">
