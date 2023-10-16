@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('pro_player_names', function (Blueprint $table) {
             $table->id();
-            $table->string('summoner_name');
+            $table->string('summoner_name')->unique();
             $table->foreignIdFor(\App\Models\ProPlayer::class, 'pro_player_id')->constrained();
         });
     }

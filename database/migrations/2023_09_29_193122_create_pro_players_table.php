@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('pro_players', function (Blueprint $table) {
             $table->id();
-            $table->string('slug');
+            $table->string('slug')->unique();
             $table->string('team_name')->nullable();
             $table->string('name');
         });

@@ -32,7 +32,6 @@ class MatchesController extends Controller
             ->orderByDesc(LolMatch::select('match_creation')->whereColumn('lol_matchs.id', 'summoner_matchs.match_id'))
             ->withPartial()
             ->paginate(20);
-
         return Inertia::render('Summoner/Matches', [
             'summoner_stats' => $summoner->get_summoner_stats($match_ids),
             'matches' => $matches,

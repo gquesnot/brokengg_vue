@@ -127,6 +127,8 @@ final class SummonerMatch extends Model
 
     public $casts = [
         'won' => 'boolean',
+        'kda' => 'float',
+        'kill_participation' => 'float',
     ];
 
     protected $table = 'summoner_matchs';
@@ -351,7 +353,7 @@ final class SummonerMatch extends Model
         return $query->select(
             'champion_id',
             DB::raw('count(id) as total'),
-            DB::raw('sum(won) as total_win'),
+            DB::raw('sum(CASE WHEN won THEN 1 ELSE 0 END) as total_win'),
             DB::raw('avg(kills) as avg_kills'),
             DB::raw('avg(deaths) as avg_deaths'),
             DB::raw('avg(assists) as avg_assists'),

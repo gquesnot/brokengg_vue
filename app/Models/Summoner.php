@@ -152,7 +152,7 @@ class Summoner extends Model
             ->whereIn('match_id', $match_ids)
             ->groupBy('summoner_id')
             ->selectRaw('summoner_id, count(id) as encounter_count')
-            ->having('encounter_count', '>', 1)
+            ->havingRaw('count(id) > 1')
             ->orderByDesc('encounter_count')
             ->pluck('encounter_count', 'summoner_id')->toArray();
 
@@ -213,7 +213,7 @@ class Summoner extends Model
             DB::raw('avg(assists) as avg_assists'),
             DB::raw('avg(kill_participation) as avg_kill_participation'),
             DB::raw('avg(kda) as avg_kda'),
-            DB::raw('sum(won) as total_win'),
+            DB::raw('sum(CASE WHEN won THEN 1 ELSE 0 END) as total_win'),
             DB::raw('count(id) as total_game'),
         ]);
         $first = $query->first();
