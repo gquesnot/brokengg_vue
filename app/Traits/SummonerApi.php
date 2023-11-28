@@ -6,26 +6,31 @@ use App\Enums\PlatformType;
 use App\Enums\RegionType;
 use App\Events\SummonerUpdated;
 use App\Http\Integrations\LolApi\LolBaseConnector;
+use App\Http\Integrations\LolApi\LolLiveGameConnector;
 use App\Http\Integrations\LolApi\LolMatchConnector;
+use App\Http\Integrations\LolApi\LolMatchDetailsConnector;
+use App\Http\Integrations\LolApi\LolMatchIdsConnector;
+use App\Http\Integrations\LolApi\LolSummonerByNameConnector;
+use App\Http\Integrations\LolApi\LolSummonerByPuuidConnector;
 use App\Http\Integrations\LolApi\Requests\LiveGameRequest;
-use App\Http\Integrations\LolApi\Requests\MatchDetailRequest;
+use App\Http\Integrations\LolApi\Requests\MatchDetailsRequest;
 use App\Http\Integrations\LolApi\Requests\MatchIdsRequest;
 use App\Http\Integrations\LolApi\Requests\MatchRequest;
 use App\Http\Integrations\LolApi\Requests\SummonerByNameRequest;
 use App\Http\Integrations\LolApi\Requests\SummonerByPuuidRequest;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
-use Saloon\Contracts\Response;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
 use Saloon\Exceptions\Request\Statuses\NotFoundException;
-use Saloon\Http\Paginators\Paginator;
+use Saloon\Http\Response;
+use Saloon\PaginationPlugin\Paginator;
 use Saloon\RateLimitPlugin\Exceptions\RateLimitReachedException;
 
 trait SummonerApi
 {
     /**
      * @throws NotFoundException
-     * @throws ForbiddenException
+     * @throws ForbiddenException|\JsonException
      */
     private function getSummonerMatchIds(): Collection
     {
@@ -35,7 +40,7 @@ trait SummonerApi
         if ($this->last_time_update) {
             $start_time = Carbon::createFromTimeString($this->last_time_update)->timestamp;
         }
-        $api = new LolBaseConnector(RegionType::EUROPE);
+        $api = new LolMatchIdsConnector(RegionType::EUROPE);
         $match_ids = collect([]);
         $response = $this->handleJobRequest(fn() => $api->send(new MatchIdsRequest($this, $page, $start_time)));
         $data = $response->json();
@@ -54,21 +59,23 @@ trait SummonerApi
     }
 
     /**
-     * @throws NotFoundException
-     * @throws ForbiddenException
-     * @throws RateLimitReachedException
+     * @param string $match_id
+     * @return array
+     * @throws \JsonException
+     * @throws \ReflectionException
+     * @throws \Throwable
      */
     private function getMatchDetail(string $match_id): array
     {
-        $api = new LolBaseConnector(RegionType::EUROPE);
-        $response = $api->send(new MatchDetailRequest($match_id));
+        $api = new LolMatchDetailsConnector(RegionType::EUROPE);
+        $response = $api->send(new MatchDetailsRequest($match_id));
 
         return $response->json();
     }
 
     /**
      * @throws NotFoundException
-     * @throws ForbiddenException
+     * @throws ForbiddenException|\JsonException
      */
     private function getMatch(string $match_id): array
     {
@@ -79,26 +86,28 @@ trait SummonerApi
     }
 
     /**
-     * @throws NotFoundException
-     * @throws ForbiddenException
-     * @throws RateLimitReachedException
+     * @return array
+     * @throws \JsonException
+     * @throws \ReflectionException
+     * @throws \Throwable
      */
     public function getLiveGame(): array
     {
-        $api = new LolBaseConnector(PlatformType::EUW1);
+        $api = new LolLiveGameConnector(PlatformType::EUW1);
         $response = $api->send(new LiveGameRequest($this));
 
         return $response->json();
     }
 
     /**
-     * @throws NotFoundException
-     * @throws ForbiddenException
-     * @throws RateLimitReachedException
+     * @param $summoner_name
+     * @return array
+     * @throws \JsonException
+     * @throws \Throwable
      */
     public static function getSummonerByName($summoner_name): array
     {
-        $api = new LolBaseConnector(PlatformType::EUW1);
+        $api = new LolSummonerByNameConnector(PlatformType::EUW1);
         $response = $api->send(new SummonerByNameRequest($summoner_name));
 
         return $response->json();
@@ -107,10 +116,11 @@ trait SummonerApi
     /**
      * @throws NotFoundException
      * @throws ForbiddenException
+     * @throws \JsonException
      */
     public function getSummonerByPuuid(): array
     {
-        $api = new LolBaseConnector(PlatformType::EUW1);
+        $api = new LolSummonerByPuuidConnector(PlatformType::EUW1);
         $response = $this->handleJobRequest(fn() => $api->send(new SummonerByPuuidRequest($this)));
 
         return $response->json();
@@ -120,7 +130,7 @@ trait SummonerApi
      * @throws NotFoundException
      * @throws ForbiddenException
      */
-    private function handleJobRequest(callable $fn_call): Response|Paginator
+    private function handleJobRequest(callable $fn_call): Response
     {
         try {
             return $fn_call();

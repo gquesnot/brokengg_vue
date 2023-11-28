@@ -4,7 +4,7 @@ namespace App\Http\Integrations\LolApi;
 
 use Saloon\RateLimitPlugin\Limit;
 
-class LolMatchConnector extends LolBaseConnector
+class LolMatchDetailsConnector extends LolBaseConnector
 {
     protected function resolveLimits(): array
     {
@@ -15,6 +15,6 @@ class LolMatchConnector extends LolBaseConnector
 
     protected function getLimiterPrefix(): ?string
     {
-        return 'match-connector';
+        return 'match-details-connector';
     }
 }

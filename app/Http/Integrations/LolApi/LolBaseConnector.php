@@ -5,9 +5,9 @@ namespace App\Http\Integrations\LolApi;
 use App\Enums\PlatformType;
 use App\Enums\RegionType;
 use Illuminate\Support\Facades\Cache;
-use Saloon\Contracts\Response;
 use Saloon\Contracts\Sender;
 use Saloon\Http\Connector;
+use Saloon\Http\Response;
 use Saloon\HttpSender\HttpSender;
 use Saloon\RateLimitPlugin\Contracts\RateLimitStore;
 use Saloon\RateLimitPlugin\Limit;
@@ -69,7 +69,7 @@ class LolBaseConnector extends Connector
     protected function resolveLimits(): array
     {
         return [
-            Limit::allow(100)->everySeconds(120),
+            Limit::allow(1600)->everyMinute(),
         ];
     }
 

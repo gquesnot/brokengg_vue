@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+    db:
+        image: postgres:latest
+        container_name: postgres-db
+        hostname: localhost
+        ports:
+            - "5432:5432"
+        restart: always
+        environment:
+            POSTGRES_DB: broken_gg
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: password

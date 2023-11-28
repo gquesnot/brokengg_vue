@@ -5,7 +5,7 @@ namespace App\Http\Integrations\LolApi\Requests;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-class MatchDetailRequest extends Request
+class MatchDetailsRequest extends Request
 {
     /**
      * Define the HTTP method
