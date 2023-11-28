@@ -63,10 +63,10 @@ for (let participant of props.participants) {
 let chart_data: ChartData<"doughnut", number[], unknown> = {
   datasets: [
     {
-      data: [handleSplitNumberToNumber(won_stat) ,handleSplitNumberToNumber(lose_stat)],
+        data: [handleSplitNumberToNumber(lose_stat), handleSplitNumberToNumber(won_stat)],
       backgroundColor: [
+          '#E57373',
         '#64B5F6',
-        '#E57373',
       ],
     }
   ]

@@ -14,6 +14,7 @@ use App\Models\SummonerMatch;
 use App\Models\SummonerMatchItem;
 use App\Models\SummonerMatchPerk;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
 use Saloon\Exceptions\Request\Statuses\NotFoundException;
@@ -58,6 +59,16 @@ trait HandleMatchDataUpdate
         if (! $map || ! $queue || ! $mode) {
             return false;
         }
+
+        $teams_kills = [
+            100 => 0,
+            200 => 0,
+        ];
+        foreach ($api_match['info']['teams'] as $team) {
+            $teams_kills[$team['teamId']] = $team['objectives']['champion']['kills'];
+        }
+
+
         $matches_to_add = [];
         foreach ($api_match['info']['participants'] as $participant) {
             // remake
@@ -120,19 +131,9 @@ trait HandleMatchDataUpdate
                 'summoner_spell2_id' => $participant['summoner2Id'],
                 'perks' => $perks,
             ];
-
-            if (array_key_exists('challenges', $participant)) {
-                if (array_key_exists('killParticipation', $participant['challenges'])) {
-                    $save_data['kill_participation'] = round($participant['challenges']['killParticipation'], 2);
-                }
-                if (array_key_exists('kda', $participant['challenges'])) {
-                    $save_data['kda'] = round($participant['challenges']['kda'], 2);
-                }
-            } else {
-                // old version
-                $deaths = $participant['deaths'] == 0 ? 1 : $participant['deaths'];
-                $save_data['kda'] = round(($participant['kills'] + $participant['assists']) / $deaths, 2);
-            }
+            $save_data['kill_participation'] = round(($participant['kills'] + $participant['assists']) / $teams_kills[$participant['teamId']], 2);
+            $deaths = $participant['deaths'] == 0 ? 1 : $participant['deaths'];
+            $save_data['kda'] = round(($participant['kills'] + $participant['assists']) / $deaths, 2);
             $save_items = [];
             $items = [
                 $participant['item0'],
