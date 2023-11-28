@@ -5,7 +5,6 @@ namespace App\Traits;
 use App\Enums\PlatformType;
 use App\Enums\RegionType;
 use App\Events\SummonerUpdated;
-use App\Http\Integrations\LolApi\LolBaseConnector;
 use App\Http\Integrations\LolApi\LolLiveGameConnector;
 use App\Http\Integrations\LolApi\LolMatchConnector;
 use App\Http\Integrations\LolApi\LolMatchDetailsConnector;
@@ -23,7 +22,6 @@ use Illuminate\Support\Collection;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
 use Saloon\Exceptions\Request\Statuses\NotFoundException;
 use Saloon\Http\Response;
-use Saloon\PaginationPlugin\Paginator;
 use Saloon\RateLimitPlugin\Exceptions\RateLimitReachedException;
 
 trait SummonerApi
@@ -59,8 +57,6 @@ trait SummonerApi
     }
 
     /**
-     * @param string $match_id
-     * @return array
      * @throws \JsonException
      * @throws \ReflectionException
      * @throws \Throwable
@@ -86,7 +82,6 @@ trait SummonerApi
     }
 
     /**
-     * @return array
      * @throws \JsonException
      * @throws \ReflectionException
      * @throws \Throwable
@@ -100,8 +95,6 @@ trait SummonerApi
     }
 
     /**
-     * @param $summoner_name
-     * @return array
      * @throws \JsonException
      * @throws \Throwable
      */

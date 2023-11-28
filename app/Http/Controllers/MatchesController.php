@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\FilterHelper;
 use App\Http\Requests\FiltersRequest;
 use App\Models\LolMatch;
 use App\Models\Summoner;
 use App\Models\SummonerMatch;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
 
@@ -32,6 +30,7 @@ class MatchesController extends Controller
             ->orderByDesc(LolMatch::select('match_creation')->whereColumn('lol_matchs.id', 'summoner_matchs.match_id'))
             ->withPartial()
             ->paginate(20);
+
         return Inertia::render('Summoner/Matches', [
             'summoner_stats' => $summoner->get_summoner_stats($match_ids),
             'matches' => $matches,

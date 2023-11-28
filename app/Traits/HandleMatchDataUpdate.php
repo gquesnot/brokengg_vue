@@ -14,7 +14,6 @@ use App\Models\SummonerMatch;
 use App\Models\SummonerMatchItem;
 use App\Models\SummonerMatchPerk;
 use Carbon\Carbon;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
 use Saloon\Exceptions\Request\Statuses\NotFoundException;
@@ -67,7 +66,6 @@ trait HandleMatchDataUpdate
         foreach ($api_match['info']['teams'] as $team) {
             $teams_kills[$team['teamId']] = $team['objectives']['champion']['kills'];
         }
-
 
         $matches_to_add = [];
         foreach ($api_match['info']['participants'] as $participant) {

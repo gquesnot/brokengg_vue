@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\FilterHelper;
 use App\Models\Champion;
 use App\Models\Summoner;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -19,7 +18,6 @@ class ChampionController extends Controller
         } catch (ModelNotFoundException $e) {
             return to_route('home');
         }
-
 
         return Inertia::render('Summoner/Champion', [
             'champion' => $champion,

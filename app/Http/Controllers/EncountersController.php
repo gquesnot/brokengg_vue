@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\FilterHelper;
 use App\Http\Requests\FiltersRequest;
 use App\Models\Summoner;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
 

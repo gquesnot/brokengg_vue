@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\FilterHelper;
 use App\Http\Requests\FiltersRequest;
 use App\Models\LolMatch;
 use App\Models\Summoner;
 use Arr;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class EncounterController extends Controller

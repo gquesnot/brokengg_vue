@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\FilterHelper;
 use App\Models\Champion;
 use App\Models\Map;
 use App\Models\ProPlayerName;

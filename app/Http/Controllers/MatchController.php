@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\FilterHelper;
 use App\Http\Requests\FiltersRequest;
 use App\Models\Summoner;
 use App\Models\SummonerMatch;
