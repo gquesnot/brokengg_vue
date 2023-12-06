@@ -9,6 +9,7 @@ use App\Enums\PlatformType;
 use App\Enums\RegionType;
 use App\Helpers\LeaguePositionHelper;
 use App\Http\Integrations\LolApi\LolAccountByNameAndTagLineConnector;
+use App\Http\Integrations\LolApi\LolAccountByPuuidConnector;
 use App\Http\Integrations\LolApi\LolSummonerByPuuidConnector;
 use App\Http\Integrations\LolApi\Requests\AccountByNameAndTagLineRequest;
 use App\Http\Integrations\LolApi\Requests\AccountByPuuidRequest;
@@ -70,7 +71,7 @@ trait HandleSummonerDataUpdate
 
     public static function getAccountByPuuid(string $puuid): array
     {
-        $api = new LolSummonerByPuuidConnector(RegionType::EUROPE);
+        $api = new LolAccountByPuuidConnector(RegionType::EUROPE);
         $response = $api->send(new AccountByPuuidRequest($puuid));
 
         return $response->json();
