@@ -29,7 +29,7 @@ class UpdateSummonersDataJob implements ShouldBeUnique, ShouldQueue
             $summoner->updateSummonerFromArray($summoner->getSummonerByPuuid());
             $summoner->updateSummonerLeague();
             $current_summoner_update_count++;
-            if ($current_summoner_update_count >= 80) {
+            if ($current_summoner_update_count >= 50) {
                 $current_summoner_update_count = 0;
                 $now = Carbon::now();
                 if (($next_now->greaterThan($now))) {

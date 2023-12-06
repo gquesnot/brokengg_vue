@@ -9,10 +9,10 @@ class UpdateSummonersDataCommand extends Command
 {
     protected $signature = 'update:summoners-data';
 
-    protected $description = 'Command description';
+    protected $description = 'Update summoners data & leagues';
 
     public function handle(): void
     {
-        UpdateSummonersDataJob::dispatchSync();
+        UpdateSummonersDataJob::dispatch();
     }
 }
