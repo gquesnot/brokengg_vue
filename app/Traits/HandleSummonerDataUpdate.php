@@ -2,6 +2,10 @@
 
 namespace App\Traits;
 
+use App\Enums\LeagueRankType;
+use App\Enums\LeagueTierType;
+use App\Enums\LeagueType;
+use App\Helpers\LeaguePositionHelper;
 use App\Models\Summoner;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
 use Saloon\Exceptions\Request\Statuses\NotFoundException;
@@ -38,5 +42,24 @@ trait HandleSummonerDataUpdate
         $this->account_id = $summoner_array['accountId'];
         $this->summoner_id = $summoner_array['id'];
         $this->save();
+    }
+
+    public function updateSummonerLeague(): void
+    {
+        $summoner_league_array = $this->getSummonerLeague();
+        $this->leagues()->delete();
+        foreach ($summoner_league_array as $league_array) {
+            $tier = LeagueTierType::from($league_array['tier']);
+            $rank = LeagueRankType::from($league_array['rank']);
+
+            $overall_position = LeaguePositionHelper::getOverallPosition($tier, $rank);
+            $this->leagues()->create([
+                'type' => LeagueType::from($league_array['queueType']),
+                'tier' => $tier,
+                'rank' => $rank,
+                'overall_position' => $overall_position,
+            ]);
+        }
+
     }
 }

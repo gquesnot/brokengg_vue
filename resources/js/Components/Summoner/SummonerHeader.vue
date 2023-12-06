@@ -165,16 +165,24 @@ const switchTab = (label: string) => {
     <div class="">
         <div class="flex justify-between">
             <div class="flex mt-4 ">
-                <div class="w-16">
-                    <VImg :width="75" :height="75"
+              <div class="w-20">
+                <VImg :width="150" :height="80"
                           :src="urlProfilIconHelper(getSummoner().profile_icon_id)"/>
-
                 </div>
-                <div class="ml-4">
+              <div class="ml-4 flex flex-col">
                     <div @click="navigateToSummoner(getSummoner().id)" class="cursor-pointer">
                         {{ getSummoner().name }}
                     </div>
-                    <PrimaryButton @click="updateSummoner">
+                <div class="mb-1">
+                  <template v-if="getSummoner().solo_q">
+                    {{ getSummoner().solo_q.tier }} {{ getSummoner().solo_q.rank }}
+                  </template>
+                  <template v-else>
+                    lvl {{ getSummoner().summoner_level }}
+                  </template>
+                </div>
+
+                <PrimaryButton @click="updateSummoner" class="justify-center">
                         Update
                     </PrimaryButton>
                 </div>

@@ -3,6 +3,7 @@ import {LolMatchInterface} from "@/types/lol-match";
 import {SummonerSpellInterface} from "@/types/summoner_spell";
 import {SummonerMatchPerksInterface} from "@/types/summoner_match_perks";
 import {SummonerMatchFrameInterface} from "@/types/summoner_match_frame";
+import {SummonerInterface} from "@/types/summoner";
 
 export interface SummonerMatchInterface {
     id: number;

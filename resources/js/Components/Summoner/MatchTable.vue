@@ -46,6 +46,7 @@ for (let participant of props.participants) {
                 {{ won ? 'Victory' : 'Defeat' }}
             </th>
             <th class="p-2">Seen</th>
+          <th class="p-2">Rank</th>
             <th class="p-2">KDA</th>
             <th class="p-2">Damage</th>
             <th class="p-2">CS</th>
@@ -73,7 +74,6 @@ for (let participant of props.participants) {
                             <VImg
                                 :src="urlSummonerSpellHelper(participant.summoner_spell2.img_url)"
                                 class="w-6 h-6 rounded mt-1"/>
-
 
                         </div>
                         <div class="flex flex-col ml-1">
@@ -111,6 +111,14 @@ for (let participant of props.participants) {
 
                     </template>
                 </td>
+              <td class="text-center">
+                <template v-if="participant.summoner.solo_q">
+                  {{ participant.summoner.solo_q.tier }} {{ participant.summoner.solo_q.rank }}
+                </template>
+                <template v-else>
+                  lvl {{ participant.summoner.summoner_level }}
+                </template>
+              </td>
                 <td class="w-64 py-1  px-3">
                     <div class="ml-4 text-xl flex justify-center items-center flex-col">
                         <div class="flex">
@@ -121,7 +129,7 @@ for (let participant of props.participants) {
                             <div class="text-gray-5 font-bold">{{ participant.assists }}</div>
                         </div>
                         <div>
-                            {{ participant.kda?.toFixed(2) }}:1 KDA
+                          {{ participant.kda?.toFixed(1) }}:1 KDA
                         </div>
                     </div>
                 </td>

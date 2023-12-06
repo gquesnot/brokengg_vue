@@ -34,7 +34,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read \App\Models\Perk|null $sub_selection1
  * @property-read \App\Models\Perk|null $sub_selection2
  * @property-read \App\Models\Perk|null $sub_style
- * @property-read \App\Models\SummonerMatch|null $summoner_match
+ * @property-read \App\Models\SummonerMatch $summoner_match
  *
  * @method static Builder|SummonerMatchPerk newModelQuery()
  * @method static Builder|SummonerMatchPerk newQuery()

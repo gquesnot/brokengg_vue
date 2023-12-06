@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $summoner_name
  * @property int $pro_player_id
- * @property-read \App\Models\ProPlayer|null $proPlayer
+ * @property-read \App\Models\ProPlayer $proPlayer
  * @property-read \App\Models\Summoner|null $summoner
  *
  * @method static \Illuminate\Database\Eloquent\Builder|ProPlayerName newModelQuery()

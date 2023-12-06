@@ -30,7 +30,6 @@ const summoner = getSummoner();
                 <div class="w-3 h-3 flex items-center justify-center">
                     <VIcon icon="fa fa-user-o" class="w-3 h-3"/>
                 </div>
-
             </template>
             <template v-else>
                 <a href="#"

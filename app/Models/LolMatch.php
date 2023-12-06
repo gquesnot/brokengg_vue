@@ -15,7 +15,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * App\Models\LolMatch
  *
  * @property int $id
- * @property int $updated
+ * @property bool $updated
  * @property string $match_id
  * @property int|null $mode_id
  * @property int|null $map_id
@@ -23,7 +23,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property \Illuminate\Support\Carbon|null $match_creation
  * @property \Illuminate\Support\Carbon|null $match_end
  * @property string|null $match_duration
- * @property int $is_trashed
+ * @property bool $is_trashed
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Map|null $map

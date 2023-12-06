@@ -11,12 +11,14 @@ use App\Http\Integrations\LolApi\LolMatchDetailsConnector;
 use App\Http\Integrations\LolApi\LolMatchIdsConnector;
 use App\Http\Integrations\LolApi\LolSummonerByNameConnector;
 use App\Http\Integrations\LolApi\LolSummonerByPuuidConnector;
+use App\Http\Integrations\LolApi\LolSummonerLeagueConnector;
 use App\Http\Integrations\LolApi\Requests\LiveGameRequest;
 use App\Http\Integrations\LolApi\Requests\MatchDetailsRequest;
 use App\Http\Integrations\LolApi\Requests\MatchIdsRequest;
 use App\Http\Integrations\LolApi\Requests\MatchRequest;
 use App\Http\Integrations\LolApi\Requests\SummonerByNameRequest;
 use App\Http\Integrations\LolApi\Requests\SummonerByPuuidRequest;
+use App\Http\Integrations\LolApi\Requests\SummonerLeagueRequest;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
@@ -115,6 +117,14 @@ trait SummonerApi
     {
         $api = new LolSummonerByPuuidConnector(PlatformType::EUW1);
         $response = $this->handleJobRequest(fn() => $api->send(new SummonerByPuuidRequest($this)));
+
+        return $response->json();
+    }
+
+    public function getSummonerLeague(): array
+    {
+        $api = new LolSummonerLeagueConnector(PlatformType::EUW1);
+        $response = $api->send(new SummonerLeagueRequest($this));
 
         return $response->json();
     }

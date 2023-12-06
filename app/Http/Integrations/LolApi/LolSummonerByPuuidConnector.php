@@ -9,7 +9,7 @@ class LolSummonerByPuuidConnector extends LolBaseConnector
     protected function resolveLimits(): array
     {
         return [
-            Limit::allow(1600)->everySeconds(10),
+            Limit::allow(1600)->everyMinute(),
         ];
     }
 

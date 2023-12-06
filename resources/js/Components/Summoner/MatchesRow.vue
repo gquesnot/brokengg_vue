@@ -14,6 +14,7 @@ import {navigateToMatch} from "@/helpers/router_helpers";
 import {SummonerEncounterCountInterface} from "@/types/summoner_encounter_count";
 import axios from "axios";
 import {usePage} from "@inertiajs/vue3";
+import {getAvgRankString} from "../../helpers/league_helpers";
 
 
 const props = defineProps<{
@@ -99,7 +100,7 @@ const toggleIsOpen = () => {
             <div class="text-gray-5 font-bold">{{ summoner_match.assists }}</div>
           </div>
           <div>
-            {{ summoner_match.kda?.toFixed(2) }}:1 KDA
+            {{ summoner_match.kda?.toFixed(1) }}:1 KDA
           </div>
         </div>
       </div>
@@ -119,7 +120,7 @@ const toggleIsOpen = () => {
           (summoner_match.minions_killed / getDurationMinutes(summoner_match.match?.match_duration)).toFixed(1)
         }})
       </div>
-      <div>Avg Rank nc</div>
+      <div>{{ getAvgRankString(summoner_match.match.participants) }}</div>
     </div>
     <div class="flex w-96 justify-self-end my-2">
       <div class="grid grid-cols-2">

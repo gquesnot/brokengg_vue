@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\LeagueType;
 use App\Traits\HandleMatchDataUpdate;
 use App\Traits\HandleMatchDetailUpdate;
 use App\Traits\HandleMatchIdsUpdate;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -31,11 +33,14 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property string|null $account_id
  * @property string|null $puuid
  * @property bool $auto_update
- * @property string|null $created_at
- * @property string|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerLeague> $leagues
+ * @property-read int|null $leagues_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LolMatch> $matches
  * @property-read int|null $matches_count
  * @property-read \App\Models\ProPlayer|null $pro_player
+ * @property-read \App\Models\SummonerLeague|null $solo_q
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerMatch> $summoner_matches
  * @property-read int|null $summoner_matches_count
  *
@@ -66,8 +71,6 @@ class Summoner extends Model
     use HandleMatchIdsUpdate;
     use HandleSummonerDataUpdate;
     use SummonerApi;
-
-    public $timestamps = false;
 
     public $fillable = [
         'name',
@@ -101,6 +104,16 @@ class Summoner extends Model
     public function pro_player(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
     {
         return $this->hasOneThrough(ProPlayer::class, ProPlayerName::class, 'summoner_name', 'id', 'name', 'pro_player_id');
+    }
+
+    public function leagues(): HasMany
+    {
+        return $this->hasMany(SummonerLeague::class, 'summoner_id', 'id');
+    }
+
+    public function solo_q(): HasOne
+    {
+        return $this->hasOne(SummonerLeague::class, 'summoner_id', 'id')->where('type', LeagueType::SOLO);
     }
 
     public function get_encounters_count_for_summoner(Summoner $summoner)

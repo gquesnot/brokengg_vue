@@ -39,7 +39,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read int|null $kills_events_count
  * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $level_up_skill_events
  * @property-read int|null $level_up_skill_events_count
- * @property-read \App\Models\LolMatch|null $match
+ * @property-read \App\Models\LolMatch $match
  * @property-read \App\Models\SummonerMatch|null $summoner_match
  *
  * @method static Builder|SummonerMatchFrame newModelQuery()
