@@ -13,11 +13,17 @@ class UpdateSummonerTagLineCommand extends Command
 
     public function handle(): void
     {
+        $count = 0;
         foreach (Summoner::where('tag_line', '=', null)->cursor() as $summoner) {
             $account = Summoner::getAccountByPuuid($summoner->puuid);
             $summoner->tag_line = $account['tagLine'];
             $summoner->name = $account['gameName'];
             $summoner->save();
+            $count++;
+            if ($count >= 800) {
+                $count = 0;
+                sleep(60);
+            }
         }
     }
 }
