@@ -9,15 +9,11 @@ use App\Http\Integrations\LolApi\LolLiveGameConnector;
 use App\Http\Integrations\LolApi\LolMatchConnector;
 use App\Http\Integrations\LolApi\LolMatchDetailsConnector;
 use App\Http\Integrations\LolApi\LolMatchIdsConnector;
-use App\Http\Integrations\LolApi\LolSummonerByNameConnector;
-use App\Http\Integrations\LolApi\LolSummonerByPuuidConnector;
 use App\Http\Integrations\LolApi\LolSummonerLeagueConnector;
 use App\Http\Integrations\LolApi\Requests\LiveGameRequest;
 use App\Http\Integrations\LolApi\Requests\MatchDetailsRequest;
 use App\Http\Integrations\LolApi\Requests\MatchIdsRequest;
 use App\Http\Integrations\LolApi\Requests\MatchRequest;
-use App\Http\Integrations\LolApi\Requests\SummonerByNameRequest;
-use App\Http\Integrations\LolApi\Requests\SummonerByPuuidRequest;
 use App\Http\Integrations\LolApi\Requests\SummonerLeagueRequest;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -92,31 +88,6 @@ trait SummonerApi
     {
         $api = new LolLiveGameConnector(PlatformType::EUW1);
         $response = $api->send(new LiveGameRequest($this));
-
-        return $response->json();
-    }
-
-    /**
-     * @throws \JsonException
-     * @throws \Throwable
-     */
-    public static function getSummonerByName($summoner_name): array
-    {
-        $api = new LolSummonerByNameConnector(PlatformType::EUW1);
-        $response = $api->send(new SummonerByNameRequest($summoner_name));
-
-        return $response->json();
-    }
-
-    /**
-     * @throws NotFoundException
-     * @throws ForbiddenException
-     * @throws \JsonException
-     */
-    public function getSummonerByPuuid(): array
-    {
-        $api = new LolSummonerByPuuidConnector(PlatformType::EUW1);
-        $response = $this->handleJobRequest(fn() => $api->send(new SummonerByPuuidRequest($this)));
 
         return $response->json();
     }

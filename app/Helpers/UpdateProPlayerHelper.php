@@ -12,7 +12,7 @@ use Illuminate\Support\Arr;
 
 class UpdateProPlayerHelper
 {
-    public static function updateProPlayer(OutputStyle $output = null): void
+    public static function updateProPlayer(?OutputStyle $output = null): void
     {
         $bar = $output?->createProgressBar();
         $connector = new LolProConnector();

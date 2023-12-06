@@ -4,17 +4,17 @@ namespace App\Http\Integrations\LolApi;
 
 use Saloon\RateLimitPlugin\Limit;
 
-class LolSummonerByNameConnector extends LolBaseConnector
+class LolAccountByNameAndTagLineConnector extends LolBaseConnector
 {
     protected function resolveLimits(): array
     {
         return [
-            Limit::allow(1600)->everyMinute(),
+            Limit::allow(1000)->everyMinute(),
         ];
     }
 
     protected function getLimiterPrefix(): ?string
     {
-        return 'summoner-by-name-connector';
+        return 'account-by-name-tag-line-connector';
     }
 }

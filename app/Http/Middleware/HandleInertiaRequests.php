@@ -44,7 +44,7 @@ class HandleInertiaRequests extends Middleware
         $summoner = null;
         if ($summoner_id) {
             try {
-                $summoner = Summoner::select(['id', 'name', 'profile_icon_id', 'summoner_level'])->with('solo_q')->findOrFail($summoner_id);
+                $summoner = Summoner::select(['id', 'name', 'profile_icon_id', 'summoner_level', 'tag_line'])->with('solo_q')->findOrFail($summoner_id);
             } catch (ModelNotFoundException $e) {
                 return to_route('home');
             }

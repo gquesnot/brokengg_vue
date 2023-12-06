@@ -24,7 +24,7 @@ trait HandleMatchDataUpdate
      * @throws ForbiddenException
      * @throws NotFoundException
      */
-    public function updateSummonerMatches(array $match_ids = null): void
+    public function updateSummonerMatches(?array $match_ids = null): void
     {
         $query = LolMatch::whereUpdated(false)->whereIsTrashed(false);
         if ($match_ids === null) {

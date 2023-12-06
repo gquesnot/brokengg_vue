@@ -6,6 +6,7 @@ type SummonerInterface = {
     name: string;
     profile_icon_id: number;
     summoner_level: number;
+    tag_line: string;
     pro_player: ProPlayerInterface | null;
     solo_q: SummonerLeagueInterface | null;
 }

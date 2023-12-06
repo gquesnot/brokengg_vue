@@ -35,6 +35,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property bool $auto_update
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $tag_line
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SummonerLeague> $leagues
  * @property-read int|null $leagues_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LolMatch> $matches
@@ -59,6 +60,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @method static Builder|Summoner whereRevisionDate($value)
  * @method static Builder|Summoner whereSummonerId($value)
  * @method static Builder|Summoner whereSummonerLevel($value)
+ * @method static Builder|Summoner whereTagLine($value)
  * @method static Builder|Summoner whereUpdatedAt($value)
  *
  * @mixin Eloquent

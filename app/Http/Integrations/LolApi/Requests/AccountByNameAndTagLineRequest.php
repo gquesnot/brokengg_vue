@@ -5,7 +5,7 @@ namespace App\Http\Integrations\LolApi\Requests;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-class SummonerByNameRequest extends Request
+class AccountByNameAndTagLineRequest extends Request
 {
     /**
      * Define the HTTP method
@@ -14,6 +14,7 @@ class SummonerByNameRequest extends Request
 
     public function __construct(
         protected string $summoner_name,
+        protected string $tag_line,
     )
     {
     }
@@ -23,6 +24,6 @@ class SummonerByNameRequest extends Request
      */
     public function resolveEndpoint(): string
     {
-        return "/lol/summoner/v4/summoners/by-name/{$this->summoner_name}";
+        return "/riot/account/v1/accounts/by-riot-id/{$this->summoner_name}/{$this->tag_line}";
     }
 }

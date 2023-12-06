@@ -11,6 +11,7 @@ const props = defineProps<{}>();
 
 const form = useForm({
     summoner_name: 'random iron',
+    tag_line: 'EUW',
 });
 
 
@@ -34,9 +35,22 @@ const searchSummoner = () => {
             <v-card-title class="text-center"><span class="text-4xl">BROKEN.GG</span></v-card-title>
             <v-card-text class=" flex flex-col items-center justify-center">
               <InputLabel for="summoner_name" value="Search Summoner" class="mb-2"/>
-              <TextInput id="summoner_name" ref="inputTextSummonerName" v-model="form.summoner_name"
-                         class="p-2 border  w-1/2"/>
-              <InputError :message="form.errors.summoner_name" class="mt-2"/>
+                <div class="flex mx-auto items-center w-fit">
+                    <div>
+                        <TextInput id="summoner_name" ref="inputTextSummonerName" v-model="form.summoner_name"
+                                   class="p-2 border"/>
+                        <InputError :message="form.errors.summoner_name" class="mt-2"/>
+                    </div>
+                    <div class="ml-3">
+                        <span class="font-bold text-xl mr-1">#</span>
+                        <TextInput id="tag_line" ref="tagLiune" v-model="form.tag_line"
+                                   class="p-2 border w-28"/>
+                        <InputError :message="form.errors.tag_line" class="mt-2"/>
+                    </div>
+
+
+                </div>
+
             </v-card-text>
             <v-card-actions class="flex justify-center">
               <PrimaryButton

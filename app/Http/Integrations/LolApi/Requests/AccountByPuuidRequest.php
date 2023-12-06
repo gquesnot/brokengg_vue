@@ -5,7 +5,7 @@ namespace App\Http\Integrations\LolApi\Requests;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-class SummonerByPuuidRequest extends Request
+class AccountByPuuidRequest extends Request
 {
     /**
      * Define the HTTP method
@@ -13,7 +13,7 @@ class SummonerByPuuidRequest extends Request
     protected Method $method = Method::GET;
 
     public function __construct(
-        protected string $puuid,
+        protected string $puuid
     )
     {
     }
@@ -23,6 +23,6 @@ class SummonerByPuuidRequest extends Request
      */
     public function resolveEndpoint(): string
     {
-        return "/lol/summoner/v4/summoners/by-puuid/{$this->puuid}";
+        return "/riot/account/v1/accounts/by-puuid/{$this->puuid}";
     }
 }

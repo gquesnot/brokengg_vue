@@ -171,7 +171,7 @@ const switchTab = (label: string) => {
                 </div>
               <div class="ml-4 flex flex-col">
                     <div @click="navigateToSummoner(getSummoner().id)" class="cursor-pointer">
-                        {{ getSummoner().name }}
+                        {{ getSummoner().name }} #{{ getSummoner().tag_line }}
                     </div>
                 <div class="mb-1">
                   <template v-if="getSummoner().solo_q">

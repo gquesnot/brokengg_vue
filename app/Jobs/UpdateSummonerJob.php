@@ -22,7 +22,10 @@ class UpdateSummonerJob implements ShouldQueue
     {
 
         SummonerUpdated::dispatch($this->summoner->id, true);
-        $this->summoner->updateSummonerFromArray($this->summoner->getSummonerByPuuid());
+        $account = Summoner::getAccountByPuuid($this->summoner->puuid);
+        $this->summoner->tag_line = $account['tagLine'];
+        $this->summoner->name = $account['gameName'];
+        $this->summoner->updateSummonerFromArray(Summoner::getSummonerByPuuid($this->summoner->puuid));
         $this->summoner->updateSummonerLeague();
 
         $this->summoner->updateSummonerMatchIds();

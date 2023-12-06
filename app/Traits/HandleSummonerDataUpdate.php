@@ -5,7 +5,14 @@ namespace App\Traits;
 use App\Enums\LeagueRankType;
 use App\Enums\LeagueTierType;
 use App\Enums\LeagueType;
+use App\Enums\PlatformType;
+use App\Enums\RegionType;
 use App\Helpers\LeaguePositionHelper;
+use App\Http\Integrations\LolApi\LolAccountByNameAndTagLineConnector;
+use App\Http\Integrations\LolApi\LolSummonerByPuuidConnector;
+use App\Http\Integrations\LolApi\Requests\AccountByNameAndTagLineRequest;
+use App\Http\Integrations\LolApi\Requests\AccountByPuuidRequest;
+use App\Http\Integrations\LolApi\Requests\SummonerByPuuidRequest;
 use App\Models\Summoner;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
 use Saloon\Exceptions\Request\Statuses\NotFoundException;
@@ -14,27 +21,63 @@ use Saloon\RateLimitPlugin\Exceptions\RateLimitReachedException;
 trait HandleSummonerDataUpdate
 {
     /**
+     * @throws \JsonException
+     * @throws \Throwable
+     */
+    public static function getAccountByNameAndTagLine(string $summoner_name, string $tag_line): array
+    {
+        $api = new LolAccountByNameAndTagLineConnector(RegionType::EUROPE);
+        $response = $api->send(new AccountByNameAndTagLineRequest($summoner_name, $tag_line));
+
+        return $response->json();
+    }
+
+    /**
      * @throws NotFoundException
      * @throws ForbiddenException
      * @throws RateLimitReachedException
      */
-    public static function updateOrCreateSummonerByName(string $summoner_name): ?Summoner
+    public static function updateOrCreateSummonerByNameAndTagLine(string $summoner_name, string $tag_line): ?Summoner
     {
 
-        $summoner_array = Summoner::getSummonerByName($summoner_name);
+        $account_info = Summoner::getAccountByNameAndTagLine($summoner_name, $tag_line);
+        $puuid = $account_info['puuid'];
+        $summoner_array = Summoner::getSummonerByPuuid($puuid);
         if (Summoner::wherePuuid($summoner_array['puuid'])->exists()) {
             $summoner = Summoner::wherePuuid($summoner_array['puuid'])->first();
         } else {
             $summoner = new Summoner();
         }
+        $summoner->tag_line = $account_info['tagLine'];
+        $summoner->name = $account_info['gameName'];
         $summoner->updateSummonerFromArray($summoner_array);
 
         return $summoner;
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     * @throws \JsonException
+     */
+    public static function getSummonerByPuuid(string $puuid): array
+    {
+        $api = new LolSummonerByPuuidConnector(PlatformType::EUW1);
+        $response = $api->send(new SummonerByPuuidRequest($puuid));
+
+        return $response->json();
+    }
+
+    public static function getAccountByPuuid(string $puuid): array
+    {
+        $api = new LolSummonerByPuuidConnector(RegionType::EUROPE);
+        $response = $api->send(new AccountByPuuidRequest($puuid));
+
+        return $response->json();
+    }
+
     public function updateSummonerFromArray(array $summoner_array): void
     {
-        $this->name = $summoner_array['name'];
         $this->puuid = $summoner_array['puuid'];
         $this->summoner_level = $summoner_array['summonerLevel'];
         $this->profile_icon_id = $summoner_array['profileIconId'];

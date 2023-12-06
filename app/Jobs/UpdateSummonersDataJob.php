@@ -26,7 +26,10 @@ class UpdateSummonersDataJob implements ShouldBeUnique, ShouldQueue
         $next_now = Carbon::now()->addMinute();
         $current_summoner_update_count = 0;
         foreach ($query->cursor() as $summoner) {
-            $summoner->updateSummonerFromArray($summoner->getSummonerByPuuid());
+            $account = Summoner::getAccountByPuuid($summoner->puuid);
+            $summoner->tag_line = $account['tagLine'];
+            $summoner->name = $account['gameName'];
+            $summoner->updateSummonerFromArray(Summoner::getSummonerByPuuid($summoner->puuid));
             $summoner->updateSummonerLeague();
             $current_summoner_update_count++;
             if ($current_summoner_update_count >= 50) {

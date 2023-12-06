@@ -22,13 +22,16 @@ class SummonerController extends Controller
     {
         $validated = $request->validate([
             'summoner_name' => 'required|string',
+            'tag_line' => 'required|string',
         ]);
         $summoner_name = $validated['summoner_name'];
-        $query = Summoner::where('name', 'like', "%{$summoner_name}%");
+        $tag_line = $validated['tag_line'];
+        $query = Summoner::where('name', 'like', "%{$summoner_name}%")
+            ->where('tag_line', 'like', "%{$tag_line}%");
         // check if summoner exists
         if (!$query->clone()->exists()) {
             try {
-                $summoner = Summoner::updateOrCreateSummonerByName($summoner_name);
+                $summoner = Summoner::updateOrCreateSummonerByNameAndTagLine($summoner_name, $tag_line);
             } catch (NotFoundException $e) {
                 return redirect()->back()->withErrors(['api' => 'Summoner not found']);
             } catch (RateLimitReachedException $e) {
