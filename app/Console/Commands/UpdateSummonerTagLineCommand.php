@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Summoner;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class UpdateSummonerTagLineCommand extends Command
@@ -13,6 +14,7 @@ class UpdateSummonerTagLineCommand extends Command
 
     public function handle(): void
     {
+        $next_now = Carbon::now()->addMinute();
         $count = 0;
         foreach (Summoner::where('tag_line', '=', null)->cursor() as $summoner) {
             $account = Summoner::getAccountByPuuid($summoner->puuid);
@@ -22,7 +24,11 @@ class UpdateSummonerTagLineCommand extends Command
             $count++;
             if ($count >= 800) {
                 $count = 0;
-                sleep(60);
+                $now = Carbon::now();
+                if (($next_now->greaterThan($now))) {
+                    sleep($now->diffInSeconds($next_now));
+                }
+                $next_now = Carbon::now()->addMinute();
             }
         }
     }
