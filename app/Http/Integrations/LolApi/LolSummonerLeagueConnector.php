@@ -9,7 +9,7 @@ class LolSummonerLeagueConnector extends LolBaseConnector
     protected function resolveLimits(): array
     {
         return [
-            Limit::allow(100)->everyMinute(),
+            Limit::allow(100)->everyMinute()->sleep(),
         ];
     }
 

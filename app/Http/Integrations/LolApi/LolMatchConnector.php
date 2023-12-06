@@ -9,7 +9,7 @@ class LolMatchConnector extends LolBaseConnector
     protected function resolveLimits(): array
     {
         return [
-            Limit::allow(2000)->everySeconds(10),
+            Limit::allow(2000)->everySeconds(10)->sleep(),
         ];
     }
 
