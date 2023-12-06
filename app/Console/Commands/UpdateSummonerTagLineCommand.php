@@ -22,7 +22,7 @@ class UpdateSummonerTagLineCommand extends Command
             $summoner->name = $account['gameName'];
             $summoner->save();
             $count++;
-            if ($count >= 800) {
+            if ($count >= 500) {
                 $count = 0;
                 $now = Carbon::now();
                 if (($next_now->greaterThan($now))) {
