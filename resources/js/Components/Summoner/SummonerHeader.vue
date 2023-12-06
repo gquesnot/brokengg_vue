@@ -175,7 +175,7 @@ const switchTab = (label: string) => {
                     </div>
                 <div class="mb-1">
                   <template v-if="getSummoner().solo_q">
-                    {{ getSummoner().solo_q.tier }} {{ getSummoner().solo_q.rank }}
+                    {{ getSummoner().solo_q?.tier }} {{ getSummoner().solo_q?.rank }}
                   </template>
                   <template v-else>
                     lvl {{ getSummoner().summoner_level }}
