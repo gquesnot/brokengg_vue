@@ -57,7 +57,7 @@ const toggleIsOpen = () => {
   <div
       :class="`${summoner_match.won ? 'bg-blue-1' : 'bg-red-1'}  my-1.5 flex rounded opacity-95 text-gray-200`">
     <div :class="`${summoner_match.won ? 'bg-blue-2' : 'bg-red-2'} w-3 rounded-l`"></div>
-    <div class="w-28 flex flex-col justify-center space-y-1 my-2 pl-4">
+      <div class="w-32 flex flex-col justify-center space-y-1 my-2 pl-4">
       <div>{{ summoner_match.match?.queue?.description.replace('games', '') }}</div>
       <div>{{ moment(summoner_match.match?.match_end).fromNow() }}</div>
       <div>{{ summoner_match.won ? 'Victory' : 'Defeat' }}</div>
