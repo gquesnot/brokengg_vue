@@ -129,8 +129,10 @@ trait HandleMatchDataUpdate
                 'summoner_spell2_id' => $participant['summoner2Id'],
                 'perks' => $perks,
             ];
-            $save_data['kill_participation'] = round(($participant['kills'] + $participant['assists']) / $teams_kills[$participant['teamId']], 2);
+            $team_kills = $teams_kills[$participant['teamId']] == 0 ? 1 : $teams_kills[$participant['teamId']];
             $deaths = $participant['deaths'] == 0 ? 1 : $participant['deaths'];
+
+            $save_data['kill_participation'] = round(($participant['kills'] + $participant['assists']) / $team_kills, 2);
             $save_data['kda'] = round(($participant['kills'] + $participant['assists']) / $deaths, 2);
             $save_items = [];
             $items = [
