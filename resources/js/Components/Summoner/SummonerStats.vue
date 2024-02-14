@@ -6,6 +6,7 @@ import {urlProfilIconHelper, urlProPlayerHelper} from "@/helpers/url_helpers";
 import {SummonerStatsInterface} from "@/types/summoner_stats";
 import {navigateToSummoner} from "@/helpers/router_helpers";
 import {SummonerInterface} from "@/types/summoner";
+import {withoutTagLine} from "@/helpers/summoner_name_helper";
 
 
 const props = defineProps({
@@ -48,7 +49,7 @@ const props = defineProps({
       <div v-if="with_summoner_name" :class="`mx-4 flex items-center ${!is_reverse ? 'flex-row-reverse ' : ''}`">
         <div>
           <div class="text-xl font-bold cursor-pointer mx-2 flex flex-col" @click="navigateToSummoner(summoner.id)">
-            {{ summoner.name }}
+              {{ withoutTagLine(summoner.name) }}
           </div>
           <div class="flex ml-1 justify-center text-xs" v-if="summoner.pro_player">
             <a :href="urlProPlayerHelper(summoner.pro_player.slug)">

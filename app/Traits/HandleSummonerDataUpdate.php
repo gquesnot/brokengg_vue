@@ -38,9 +38,9 @@ trait HandleSummonerDataUpdate
      * @throws ForbiddenException
      * @throws RateLimitReachedException
      */
-    public static function updateOrCreateSummonerByNameAndTagLine(string $summoner_name, string $tag_line): ?Summoner
+    public static function updateOrCreateSummonerByNameAndTagLine(string $summoner_name): ?Summoner
     {
-
+        [$summoner_name, $tag_line] = explode('#', $summoner_name);
         $account_info = Summoner::getAccountByNameAndTagLine($summoner_name, $tag_line);
         $puuid = $account_info['puuid'];
         $summoner_array = Summoner::getSummonerByPuuid($puuid);
@@ -49,8 +49,7 @@ trait HandleSummonerDataUpdate
         } else {
             $summoner = new Summoner();
         }
-        $summoner->tag_line = $account_info['tagLine'];
-        $summoner->name = $account_info['gameName'];
+        $summoner->name = $account_info['gameName'] . '#' . $account_info['tagLine'];
         $summoner->updateSummonerFromArray($summoner_array);
 
         return $summoner;

@@ -14,6 +14,8 @@ class UpdateProPlayerHelper
 {
     public static function updateProPlayer(?OutputStyle $output = null): void
     {
+        ProPlayer::query()->delete();
+        ProPlayerName::query()->delete();
         $bar = $output?->createProgressBar();
         $connector = new LolProConnector();
         $paginator = $connector->paginate(new SummonerProListRequest());

@@ -6,6 +6,7 @@ import {EncounterInterface} from "@/types/summoner_encounters";
 import {navigateToEncounter} from "@/helpers/router_helpers";
 import {getSummoner} from "@/helpers/root_props_helpers";
 import {urlProPlayerHelper} from "@/helpers/url_helpers";
+import {withoutTagLine} from "@/helpers/summoner_name_helper";
 
 
 const props = defineProps<{
@@ -18,7 +19,7 @@ const summoner = getSummoner();
 
 <template>
     <td>
-        {{ encounter.name }}
+        {{ withoutTagLine(encounter.name) }}
     </td>
     <td>
       <div class="flex items-center">

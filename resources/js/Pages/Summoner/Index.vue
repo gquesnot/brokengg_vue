@@ -10,8 +10,7 @@ import AlertApi from "@/Components/AlertApi.vue";
 const props = defineProps<{}>();
 
 const form = useForm({
-    summoner_name: 'random iron',
-    tag_line: 'EUW',
+    summoner_name: 'random iron#EUW',
 });
 
 
@@ -41,14 +40,6 @@ const searchSummoner = () => {
                                    class="p-2 border"/>
                         <InputError :message="form.errors.summoner_name" class="mt-2"/>
                     </div>
-                    <div class="ml-3">
-                        <span class="font-bold text-xl mr-1">#</span>
-                        <TextInput id="tag_line" ref="tagLiune" v-model="form.tag_line"
-                                   class="p-2 border w-28"/>
-                        <InputError :message="form.errors.tag_line" class="mt-2"/>
-                    </div>
-
-
                 </div>
 
             </v-card-text>

@@ -4,6 +4,7 @@ import {SummonerMatchInterface} from "@/types/summoner_match";
 import {getSummoner} from "@/helpers/root_props_helpers";
 import {navigateToEncounter, navigateToSummoner} from "@/helpers/router_helpers";
 import {SummonerEncounterCountInterface} from "@/types/summoner_encounter_count";
+import {withoutTagLine} from "@/helpers/summoner_name_helper";
 
 const props = defineProps<{
     participant: SummonerMatchInterface
@@ -66,7 +67,7 @@ const summoner = getSummoner();
         </a>
         </div>
         <div class="ml-1 truncate w-64 cursor-pointer " @click="navigateToSummoner(participant.summoner_id)">
-            {{ participant.summoner?.name }}
+            {{ withoutTagLine(participant.summoner?.name) }}
         </div>
     </div>
 </template>

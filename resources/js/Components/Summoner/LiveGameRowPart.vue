@@ -4,13 +4,13 @@
 import {urlChampionHelper, urlProPlayerHelper} from "@/helpers/url_helpers";
 import {getSummoner} from "@/helpers/root_props_helpers";
 import {navigateToEncounter} from "@/helpers/router_helpers";
+import {withoutTagLine} from "@/helpers/summoner_name_helper";
 
 
 const props = defineProps<{
     is_my_team: boolean
     participant: any
 }>();
-console.log(props.participant)
 
 
 const summoner = getSummoner();
@@ -25,7 +25,7 @@ const summoner = getSummoner();
                 :src="urlChampionHelper(participant['champion']['img_url'])"
                 class="w-8 h-8"/>
         </div>
-        <div class="w-25 truncate ml-4">{{ participant['summoner']['name'] }}</div>
+        <div class="w-25 truncate ml-4">{{ withoutTagLine(participant['summoner']['name']) }}</div>
         <div class="ml-4 w-10">
             <div v-if="participant['summoner']['id'] != null">
               <div @click="navigateToEncounter(summoner.id, participant['summoner']['id'])"

@@ -5,6 +5,7 @@ import {getSummoner} from "@/helpers/root_props_helpers";
 import {urlChampionHelper, urlItemHelper, urlPerkHelper, urlSummonerSpellHelper} from "@/helpers/url_helpers";
 import {navigateToEncounter, navigateToSummoner} from "@/helpers/router_helpers";
 import {SummonerEncounterCountInterface} from "@/types/summoner_encounter_count";
+import {withoutTagLine} from "@/helpers/summoner_name_helper";
 
 
 const props = defineProps<{
@@ -85,7 +86,9 @@ for (let participant of props.participants) {
                                 class="w-6 h-6 mt-1 "/>
                         </div>
                         <div class="flex flex-col font-medium">
-                            <div class="cursor-pointer" @click="navigateToSummoner(participant.summoner_id)">{{ participant?.summoner?.name }}</div>
+                            <div class="cursor-pointer" @click="navigateToSummoner(participant.summoner_id)">
+                                {{ withoutTagLine(participant?.summoner?.name) }}
+                            </div>
                         </div>
                     </div>
                 </td>
