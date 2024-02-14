@@ -48,7 +48,6 @@ class UpdateProPlayerHelper
             $profile = $response->json();
             $accounts = Arr::get($profile, 'league_player.accounts', []);
             $summoner_names = Arr::pluck($accounts, 'summoner_name');
-
             $pro_players_names_to_insert = array_merge(collect($summoner_names)->map(function ($summoner_name) use ($pro_player_id) {
                 return [
                     'pro_player_id' => $pro_player_id,
