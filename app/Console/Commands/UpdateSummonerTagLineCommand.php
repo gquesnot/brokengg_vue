@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Summoner;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class UpdateSummonerTagLineCommand extends Command
