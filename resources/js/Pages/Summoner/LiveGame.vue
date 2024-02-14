@@ -15,8 +15,8 @@ const props = defineProps<{
 const summoner = getSummoner();
 
 const form = useForm({
-    lobby_search: 'nos unforgiven joined the lobby\n' +
-        'random iron joined the lobby\n'
+    lobby_search: 'Random Iron #EUW joined the lobby\n' +
+        'Nos Unforgiven #EUW joined the lobby\n'
 })
 
 

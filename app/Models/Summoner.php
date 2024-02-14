@@ -203,15 +203,16 @@ class Summoner extends Model
         $summoner_names = explode("\n", $lobby_search);
         $live_game = ['participants' => [], 'is_live' => false];
         foreach ($summoner_names as $idx => $name) {
-            $name = trim(str_replace('joined the lobby', '', $name));
-
-            $summoner = Summoner::whereName($name)->first();
+            $base_name = trim(str_replace('joined the lobby', '', $name));
+            [$summoner_name, $tag_line] = explode(' #', $base_name);
+            $summoner_name_with_tagline = $summoner_name . '#' . $tag_line;
+            $summoner = Summoner::whereName($summoner_name_with_tagline)->first();
             if ($name == $this->name) {
                 $live_game['participants'][] = ['summoner' => $this, 'encounter_count' => 0];
             } elseif ($summoner) {
                 $live_game['participants'][] = ['summoner' => $summoner, 'encounter_count' => $encounter_counts->get($summoner->id)];
             } else {
-                $live_game['participants'][] = ['summoner' => (object) ['name' => $name], 'encounter_count' => 0];
+                $live_game['participants'][] = ['summoner' => (object)['name' => $summoner_name_with_tagline], 'encounter_count' => 0];
             }
         }
 

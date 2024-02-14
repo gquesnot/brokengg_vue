@@ -16,8 +16,7 @@ class UpdateSummonerTagLineCommand extends Command
     {
         foreach (Summoner::where('tag_line', '=', null)->cursor() as $summoner) {
             $account = Summoner::getAccountByPuuid($summoner->puuid);
-            $summoner->tag_line = $account['tagLine'];
-            $summoner->name = $account['gameName'];
+            $summoner->name = $account['gameName'] . '#' . $account['tagLine'];
             $summoner->save();
         }
     }

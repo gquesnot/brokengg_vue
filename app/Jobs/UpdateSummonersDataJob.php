@@ -27,8 +27,7 @@ class UpdateSummonersDataJob implements ShouldBeUnique, ShouldQueue
         $current_summoner_update_count = 0;
         foreach ($query->cursor() as $summoner) {
             $account = Summoner::getAccountByPuuid($summoner->puuid);
-            $summoner->tag_line = $account['tagLine'];
-            $summoner->name = $account['gameName'];
+            $summoner->name = $account['gameName'] . '#' . $account['tagLine'];
             $summoner->updateSummonerFromArray(Summoner::getSummonerByPuuid($summoner->puuid));
             $summoner->updateSummonerLeague();
             $current_summoner_update_count++;
