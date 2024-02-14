@@ -76,8 +76,16 @@ trait HandleMatchDataUpdate
             }
             $summoner = Summoner::wherePuuid($participant['puuid'])->first();
             if (! $summoner) {
+                $summoner_name = $participant['riotIdGameName'];
+                $summoner_tagline = $participant['riotIdTagline'];
+                if (!$summoner_name || !$summoner_tagline) {
+                    $account_detail = Summoner::getAccountByPuuid($participant['puuid']);
+                    $summoner_name = $account_detail['gameName'];
+                    $summoner_tagline = $account_detail['tagLine'];
+                }
+                $name = $summoner_name . '#' . $summoner_tagline;
                 $summoner = Summoner::create([
-                    'name' => $participant['riotIdGameName'] . '#' . $participant['riotIdTagline'],
+                    'name' => $name,
                     'puuid' => $participant['puuid'],
                     'summoner_level' => $participant['summonerLevel'],
                     'profile_icon_id' => $participant['profileIcon'],
