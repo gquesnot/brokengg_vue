@@ -75,7 +75,7 @@ class LiveGameController extends Controller
             if ($participant_summoner) {
                 $participant_summoner->load('pro_player');
             } else {
-                $pro_player = ProPlayerName::whereSummonerName($participant['summonerName'])->with('proPlayer')->first();
+                $pro_player = ProPlayerName::whereSummonerName($participant_summoner->name)->with('proPlayer')->first();
 
                 $participant_summoner = [
                     'id' => null,

@@ -21,6 +21,7 @@ import {navigateToSummoner} from "@/helpers/router_helpers";
 import moment from "moment";
 import SummonerUpdateEventInterface from "@/types/summoner_update_event_interface";
 import AlertApi from "@/Components/AlertApi.vue";
+import {tagLineOnly, withoutTagLine} from "../../helpers/summoner_name_helper";
 
 const props = defineProps<{
     tab: string
@@ -169,11 +170,12 @@ const switchTab = (label: string) => {
                 <VImg :width="150" :height="80"
                           :src="urlProfilIconHelper(getSummoner().profile_icon_id)"/>
                 </div>
-              <div class="ml-4 flex flex-col">
+                <div class="ml-4 flex flex-col font-bold text-xl">
                     <div @click="navigateToSummoner(getSummoner().id)" class="cursor-pointer">
-                        {{ getSummoner().name }}
+                        {{ withoutTagLine(getSummoner().name) }} <span
+                        class="text-gray-400">#{{ tagLineOnly(getSummoner().name) }}</span>
                     </div>
-                <div class="mb-1">
+                    <div class="mb-1 text-base">
                   <template v-if="getSummoner().solo_q">
                     {{ getSummoner().solo_q?.tier }} {{ getSummoner().solo_q?.rank }}
                   </template>
@@ -200,6 +202,7 @@ const switchTab = (label: string) => {
                                 id="queue"
                                 density="comfortable"
                                 name="queue"
+                                class="mt-4"
                                 :clearable="true"
                             />
                         </div>
@@ -213,6 +216,7 @@ const switchTab = (label: string) => {
                                 density="comfortable"
                                 id="champion_id"
                                 name="champion_id"
+                                class=""
                                 :clearable="true"
 
                             />
@@ -235,7 +239,7 @@ const switchTab = (label: string) => {
                                 :input-props="{placeholder: 'YYYY-MM-DD'}"
                             />
                         </div>
-                        <div>
+                        <div class="mt-1.5">
                             <label for="end_time">End Date</label>
                             <Datepicker
                                 v-model="form.filters.end_date"
@@ -250,7 +254,7 @@ const switchTab = (label: string) => {
                     </div>
                 </div>
                 <div class="flex ">
-                    <PrimaryButton @click="applyFilter" class="ml-4">
+                    <PrimaryButton @click="applyFilter">
                         Apply
                     </PrimaryButton>
                     <PrimaryButton @click="clearFilter" class="ml-4">
