@@ -22,10 +22,6 @@ class UpdateSummonerJob implements ShouldQueue
     {
     }
 
-    public function middleware(): array
-    {
-        return [new ApiRateLimited];
-    }
 
     public function handle(): void
     {

@@ -52,11 +52,13 @@ trait HandleMatchDataUpdate
         $matches_data = [];
         $pool->withResponseHandler(function (Response $response) use (&$matches_data) {
             $api_match = $response->json();
-            $matches_data[$api_match['metadata']['matchId']] = $api_match;
+            $match_id = Arr::get($api_match, 'metadata.matchId');
+            if ($match_id) {
+                $matches_data[$match_id] = $api_match;
+            }
         });
         $promise = $pool->send();
         $promise->wait();
-        dd(count($matches_data));
         foreach ($matches as $match) {
             $api_match = Arr::get($matches_data, $match->match_id);
             if (!$api_match || !$this->updateMatchFromArray($match, $api_match)) {
