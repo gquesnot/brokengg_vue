@@ -61,7 +61,10 @@ trait HandleMatchDataUpdate
         $promise->wait();
         foreach ($matches as $match) {
             $api_match = Arr::get($matches_data, $match->match_id);
-            if (!$api_match || !$this->updateMatchFromArray($match, $api_match)) {
+            if (!$api_match) {
+                continue;
+            }
+            if (!$this->updateMatchFromArray($match, $api_match)) {
                 $match->update(['is_trashed' => true, 'updated' => true]);
             }
         }
