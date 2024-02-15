@@ -8,6 +8,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\Middleware\ThrottlesExceptions;
 use Illuminate\Queue\SerializesModels;
 use Saloon\RateLimitPlugin\Helpers\ApiRateLimited;
 
@@ -19,6 +20,10 @@ class UpdateSummonerJob implements ShouldQueue
     {
     }
 
+    public function middleware(): array
+    {
+        return [new ApiRateLimited, new ThrottlesExceptions(10, 10)];
+    }
 
     public function handle(): void
     {
