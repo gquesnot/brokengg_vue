@@ -75,11 +75,17 @@ trait HandleSummonerDataUpdate
         return $response->json();
     }
 
-    public static function getAccountByPuuid(string $puuid): array
+    public static function getAccountByPuuid(string $puuid): ?array
     {
         $api = new LolAccountByPuuidConnector(RegionType::EUROPE);
 
-        $response = $api->send(new AccountByPuuidRequest($puuid));
+
+        try {
+            $response = $api->send(new AccountByPuuidRequest($puuid));
+
+        } catch (TooManyRequestsException $e) {
+            return null;
+        }
 
         return $response->json();
     }
