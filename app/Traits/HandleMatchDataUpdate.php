@@ -14,6 +14,7 @@ use App\Models\SummonerMatch;
 use App\Models\SummonerMatchItem;
 use App\Models\SummonerMatchPerk;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
 use Saloon\Exceptions\Request\Statuses\NotFoundException;
@@ -76,8 +77,8 @@ trait HandleMatchDataUpdate
             }
             $summoner = Summoner::wherePuuid($participant['puuid'])->first();
             if (! $summoner) {
-                $summoner_name = $participant['riotIdGameName'];
-                $summoner_tagline = $participant['riotIdTagline'];
+                $summoner_name = Arr::get($participant, 'riotIdGameName');
+                $summoner_tagline = Arr::get($participant, 'riotIdTagline');
                 if (!$summoner_name || !$summoner_tagline) {
                     $account_detail = Summoner::getAccountByPuuid($participant['puuid']);
                     $summoner_name = $account_detail['gameName'];
