@@ -16,7 +16,10 @@ class UpdateSummonerJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $tries = 10;
+    public function tries(): int
+    {
+        return 10;
+    }
 
     public function __construct(private readonly Summoner $summoner)
     {
