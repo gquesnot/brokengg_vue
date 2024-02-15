@@ -33,14 +33,6 @@ class UpdateSummonersDataJob implements ShouldBeUnique, ShouldQueue
         $this->onQueue('summoners-data');
     }
 
-    public function middleware(): array
-    {
-        return [
-            new ApiRateLimited
-        ];
-    }
-
-
 
     public function handle(): void
     {
