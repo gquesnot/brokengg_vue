@@ -17,7 +17,6 @@ use App\Models\SummonerMatch;
 use App\Models\SummonerMatchItem;
 use App\Models\SummonerMatchPerk;
 use Carbon\Carbon;
-use Couchbase\RateLimitedException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
@@ -110,7 +109,7 @@ trait HandleMatchDataUpdate
                         $account_detail = Summoner::getAccountByPuuid($participant['puuid']);
                     }
                     if ($tries == 0) {
-                        return new RateLimitedException('Rate limit exceeded update match from array');
+                        throw new \Exception('Account api pb');
                     }
                     $summoner_name = $account_detail['gameName'];
                     $summoner_tagline = $account_detail['tagLine'];
