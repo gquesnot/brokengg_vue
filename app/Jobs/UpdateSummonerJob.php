@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Saloon\RateLimitPlugin\Helpers\ApiRateLimited;
 
 class UpdateSummonerJob implements ShouldQueue
 {
@@ -16,6 +17,11 @@ class UpdateSummonerJob implements ShouldQueue
 
     public function __construct(private readonly Summoner $summoner)
     {
+    }
+
+    public function middleware(): array
+    {
+        return [new ApiRateLimited];
     }
 
     public function handle(): void

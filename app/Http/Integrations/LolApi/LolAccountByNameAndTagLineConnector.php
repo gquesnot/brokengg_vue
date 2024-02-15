@@ -9,7 +9,7 @@ class LolAccountByNameAndTagLineConnector extends LolBaseConnector
     protected function resolveLimits(): array
     {
         return [
-            Limit::allow(1000)->everyMinute(),
+            Limit::allow(1000)->everyMinute()->sleep(),
         ];
     }
 
