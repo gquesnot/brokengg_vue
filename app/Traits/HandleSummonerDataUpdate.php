@@ -15,8 +15,11 @@ use App\Http\Integrations\LolApi\Requests\AccountByNameAndTagLineRequest;
 use App\Http\Integrations\LolApi\Requests\AccountByPuuidRequest;
 use App\Http\Integrations\LolApi\Requests\SummonerByPuuidRequest;
 use App\Models\Summoner;
+use Saloon\Exceptions\Request\FatalRequestException;
+use Saloon\Exceptions\Request\RequestException;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
 use Saloon\Exceptions\Request\Statuses\NotFoundException;
+use Saloon\Exceptions\Request\Statuses\TooManyRequestsException;
 use Saloon\RateLimitPlugin\Exceptions\RateLimitReachedException;
 
 trait HandleSummonerDataUpdate
@@ -60,10 +63,14 @@ trait HandleSummonerDataUpdate
      * @throws ForbiddenException
      * @throws \JsonException
      */
-    public static function getSummonerByPuuid(string $puuid): array
+    public static function getSummonerByPuuid(string $puuid): ?array
     {
         $api = new LolSummonerByPuuidConnector(PlatformType::EUW1);
-        $response = $api->send(new SummonerByPuuidRequest($puuid));
+        try {
+            $response = $api->send(new SummonerByPuuidRequest($puuid));
+        } catch (TooManyRequestsException $e) {
+            return null;
+        }
 
         return $response->json();
     }
@@ -71,6 +78,7 @@ trait HandleSummonerDataUpdate
     public static function getAccountByPuuid(string $puuid): array
     {
         $api = new LolAccountByPuuidConnector(RegionType::EUROPE);
+
         $response = $api->send(new AccountByPuuidRequest($puuid));
 
         return $response->json();
