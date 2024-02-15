@@ -35,7 +35,6 @@ class UpdateSummonerJob implements ShouldQueue
     {
         return [
             new ApiRateLimited,
-            new ThrottlesExceptions(10, 60),
         ];
     }
 
