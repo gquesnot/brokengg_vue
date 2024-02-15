@@ -62,7 +62,7 @@ trait HandleMatchDataUpdate
         foreach ($matches as $match) {
             $api_match = Arr::get($matches_data, $match->match_id);
             if (!$api_match || !$this->updateMatchFromArray($match, $api_match)) {
-                $matches->first()->update(['is_trashed' => true, 'updated' => true]);
+                $match->update(['is_trashed' => true, 'updated' => true]);
             }
         }
     }
