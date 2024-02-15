@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Saloon\RateLimitPlugin\Helpers\ApiRateLimited;
 
 class UpdateSummonersDataJob implements ShouldBeUnique, ShouldQueue
 {
@@ -18,6 +19,11 @@ class UpdateSummonersDataJob implements ShouldBeUnique, ShouldQueue
     public function __construct()
     {
         $this->onQueue('summoners-data');
+    }
+
+    public function middleware(): array
+    {
+        return [new ApiRateLimited];
     }
 
     public function handle(): void

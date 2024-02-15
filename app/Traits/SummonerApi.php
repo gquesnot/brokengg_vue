@@ -31,27 +31,11 @@ trait SummonerApi
     private function getSummonerMatchIds(): Collection
     {
         $max_match_count = config('services.riot.max_match_count');
-        $page = 0;
+        $connector = new LolMatchIdsConnector(RegionType::EUROPE);
         $start_time = null;
-        if ($this->last_time_update) {
-            $start_time = Carbon::createFromTimeString($this->last_time_update)->timestamp;
-        }
-        $api = new LolMatchIdsConnector(RegionType::EUROPE);
-        $match_ids = collect([]);
-        $response = $this->handleJobRequest(fn() => $api->send(new MatchIdsRequest($this, $page, $start_time)));
-        $data = $response->json();
-
-        while (count($data) == 100) {
-            $match_ids = $match_ids->merge($data);
-            if ($max_match_count != 0 && $match_ids->count() > $max_match_count) {
-                return $match_ids->slice(0, $max_match_count);
-            }
-            $page++;
-            $response = $this->handleJobRequest(fn() => $api->send(new MatchIdsRequest($this, $page, $start_time)));
-            $data = $response->json();
-        }
-
-        return $match_ids->merge($data);
+        $request = new MatchIdsRequest($this, $start_time);
+        $paginator = $connector->paginate($request);
+        return $paginator->collect()->flatten()->collect();
     }
 
     /**

@@ -5,8 +5,9 @@ namespace App\Http\Integrations\LolApi\Requests;
 use App\Models\Summoner;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
+use Saloon\PaginationPlugin\Contracts\Paginatable;
 
-class MatchIdsRequest extends Request
+class MatchIdsRequest extends Request implements Paginatable
 {
     /**
      * Define the HTTP method
@@ -15,7 +16,6 @@ class MatchIdsRequest extends Request
 
     public function __construct(
         protected Summoner $summoner,
-        protected int $page,
         protected ?int $start_time,
     )
     {
@@ -34,10 +34,7 @@ class MatchIdsRequest extends Request
      */
     public function defaultQuery(): array
     {
-        $query = [
-            'start' => $this->page * 100,
-            'count' => 100,
-        ];
+        $query = [];
         if ($this->start_time !== null) {
             $query['startTime'] = $this->start_time;
         }

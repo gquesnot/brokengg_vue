@@ -15,6 +15,8 @@ trait HandleMatchIdsUpdate
     public function updateSummonerMatchIds()
     {
         $match_ids = $this->getSummonerMatchIds();
+        $present_match_ids = LolMatch::whereIn('match_id', $match_ids)->pluck('match_id');
+        $match_ids = $match_ids->diff($present_match_ids);
         $db_match_ids = $match_ids
             ->map(function ($match_id) {
                 return [

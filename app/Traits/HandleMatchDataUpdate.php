@@ -2,7 +2,10 @@
 
 namespace App\Traits;
 
+use App\Enums\RegionType;
 use App\Events\SummonerUpdated;
+use App\Http\Integrations\LolApi\LolMatchConnector;
+use App\Http\Integrations\LolApi\Requests\MatchRequest;
 use App\Models\Champion;
 use App\Models\Item;
 use App\Models\LolMatch;
@@ -18,6 +21,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
 use Saloon\Exceptions\Request\Statuses\NotFoundException;
+use Saloon\Http\Response;
 
 trait HandleMatchDataUpdate
 {
@@ -33,21 +37,31 @@ trait HandleMatchDataUpdate
         } else {
             $matches = $query->whereIn('match_id', $match_ids)->get();
         }
-        foreach ($matches as $match) {
-            $summoner_match_ids = SummonerMatch::whereMatchId($match->id)->pluck('id');
-            SummonerMatchPerk::whereIn('summoner_match_id', $summoner_match_ids)->delete();
-            SummonerMatchItem::whereIn('summoner_match_id', $summoner_match_ids)->delete();
-            SummonerMatch::whereMatchId($match->id)->delete();
-            $api_match = $this->getMatch($match->match_id);
-            if (! $api_match || ! $this->updateMatchFromArray($match, $api_match)) {
-                $match->update(['is_trashed' => true, 'updated' => true]);
+        $summoner_match_ids = SummonerMatch::whereIn('match_id', $matches->pluck('id'))->pluck('id');
+        SummonerMatchPerk::whereIn('summoner_match_id', $summoner_match_ids)->delete();
+        SummonerMatchItem::whereIn('summoner_match_id', $summoner_match_ids)->delete();
+        SummonerMatch::whereIn('match_id', $matches->pluck('id'))->delete();
+
+        $connector = new LolMatchConnector(RegionType::EUROPE);
+        $requests = function ($matchs) {
+            foreach ($matchs as $match) {
+                yield new MatchRequest($match->match_id);
             }
-        }
+        };
+        $pool = $connector->pool($requests($matches), concurrency: 10);
+        $pool->withResponseHandler(function (Response $response) use ($matches) {
+            $api_match = $response->json();
+            $match = $matches->firstWhere('match_id', $api_match['metadata']['matchId']);
+            if (!$api_match || !$this->updateMatchFromArray($match, $api_match)) {
+                $matches->first()->update(['is_trashed' => true, 'updated' => true]);
+            }
+        });
+        $promise = $pool->send();
+        $promise->wait();
     }
 
     private function updateMatchFromArray(LolMatch $match, array $api_match)
     {
-        $match_id = $match->match_id;
         //Storage::disk('local')->put("{$match_id}.json", json_encode($api_match));
         $map_id = intval($api_match['info']['mapId']);
         $queue_id = intval($api_match['info']['queueId']);
