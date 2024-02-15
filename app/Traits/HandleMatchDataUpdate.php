@@ -56,6 +56,7 @@ trait HandleMatchDataUpdate
         });
         $promise = $pool->send();
         $promise->wait();
+        dd(count($matches_data));
         foreach ($matches as $match) {
             $api_match = Arr::get($matches_data, $match->match_id);
             if (!$api_match || !$this->updateMatchFromArray($match, $api_match)) {
