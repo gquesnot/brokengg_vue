@@ -102,10 +102,10 @@ trait HandleMatchDataUpdate
                 $summoner_tagline = Arr::get($participant, 'riotIdTagline');
                 if (!$summoner_name || !$summoner_tagline) {
                     $account_detail = Summoner::getAccountByPuuid($participant['puuid']);
-                    $tries = 3;
+                    $tries = 20;
                     while (!$account_detail && $tries > 0) {
                         $tries--;
-                        sleep(10);
+                        sleep(5);
                         $account_detail = Summoner::getAccountByPuuid($participant['puuid']);
                     }
                     if ($tries == 0) {
