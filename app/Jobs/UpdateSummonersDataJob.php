@@ -22,6 +22,10 @@ class UpdateSummonersDataJob implements ShouldBeUnique, ShouldQueue
         return 10;
     }
 
+    public function retryUntil(): DateTime
+    {
+        return now()->addHours(2);
+    }
 
     public function __construct()
     {

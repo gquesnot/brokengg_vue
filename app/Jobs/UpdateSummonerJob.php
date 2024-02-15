@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Events\SummonerUpdated;
 use App\Models\Summoner;
+use DateTime;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -19,6 +20,11 @@ class UpdateSummonerJob implements ShouldQueue
     public function tries(): int
     {
         return 10;
+    }
+
+    public function retryUntil(): DateTime
+    {
+        return now()->addHours(2);
     }
 
     public function __construct(private readonly Summoner $summoner)
