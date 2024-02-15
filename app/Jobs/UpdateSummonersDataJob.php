@@ -17,6 +17,8 @@ class UpdateSummonersDataJob implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $tries = 10;
+
 
     public function __construct()
     {
@@ -25,7 +27,7 @@ class UpdateSummonersDataJob implements ShouldBeUnique, ShouldQueue
 
     public function middleware(): array
     {
-        return [new ApiRateLimited, new ThrottlesExceptions(10, 10)];
+        return [new ApiRateLimited];
     }
 
     public function handle(): void
