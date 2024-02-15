@@ -31,6 +31,7 @@ class UpdateSummonerJob implements ShouldQueue
     {
     }
 
+
     public function handle(): void
     {
 

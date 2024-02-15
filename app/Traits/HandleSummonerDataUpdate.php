@@ -68,7 +68,7 @@ trait HandleSummonerDataUpdate
         $api = new LolSummonerByPuuidConnector(PlatformType::EUW1);
         try {
             $response = $api->send(new SummonerByPuuidRequest($puuid));
-        } catch (TooManyRequestsException $e) {
+        } catch (RateLimitReachedException $e) {
             return null;
         }
 
@@ -83,7 +83,7 @@ trait HandleSummonerDataUpdate
         try {
             $response = $api->send(new AccountByPuuidRequest($puuid));
 
-        } catch (TooManyRequestsException $e) {
+        } catch (RateLimitReachedException $e) {
             return null;
         }
 
