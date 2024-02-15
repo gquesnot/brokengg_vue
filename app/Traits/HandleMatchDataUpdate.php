@@ -49,15 +49,19 @@ trait HandleMatchDataUpdate
             }
         };
         $pool = $connector->pool($requests($matches), concurrency: 10);
-        $pool->withResponseHandler(function (Response $response) use ($matches) {
+        $matches_data = [];
+        $pool->withResponseHandler(function (Response $response) use (&$matches_data) {
             $api_match = $response->json();
-            $match = $matches->firstWhere('match_id', $api_match['metadata']['matchId']);
-            if (!$api_match || !$this->updateMatchFromArray($match, $api_match)) {
-                $matches->first()->update(['is_trashed' => true, 'updated' => true]);
-            }
+            $matches_data[$api_match['metadata']['matchId']] = $api_match;
         });
         $promise = $pool->send();
         $promise->wait();
+        foreach ($matches as $match) {
+            $api_match = Arr::get($matches_data, $match->match_id);
+            if (!$api_match || !$this->updateMatchFromArray($match, $api_match)) {
+                $matches->first()->update(['is_trashed' => true, 'updated' => true]);
+            }
+        }
     }
 
     private function updateMatchFromArray(LolMatch $match, array $api_match)
