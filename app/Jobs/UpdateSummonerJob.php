@@ -25,7 +25,8 @@ class UpdateSummonerJob implements ShouldQueue
     public function middleware(): array
     {
         return [
-            new ApiRateLimited
+            new ApiRateLimited,
+            new ThrottlesExceptions(10, 60),
         ];
     }
 
