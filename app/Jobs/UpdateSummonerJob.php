@@ -19,7 +19,7 @@ class UpdateSummonerJob implements ShouldQueue
 
     public function tries(): int
     {
-        return 10;
+        return 1;
     }
 
     public function retryUntil(): DateTime
