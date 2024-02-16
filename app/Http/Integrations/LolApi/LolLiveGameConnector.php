@@ -10,7 +10,7 @@ class LolLiveGameConnector extends LolBaseConnector
     {
         return [
             Limit::allow(2000)->everySeconds(10),
-            Limit::allow(600000)->everyFiveMinutes(),
+            Limit::allow(1200000)->everySeconds(seconds: 600),
         ];
     }
 

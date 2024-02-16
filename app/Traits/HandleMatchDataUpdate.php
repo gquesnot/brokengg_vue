@@ -43,27 +43,9 @@ trait HandleMatchDataUpdate
         SummonerMatch::whereIn('match_id', $matches->pluck('id'))->delete();
 
         $connector = new LolMatchConnector(RegionType::EUROPE);
-        $requests = function ($matchs) {
-            foreach ($matchs as $match) {
-                yield new MatchRequest($match->match_id);
-            }
-        };
-        $pool = $connector->pool($requests($matches), concurrency: 10);
-        $matches_data = [];
-        $pool->withResponseHandler(function (Response $response) use (&$matches_data) {
-            $api_match = $response->json();
-            $match_id = Arr::get($api_match, 'metadata.matchId');
-            if ($match_id) {
-                $matches_data[$match_id] = $api_match;
-            }
-        });
-        $promise = $pool->send();
-        $promise->wait();
         foreach ($matches as $match) {
-            $api_match = Arr::get($matches_data, $match->match_id);
-            if (!$api_match) {
-                continue;
-            }
+            $response = $connector->send(new MatchRequest($match->match_id));
+            $api_match = $response->json();
             if (!$this->updateMatchFromArray($match, $api_match)) {
                 $match->update(['is_trashed' => true, 'updated' => true]);
             }
@@ -105,15 +87,6 @@ trait HandleMatchDataUpdate
                 $summoner_tagline = Arr::get($participant, 'riotIdTagline');
                 if (!$summoner_name || !$summoner_tagline) {
                     $account_detail = Summoner::getAccountByPuuid($participant['puuid']);
-                    $tries = 20;
-                    while (!$account_detail && $tries > 0) {
-                        $tries--;
-                        sleep(5);
-                        $account_detail = Summoner::getAccountByPuuid($participant['puuid']);
-                    }
-                    if ($tries == 0) {
-                        throw new \Exception('Account api pb');
-                    }
                     $summoner_name = $account_detail['gameName'];
                     $summoner_tagline = $account_detail['tagLine'];
                 }

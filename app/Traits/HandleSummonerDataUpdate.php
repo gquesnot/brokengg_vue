@@ -82,11 +82,10 @@ trait HandleSummonerDataUpdate
 
         try {
             $response = $api->send(new AccountByPuuidRequest($puuid));
-
         } catch (RateLimitReachedException $e) {
-            return null;
+            sleep($e->getLimit()->getRemainingSeconds() + 1);
+            return self::getAccountByPuuid($puuid);
         }
-
         return $response->json();
     }
 
