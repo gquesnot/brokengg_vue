@@ -20,15 +20,6 @@ class UpdateSummonersDataJob implements ShouldBeUnique, ShouldQueue
 
     public int $timeout = 3600;
 
-    public function tries(): int
-    {
-        return 1;
-    }
-
-    public function retryUntil(): DateTime
-    {
-        return now()->addHours(2);
-    }
 
     public function __construct()
     {
