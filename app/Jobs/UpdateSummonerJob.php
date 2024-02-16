@@ -17,6 +17,8 @@ class UpdateSummonerJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public int $timeout = 3600;
+
     public function tries(): int
     {
         return 1;
