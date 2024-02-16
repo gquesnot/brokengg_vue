@@ -39,14 +39,12 @@ trait HandleMatchDataUpdate
         }
 
 
-        $connector = new LolMatchConnector(RegionType::EUROPE);
         foreach ($matches as $match) {
             $summoner_match_ids = SummonerMatch::whereMatchId($match->id)->pluck('id');
             SummonerMatchPerk::whereIn('summoner_match_id', $summoner_match_ids)->delete();
             SummonerMatchItem::whereIn('summoner_match_id', $summoner_match_ids)->delete();
             SummonerMatch::whereMatchId($match->id)->delete();
-            $response = $connector->send(new MatchRequest($match->match_id));
-            $api_match = $response->json();
+            $api_match = Summoner::getMatch($match->match_id);
             if (!$this->updateMatchFromArray($match, $api_match)) {
                 $match->update(['is_trashed' => true, 'updated' => true]);
             }
