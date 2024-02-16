@@ -37,13 +37,14 @@ trait HandleMatchDataUpdate
         } else {
             $matches = $query->whereIn('match_id', $match_ids)->get();
         }
-        $summoner_match_ids = SummonerMatch::whereIn('match_id', $matches->pluck('id'))->pluck('id');
-        SummonerMatchPerk::whereIn('summoner_match_id', $summoner_match_ids)->delete();
-        SummonerMatchItem::whereIn('summoner_match_id', $summoner_match_ids)->delete();
-        SummonerMatch::whereIn('match_id', $matches->pluck('id'))->delete();
+
 
         $connector = new LolMatchConnector(RegionType::EUROPE);
         foreach ($matches as $match) {
+            $summoner_match_ids = SummonerMatch::whereMatchId($match->id)->pluck('id');
+            SummonerMatchPerk::whereIn('summoner_match_id', $summoner_match_ids)->delete();
+            SummonerMatchItem::whereIn('summoner_match_id', $summoner_match_ids)->delete();
+            SummonerMatch::whereMatchId($match->id)->delete();
             $response = $connector->send(new MatchRequest($match->match_id));
             $api_match = $response->json();
             if (!$this->updateMatchFromArray($match, $api_match)) {
