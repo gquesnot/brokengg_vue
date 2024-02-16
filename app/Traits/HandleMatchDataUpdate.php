@@ -82,7 +82,7 @@ trait HandleMatchDataUpdate
             if ($participant['gameEndedInEarlySurrender']) {
                 return false;
             }
-            $summoner = Summoner::wherePuuid($participant['puuid'])->first();
+            $summoner = Summoner::wherePuuid($participant['puuid'])->orWhere('summoner_id', $participant['summonerId'])->first();
             if (! $summoner) {
                 $summoner_name = Arr::get($participant, 'riotIdGameName');
                 $summoner_tagline = Arr::get($participant, 'riotIdTagline');
