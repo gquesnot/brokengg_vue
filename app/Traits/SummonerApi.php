@@ -15,7 +15,6 @@ use App\Http\Integrations\LolApi\Requests\MatchDetailsRequest;
 use App\Http\Integrations\LolApi\Requests\MatchIdsRequest;
 use App\Http\Integrations\LolApi\Requests\MatchRequest;
 use App\Http\Integrations\LolApi\Requests\SummonerLeagueRequest;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
 use Saloon\Exceptions\Request\Statuses\NotFoundException;
@@ -35,6 +34,7 @@ trait SummonerApi
         $start_time = null;
         $request = new MatchIdsRequest($this, $start_time);
         $paginator = $connector->paginate($request);
+
         return $paginator->collect()->flatten()->collect();
     }
 

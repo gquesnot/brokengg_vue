@@ -4,15 +4,12 @@ namespace App\Jobs;
 
 use App\Models\Summoner;
 use Carbon\Carbon;
-use DateTime;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\Middleware\ThrottlesExceptions;
 use Illuminate\Queue\SerializesModels;
-use Saloon\RateLimitPlugin\Helpers\ApiRateLimited;
 
 class UpdateSummonersDataJob implements ShouldBeUnique, ShouldQueue
 {
@@ -20,12 +17,10 @@ class UpdateSummonersDataJob implements ShouldBeUnique, ShouldQueue
 
     public int $timeout = 3600;
 
-
     public function __construct()
     {
         $this->onQueue('summoners-data');
     }
-
 
     public function handle(): void
     {

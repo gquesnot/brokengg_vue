@@ -41,7 +41,16 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property int|null $wards_placed
  * @property int $summoner_spell1_id
  * @property int $summoner_spell2_id
+ * @property-read mixed $avg_assists
+ * @property-read mixed $avg_cs
+ * @property-read mixed $avg_damage_dealt_to_champions
+ * @property-read mixed $avg_damage_taken
+ * @property-read mixed $avg_deaths
+ * @property-read mixed $avg_gold
+ * @property-read mixed $avg_kda
+ * @property-read mixed $avg_kills
  * @property-read \App\Models\Champion|null $champion
+ * @property-read mixed $cs_per_minute
  * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $death_events
  * @property-read int|null $death_events_count
  * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $events
@@ -56,11 +65,18 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  * @property-read int|null $kills_events_count
  * @property-read Collection<int, \App\Models\SummonerMatchFrameEvent> $level_up_skill_events
  * @property-read int|null $level_up_skill_events_count
+ * @property-read mixed $loses
  * @property-read \App\Models\LolMatch|null $match
  * @property-read \App\Models\SummonerMatchPerk|null $perks
  * @property-read \App\Models\Summoner|null $summoner
  * @property-read \App\Models\SummonerSpell|null $summoner_spell1
  * @property-read \App\Models\SummonerSpell|null $summoner_spell2
+ * @property-read mixed $total_double_kills
+ * @property-read mixed $total_penta_kills
+ * @property-read mixed $total_quadra_kills
+ * @property-read mixed $total_triple_kills
+ * @property-read mixed $winrate
+ * @property-read mixed $wins
  *
  * @method static Builder|SummonerMatch championsCalc()
  * @method static Builder|SummonerMatch newModelQuery()

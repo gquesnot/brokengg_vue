@@ -2,10 +2,7 @@
 
 namespace App\Traits;
 
-use App\Enums\RegionType;
 use App\Events\SummonerUpdated;
-use App\Http\Integrations\LolApi\LolMatchConnector;
-use App\Http\Integrations\LolApi\Requests\MatchRequest;
 use App\Models\Champion;
 use App\Models\Item;
 use App\Models\LolMatch;
@@ -21,7 +18,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
 use Saloon\Exceptions\Request\Statuses\NotFoundException;
-use Saloon\Http\Response;
 
 trait HandleMatchDataUpdate
 {
@@ -37,7 +33,6 @@ trait HandleMatchDataUpdate
         } else {
             $matches = $query->whereIn('match_id', $match_ids)->get();
         }
-
 
         foreach ($matches as $match) {
             $summoner_match_ids = SummonerMatch::whereMatchId($match->id)->pluck('id');

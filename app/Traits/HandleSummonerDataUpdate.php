@@ -15,11 +15,8 @@ use App\Http\Integrations\LolApi\Requests\AccountByNameAndTagLineRequest;
 use App\Http\Integrations\LolApi\Requests\AccountByPuuidRequest;
 use App\Http\Integrations\LolApi\Requests\SummonerByPuuidRequest;
 use App\Models\Summoner;
-use Saloon\Exceptions\Request\FatalRequestException;
-use Saloon\Exceptions\Request\RequestException;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
 use Saloon\Exceptions\Request\Statuses\NotFoundException;
-use Saloon\Exceptions\Request\Statuses\TooManyRequestsException;
 use Saloon\RateLimitPlugin\Exceptions\RateLimitReachedException;
 
 trait HandleSummonerDataUpdate
@@ -79,13 +76,14 @@ trait HandleSummonerDataUpdate
     {
         $api = new LolAccountByPuuidConnector(RegionType::EUROPE);
 
-
         try {
             $response = $api->send(new AccountByPuuidRequest($puuid));
         } catch (RateLimitReachedException $e) {
             sleep($e->getLimit()->getRemainingSeconds() + 1);
+
             return self::getAccountByPuuid($puuid);
         }
+
         return $response->json();
     }
 

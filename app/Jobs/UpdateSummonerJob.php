@@ -4,14 +4,11 @@ namespace App\Jobs;
 
 use App\Events\SummonerUpdated;
 use App\Models\Summoner;
-use DateTime;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\Middleware\ThrottlesExceptions;
 use Illuminate\Queue\SerializesModels;
-use Saloon\RateLimitPlugin\Helpers\ApiRateLimited;
 
 class UpdateSummonerJob implements ShouldQueue
 {
@@ -19,11 +16,9 @@ class UpdateSummonerJob implements ShouldQueue
 
     public int $timeout = 3600;
 
-
     public function __construct(private readonly Summoner $summoner)
     {
     }
-
 
     public function handle(): void
     {

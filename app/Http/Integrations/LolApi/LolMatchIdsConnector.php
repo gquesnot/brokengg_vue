@@ -26,6 +26,7 @@ class LolMatchIdsConnector extends LolBaseConnector implements HasPagination
     {
         return new class(connector: $this, request: $request) extends Paginator {
             protected ?int $perPageLimit = 100;
+
             protected int $currentPage = 0;
 
             protected function isLastPage(Response $response): bool
@@ -43,9 +44,9 @@ class LolMatchIdsConnector extends LolBaseConnector implements HasPagination
                 $request->query()->add('start', $this->currentPage * $this->perPageLimit);
 
                 $request->query()->add('count', $this->perPageLimit);
+
                 return $request;
             }
         };
     }
-
 }

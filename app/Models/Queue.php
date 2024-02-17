@@ -13,6 +13,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  *
  * @property int $id
  * @property string $description
+ * @property mixed $name
  *
  * @method static Builder|Queue newModelQuery()
  * @method static Builder|Queue newQuery()
