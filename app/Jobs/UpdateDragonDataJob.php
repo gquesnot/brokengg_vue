@@ -17,16 +17,22 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use RiotAPI\DataDragonAPI\DataDragonAPI;
 
 class UpdateDragonDataJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public array $urls = [
-        'version' => 'https://static.developer.riotgames.com/docs/lol/queues.json',
+        "versions" => "https://ddragon.leagueoflegends.com/api/versions.json",
+        "champions" => "https://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/champion.json",
+        "items" => "https://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/item.json",
+        "maps" => "https://static.developer.riotgames.com/docs/lol/maps.json",
+        'queues' => 'https://static.developer.riotgames.com/docs/lol/queues.json',
         'modes' => 'https://static.developer.riotgames.com/docs/lol/gameModes.json',
         'perks' => 'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perks.json',
+        "summoner_spells" => "https://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/summoner.json",
+        "runes_reforged" => "https://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/runesReforged.json",
+
 
     ];
 
@@ -52,7 +58,7 @@ class UpdateDragonDataJob implements ShouldQueue
 
     public function updateQueues($version)
     {
-        $queues = Http::withoutVerifying()->get($this->urls['version'])->json();
+        $queues = Http::withoutVerifying()->get($this->urls['queues'])->json();
         foreach ($queues as $queue) {
             $queue_id = intval($queue['queueId']);
             $model = Queue::whereId($queue_id)->first();
@@ -74,12 +80,12 @@ class UpdateDragonDataJob implements ShouldQueue
 
     public function updateMaps($version)
     {
-        $maps = DataDragonAPI::getStaticMaps(version: $version);
-        foreach ($maps['data'] as $map_id => $map) {
-            $map_id = intval($map['MapId']);
+        $maps = Http::withoutVerifying()->get($this->urls['maps'])->json();
+        foreach ($maps as $map) {
+            $map_id = intval($map['mapId']);
             $model = Map::whereId($map_id)->first();
             $data = [
-                'description' => $map['MapName'],
+                'description' => $map['mapName'],
                 'id' => $map_id,
             ];
             if ($model) {
@@ -92,7 +98,7 @@ class UpdateDragonDataJob implements ShouldQueue
 
     public function updateChampions($version)
     {
-        $champions = DataDragonAPI::getStaticChampions(version: $version);
+        $champions = Http::withoutVerifying()->get(Str::replace('{version}', $version, $this->urls['champions']))->json();
         foreach ($champions['data'] as $champion_name => $champion) {
             $champion_id = intval($champion['key']);
             $model = Champion::whereId($champion_id)->first();
@@ -113,7 +119,7 @@ class UpdateDragonDataJob implements ShouldQueue
 
     public function updateItems($version)
     {
-        $items = DataDragonAPI::getStaticItems(version: $version);
+        $items = Http::withoutVerifying()->get(Str::replace('{version}', $version, $this->urls['items']))->json();
         foreach ($items['data'] as $item_id => $item) {
             $item_id = intval($item_id);
             $model = Item::whereId($item_id)->first();
@@ -134,7 +140,7 @@ class UpdateDragonDataJob implements ShouldQueue
 
     public function updateSummonerSpells($version)
     {
-        $spells = DataDragonAPI::getStaticSummonerSpells(version: $version);
+        $spells = Http::withoutVerifying()->get(Str::replace('{version}', $version, $this->urls['summoner_spells']))->json();
         foreach ($spells['data'] as $spell_name => $spell) {
             $spell_id = intval($spell['key']);
             $model = SummonerSpell::whereId($spell_id)->first();
@@ -153,7 +159,7 @@ class UpdateDragonDataJob implements ShouldQueue
 
     public function updateVersion()
     {
-        $versions = DataDragonAPI::getStaticVersions();
+        $versions = Http::withoutVerifying()->get($this->urls['versions'])->json();
         $latestVersion = $versions[0];
         $latestDbVersion = Version::orderByDesc('version')->first()?->name;
         $is_new = $latestDbVersion === null || $latestDbVersion !== $latestVersion;
@@ -184,7 +190,7 @@ class UpdateDragonDataJob implements ShouldQueue
     public function updatePerks(mixed $last_version)
     {
         $perks_raw_data = Http::withoutVerifying()->get($this->urls['perks'])->json();
-        $perks_api_data = DataDragonAPI::getStaticReforgedRunes(version: $last_version);
+        $perks_api_data = Http::withoutVerifying()->get(Str::replace('{version}', $last_version, $this->urls['runes_reforged']))->json();
         $perks_combined = [];
 
         foreach ($perks_raw_data as $perk) {
