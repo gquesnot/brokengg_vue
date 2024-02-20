@@ -26,7 +26,7 @@
         "spatie/laravel-typescript-transformer": "^2.3",
         "spatie/typescript-transformer": "^2.2",
         "symfony/http-client": "^6.3",
-        "tightenco/ziggy": "^1.0",
+        "tightenco/ziggy": "^1.8.2",
         "wendelladriel/laravel-lift": "^0.11.0"
     },
     "require-dev": {
