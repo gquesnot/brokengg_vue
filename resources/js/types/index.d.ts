@@ -9,13 +9,5 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
     auth: {
         user: User;
     };
-    filters: Record<string, string>;
-    champion_options: OptionInterface[];
-    role_options: OptionInterface[];
-    summoner: SummonerInterface;
-    version: string;
-    only: string[];
     route_params: Record<string, string>;
-
-
 };

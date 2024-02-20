@@ -46,33 +46,34 @@ const props = defineProps({
 <template>
     <div
         :class="`text-gray-5 bg-gray-1 text-gray-1 flex justify-${justify} rounded my-3  p-4 ${is_reverse ? 'flex-row-reverse ' : ''}`">
-      <div v-if="with_summoner_name" :class="`mx-4 flex items-center ${!is_reverse ? 'flex-row-reverse ' : ''}`">
-        <div>
-          <div class="text-xl font-bold cursor-pointer mx-2 flex flex-col" @click="navigateToSummoner(summoner.id)">
-              {{ withoutTagLine(summoner.name) }}
-          </div>
-          <div class="flex ml-1 justify-center text-xs" v-if="summoner.pro_player">
-            <a :href="urlProPlayerHelper(summoner.pro_player.slug)">
-              <div class="bg-purple-800 py-0.5 px-1 rounded">
-                PRO
-                <v-tooltip
-                    activator="parent"
-                    location="bottom"
-                    class="text-center"
-                >
-                  <p>
-                    {{ summoner.pro_player?.team_name }}
-                  </p>
-                  <p>
-                    {{ summoner.pro_player?.name }}
-                  </p>
-                </v-tooltip>
-              </div>
-            </a>
-          </div>
+        <div v-if="with_summoner_name" :class="`mx-4 flex items-center ${!is_reverse ? 'flex-row-reverse ' : ''}`">
+            <div>
+                <div class="text-xl font-bold cursor-pointer mx-2 flex flex-col"
+                     @click="navigateToSummoner(summoner.id)">
+                    {{ withoutTagLine(summoner.name) }}
+                </div>
+                <div class="flex ml-1 justify-center text-xs" v-if="summoner.pro_player">
+                    <a :href="urlProPlayerHelper(summoner.pro_player.slug)">
+                        <div class="bg-purple-800 py-0.5 px-1 rounded">
+                            PRO
+                            <v-tooltip
+                                activator="parent"
+                                location="bottom"
+                                class="text-center"
+                            >
+                                <p>
+                                    {{ summoner.pro_player?.team_name }}
+                                </p>
+                                <p>
+                                    {{ summoner.pro_player?.name }}
+                                </p>
+                            </v-tooltip>
+                        </div>
+                    </a>
+                </div>
             </div>
 
-        <VImg :src="urlProfilIconHelper(summoner.profile_icon_id)" class="w-16 h-16 rounded-full mx-1"/>
+            <VImg :src="urlProfilIconHelper(summoner.profile_icon_id)" class="w-16 h-16 rounded-full mx-1"/>
         </div>
         <div class=" mx-4 flex flex-col items-center justify-center">
             <div class="flex space-x-2">

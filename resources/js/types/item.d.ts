@@ -1,4 +1,4 @@
-type ItemInterface = {
+export interface ItemInterface {
     id: number;
     item_id: string;
     name: string;

@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import {Link, router} from '@inertiajs/vue3'
 import {PaginationLinkInterface} from "@/types/pagination_link";
-import {getFilters, getOnly, getParamsWithFilters, getRouteParams} from "@/helpers/root_props_helpers";
+import {getRouteParams} from "@/helpers/root_props_helpers";
+import {useFiltersStore, useSummonerStore} from "@/store";
 
 
 const props = defineProps<{
     links: PaginationLinkInterface[]
 }>();
+let filtersStore = useFiltersStore()
+let summonerStore = useSummonerStore()
 
 
 const switchPage = (url: string | null) => {
@@ -20,15 +23,16 @@ const switchPage = (url: string | null) => {
         // @ts-ignore
         page = parseInt(page_str[1])
     }
-    const route_params = getRouteParams()
+
 
     //@ts-ignore
-    router.visit(route(route().current(), getParamsWithFilters(getFilters(), {
-        ...route_params,
+    router.visit(route(route().current(), {
+        ...getRouteParams(),
+        ...filtersStore.toObj(),
         page: page.toString()
-    })), {
+    }), {
         preserveState: true,
-        only: getOnly()
+        only: summonerStore.only
     })
 }
 

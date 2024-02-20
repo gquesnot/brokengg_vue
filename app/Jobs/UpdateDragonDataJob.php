@@ -23,16 +23,15 @@ class UpdateDragonDataJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public array $urls = [
-        "versions" => "https://ddragon.leagueoflegends.com/api/versions.json",
-        "champions" => "https://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/champion.json",
-        "items" => "https://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/item.json",
-        "maps" => "https://static.developer.riotgames.com/docs/lol/maps.json",
+        'versions' => 'https://ddragon.leagueoflegends.com/api/versions.json',
+        'champions' => 'https://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/champion.json',
+        'items' => 'https://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/item.json',
+        'maps' => 'https://static.developer.riotgames.com/docs/lol/maps.json',
         'queues' => 'https://static.developer.riotgames.com/docs/lol/queues.json',
         'modes' => 'https://static.developer.riotgames.com/docs/lol/gameModes.json',
         'perks' => 'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perks.json',
-        "summoner_spells" => "https://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/summoner.json",
-        "runes_reforged" => "https://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/runesReforged.json",
-
+        'summoner_spells' => 'https://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/summoner.json',
+        'runes_reforged' => 'https://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/runesReforged.json',
 
     ];
 
@@ -67,7 +66,7 @@ class UpdateDragonDataJob implements ShouldQueue
                 $description = $queue['map'];
             }
             $data = [
-                'description' => $description,
+                'description' => Str::replace(' games', '', $description),
                 'id' => $queue_id,
             ];
             if ($model) {

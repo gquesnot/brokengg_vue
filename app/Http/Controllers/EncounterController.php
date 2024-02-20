@@ -5,17 +5,20 @@ namespace App\Http\Controllers;
 use App\Http\Requests\FiltersRequest;
 use App\Models\LolMatch;
 use App\Models\Summoner;
+use App\Traits\ControllerTrait;
 use Arr;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Inertia\Inertia;
 
 class EncounterController extends Controller
 {
+    use ControllerTrait;
+
     public function index(FiltersRequest $request, int $summoner_id, int $encounter_id)
     {
         try {
-            $summoner = Summoner::with('pro_player')->findOrFail($summoner_id);
-            $encounter = Summoner::with('pro_player')->findOrFail($encounter_id);
+            $summoner = $this->get_summoner($summoner_id);
+            $encounter = $this->get_summoner($encounter_id);
         } catch (ModelNotFoundException $e) {
             return to_route('home');
         }
@@ -27,6 +30,12 @@ class EncounterController extends Controller
             'encounter' => $encounter,
             'with_' => $this->getMatchData($summoner, $encounter, $filtered_match_ids, true),
             'vs_' => $this->getMatchData($summoner, $encounter, $filtered_match_ids, false),
+            'summoner' => $summoner,
+            'champion_options' => fn() => $this->get_champion_options(),
+            'queue_options' => fn() => $this->get_queue_options($summoner),
+            'filters' => $filters,
+            'version' => fn() => $this->get_last_version(),
+            'only' => fn() => ['encounter', 'with_', 'vs_'],
         ]);
     }
 

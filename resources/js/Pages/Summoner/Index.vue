@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import {Head, useForm, usePage} from '@inertiajs/vue3';
+import {Head, useForm} from '@inertiajs/vue3';
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import {ref} from "vue";
 import AlertApi from "@/Components/AlertApi.vue";
 
 const props = defineProps<{}>();
@@ -17,8 +16,8 @@ const form = useForm({
 const searchSummoner = () => {
     form.post(route('summoner.store'), {
         preserveScroll: true,
-      onError() {
-      }
+        onError() {
+        }
     });
 };
 
@@ -30,33 +29,33 @@ const searchSummoner = () => {
     <div class="flex justify-center items-center min-h-screen bg-dots-darker bg-center">
         <v-card class="w-1/2 p-8">
 
-          <div class="bg-gray-1">
-            <v-card-title class="text-center"><span class="text-4xl">BROKEN.GG</span></v-card-title>
-            <v-card-text class=" flex flex-col items-center justify-center">
-              <InputLabel for="summoner_name" value="Search Summoner" class="mb-2"/>
-                <div class="flex mx-auto items-center w-fit">
-                    <div>
-                        <TextInput id="summoner_name" ref="inputTextSummonerName" v-model="form.summoner_name"
-                                   class="p-2 border"/>
-                        <InputError :message="form.errors.summoner_name" class="mt-2"/>
+            <div class="bg-gray-1">
+                <v-card-title class="text-center"><span class="text-4xl">BROKEN.GG</span></v-card-title>
+                <v-card-text class=" flex flex-col items-center justify-center">
+                    <InputLabel for="summoner_name" value="Search Summoner" class="mb-2"/>
+                    <div class="flex mx-auto items-center w-fit">
+                        <div>
+                            <TextInput id="summoner_name" ref="inputTextSummonerName" v-model="form.summoner_name"
+                                       class="p-2 border"/>
+                            <InputError :message="form.errors.summoner_name" class="mt-2"/>
+                        </div>
                     </div>
-                </div>
 
-            </v-card-text>
-            <v-card-actions class="flex justify-center">
-              <PrimaryButton
-                  class="mt-4 text-2xl"
-                  @click="searchSummoner">
-                Search
-              </PrimaryButton>
-            </v-card-actions>
+                </v-card-text>
+                <v-card-actions class="flex justify-center">
+                    <PrimaryButton
+                        class="mt-4 text-2xl"
+                        @click="searchSummoner">
+                        Search
+                    </PrimaryButton>
+                </v-card-actions>
 
-          </div>
+            </div>
 
         </v-card>
     </div>
 
-  <AlertApi/>
+    <AlertApi/>
 
 </template>
 

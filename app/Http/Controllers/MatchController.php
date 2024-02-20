@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FiltersRequest;
-use App\Models\Summoner;
 use App\Models\SummonerMatch;
+use App\Traits\ControllerTrait;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -15,14 +15,18 @@ use Saloon\RateLimitPlugin\Exceptions\RateLimitReachedException;
 
 class MatchController extends Controller
 {
+    use ControllerTrait;
+
     public function index(FiltersRequest $request, int $summoner_id, int $summoner_match_id)
     {
+
         try {
-            $summoner = Summoner::findOrFail($summoner_id);
+            $summoner = $this->get_summoner($summoner_id);
             $summoner_match = SummonerMatch::findOrFail($summoner_match_id);
         } catch (ModelNotFoundException $e) {
             return to_route('home');
         }
+
         $filters = Arr::get($request->validated(), 'filters', []);
         [$query, $encounter_query] = $summoner->get_summoner_match_query($filters);
         $encounter_match_ids = $encounter_query->pluck('match_id');
@@ -30,13 +34,19 @@ class MatchController extends Controller
         return Inertia::render('Summoner/Match', [
             'summoner_match' => fn () => SummonerMatch::withPartial()->find($summoner_match->id),
             'summoner_encounter_count' => fn () => $summoner->get_encounters_count($encounter_match_ids),
+            'filters' => $filters,
+            'summoner' => $summoner,
+            'champion_options' => fn() => $this->get_champion_options(),
+            'queue_options' => fn() => $this->get_queue_options($summoner),
+            'version' => fn() => $this->get_last_version(),
+            'only' => fn() => ['summoner_match', 'summoner_encounter_count'],
         ]);
     }
 
     public function getSummonerMatchLoaded(Request $request, int $summoner_id, int $summoner_match_id)
     {
         try {
-            $summoner = Summoner::findOrFail($summoner_id);
+            $summoner = $this->get_summoner($summoner_id);
             $summoner_match = SummonerMatch::findOrFail($summoner_match_id);
         } catch (ModelNotFoundException $e) {
             return to_route('home');
@@ -50,13 +60,12 @@ class MatchController extends Controller
     public function getSummonerMatchDetail(Request $request, int $summoner_id, int $summoner_match_id)
     {
         try {
-            $summoner = Summoner::findOrFail($summoner_id);
+            $summoner = $this->get_summoner($summoner_id);
             $summoner_match = SummonerMatch::findOrFail($summoner_match_id);
         } catch (ModelNotFoundException $e) {
             return to_route('home');
         }
         if (!$summoner_match->has_detail()) {
-
             try {
                 $summoner->loadMatchDetail($summoner_match->match);
             } catch (ForbiddenException|NotFoundException $e) {

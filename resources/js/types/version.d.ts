@@ -1,4 +1,4 @@
-type VersionInterface = {
+export interface VersionInterface {
     id: number;
     name: string;
 }

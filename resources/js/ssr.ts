@@ -1,4 +1,4 @@
-import {createSSRApp, h, DefineComponent} from 'vue';
+import {createSSRApp, DefineComponent, h} from 'vue';
 import {renderToString} from '@vue/server-renderer';
 import {createInertiaApp} from '@inertiajs/vue3';
 import createServer from '@inertiajs/vue3/server';
@@ -11,7 +11,7 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import {aliases, fa} from 'vuetify/iconsets/fa4'
 
-import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js'
+import {ArcElement, Chart as ChartJS, Legend, Tooltip} from 'chart.js'
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 

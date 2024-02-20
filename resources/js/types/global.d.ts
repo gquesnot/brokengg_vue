@@ -5,7 +5,7 @@ import {PageProps as AppPageProps} from './';
 import Echo from 'laravel-echo';
 
 import Pusher from 'pusher-js';
-import {PropType} from "vue";
+
 declare global {
     interface Window {
         axios: AxiosInstance;

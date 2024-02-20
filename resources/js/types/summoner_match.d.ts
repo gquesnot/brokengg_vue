@@ -32,13 +32,12 @@ export interface SummonerMatchInterface {
 
     summoner_spell1: SummonerSpellInterface;
     summoner_spell2: SummonerSpellInterface;
-    perks:SummonerMatchPerksInterface;
+    perks: SummonerMatchPerksInterface;
     match: LolMatchInterface;
     champion: ChampionInterface;
     summoner: SummonerInterface;
     items: ItemInterface[];
     frames: SummonerMatchFrameInterface[];
-
 
 
 }

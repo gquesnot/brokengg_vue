@@ -79,8 +79,10 @@ selected_participant_id.value = props.summoner_match.id
         </div>
         <div v-if="selected_participant">
             <div>
-                <MatchDetailItemsBuild :selected_participant="selected_participant" :first_frame_with_events="first_frame_with_events"/>
-                <MatchDetailSkillBuild :selected_participant="selected_participant" :ordered_level_up_skills="ordered_level_up_skills"/>
+                <MatchDetailItemsBuild :selected_participant="selected_participant"
+                                       :first_frame_with_events="first_frame_with_events"/>
+                <MatchDetailSkillBuild :selected_participant="selected_participant"
+                                       :ordered_level_up_skills="ordered_level_up_skills"/>
                 <MatchDetailRuneBuild :selected_participant="selected_participant"/>
             </div>
         </div>

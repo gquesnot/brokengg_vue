@@ -27,7 +27,6 @@ const timestamp_to_hours_minutes_seconds = (timestamp: number): string => {
 }
 
 
-
 </script>
 
 <template>
@@ -44,27 +43,27 @@ const timestamp_to_hours_minutes_seconds = (timestamp: number): string => {
                 </div>
                 <div class="flex flex-col items-center relative mb-10">
                     <div class="flex items-center border-gray-900 border-4 rounded">
-                      <template v-for="(item_event) in frame.item_events"
-                                :key="`${item_event.item_id}-${item_event.type}-${item_event.summoner_match_frame_id}`">
+                        <template v-for="(item_event) in frame.item_events"
+                                  :key="`${item_event.item_id}-${item_event.type}-${item_event.summoner_match_frame_id}`">
                             <div v-if="item_event.type === EventType.ITEM_PURCHASED"
                                  class="relative border-gray-900 border-4">
                                 <VImg :src="urlItemHelper(item_event.item.img_url)" class="w-8 h-8"/>
-                              <div v-if="item_event.item_count > 1"
-                                   class="text-center flex justify-center items-center  text-sm absolute bottom-0 right-0 bg-gray-800 font-bold rounded w-[17px] h-[17px] border-4 border-gray-800">
-                                <span>{{ item_event.item_count }}</span>
-                              </div>
+                                <div v-if="item_event.item_count > 1"
+                                     class="text-center flex justify-center items-center  text-sm absolute bottom-0 right-0 bg-gray-800 font-bold rounded w-[17px] h-[17px] border-4 border-gray-800">
+                                    <span>{{ item_event.item_count }}</span>
+                                </div>
                             </div>
-                        <div class="relative rounded  border-gray-900 border-4"
+                            <div class="relative rounded  border-gray-900 border-4"
                                  v-else-if="item_event.type === EventType.ITEM_SOLD">
                                 <VImg :src="urlItemHelper(item_event.item.img_url)"
                                       class="w-8 h-8 opacity-75"/>
-                          <div class="absolute -bottom-0.5 -right-0.5">
+                                <div class="absolute -bottom-0.5 -right-0.5">
                                     <VIcon icon="fa fa-times" class="text-red "/>
                                 </div>
-                          <div v-if="item_event.item_count > 1"
-                               class="text-center flex justify-center items-center  text-sm absolute bottom-0 right-0 bg-gray-800 font-bold rounded w-[17px] h-[17px] border-4 border-gray-800">
-                            <span>{{ item_event.item_count }}</span>
-                          </div>
+                                <div v-if="item_event.item_count > 1"
+                                     class="text-center flex justify-center items-center  text-sm absolute bottom-0 right-0 bg-gray-800 font-bold rounded w-[17px] h-[17px] border-4 border-gray-800">
+                                    <span>{{ item_event.item_count }}</span>
+                                </div>
                             </div>
                         </template>
                     </div>

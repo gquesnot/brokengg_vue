@@ -5,18 +5,29 @@ import SummonerStats from "@/Components/Summoner/SummonerStats.vue";
 import MatchesRow from "@/Components/Summoner/MatchesRow.vue";
 import {SummonerMatchesPaginated} from "@/types/summoner_match";
 import {SummonerStatsInterface} from "@/types/summoner_stats";
-import {getSummoner} from "@/helpers/root_props_helpers";
 import {SummonerEncounterCountInterface} from "@/types/summoner_encounter_count";
+import {useFiltersStore, useSummonerStore} from "@/store";
+import {SummonerInterface} from "@/types/summoner";
+import {BeforeFiltersInterface} from "@/types/filters";
+import {OptionInterface} from "@/types/option";
 
 
 const props = defineProps<{
     matches: SummonerMatchesPaginated
-    summoner_stats: SummonerStatsInterface|null
+    summoner_stats: SummonerStatsInterface | null
     summoner_encounter_count: SummonerEncounterCountInterface
+    summoner: SummonerInterface,
+    filters: BeforeFiltersInterface,
+    version: string,
+    champion_options: OptionInterface[],
+    queue_options: OptionInterface[],
+    only: string[],
 }>();
 
-
-const summoner = getSummoner();
+const summonerStore = useSummonerStore();
+const filtersStore = useFiltersStore();
+summonerStore.setStore(props.summoner, props.version, props.champion_options, props.queue_options, props.only);
+filtersStore.setStore(props.filters);
 
 
 </script>
@@ -29,7 +40,8 @@ const summoner = getSummoner();
             tab="Matches"
         />
 
-        <SummonerStats v-if="summoner_stats"  :summoner_stats="summoner_stats" :summoner="summoner" justify="start"/>
+        <SummonerStats v-if="summoner_stats" :summoner_stats="summoner_stats" :summoner="summonerStore.summoner"
+                       justify="start"/>
         <div class="flex flex-col" v-for="match in matches.data" :key="match.id">
             <MatchesRow
                 :key="match.id"

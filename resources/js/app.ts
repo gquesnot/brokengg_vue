@@ -13,13 +13,14 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import {aliases, fa} from 'vuetify/iconsets/fa4'
 
-import { Chart as ChartJS ,ArcElement,Tooltip, Legend } from 'chart.js'
+import {ArcElement, Chart as ChartJS, Legend, Tooltip} from 'chart.js'
+import {createPinia} from "pinia";
 
 const vuetify = createVuetify({
     components,
     directives,
-    theme:{
-      defaultTheme: 'dark',
+    theme: {
+        defaultTheme: 'dark',
     },
     icons: {
         defaultSet: 'fa',
@@ -30,8 +31,10 @@ const vuetify = createVuetify({
     },
 })
 
-ChartJS.register(ArcElement,Tooltip, Legend)
+ChartJS.register(ArcElement, Tooltip, Legend)
 
+
+const pinia = createPinia()
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
@@ -42,6 +45,7 @@ createInertiaApp({
         createApp({render: () => h(App, props)})
             .use(plugin)
             .use(vuetify)
+            .use(pinia)
             .use(ZiggyVue, Ziggy)
             .mount(el);
     },

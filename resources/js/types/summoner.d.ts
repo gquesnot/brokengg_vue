@@ -1,7 +1,7 @@
 import {ProPlayerInterface} from "@/types/pro_player";
 import {SummonerLeagueInterface} from "@/types/summoner_league";
 
-type SummonerInterface = {
+export interface SummonerInterface {
     id: number;
     name: string;
     profile_icon_id: number;

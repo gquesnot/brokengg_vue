@@ -4,30 +4,43 @@
 import {SummonerEncountersPaginated} from "@/types/summoner_encounters";
 import {ref, watch} from "vue";
 import {debounce} from "lodash";
-import {getFilters, getOnly, getParamsWithFilters, getSummoner} from "@/helpers/root_props_helpers";
 import {router} from "@inertiajs/vue3";
 import TextInput from "@/Components/TextInput.vue";
 import SummonerHeader from "@/Components/Summoner/SummonerHeader.vue";
 import Pagination from "@/Components/Pagination.vue";
 import EncountersRow from "@/Components/Summoner/EncountersRow.vue";
+import {useFiltersStore, useSummonerStore} from "@/store";
+import {SummonerInterface} from "@/types/summoner";
+import {BeforeFiltersInterface} from "@/types/filters";
+import {OptionInterface} from "@/types/option";
 
 const props = defineProps<{
     search?: string
-    encounters: SummonerEncountersPaginated
+    encounters: SummonerEncountersPaginated,
+    summoner: SummonerInterface,
+    filters: BeforeFiltersInterface,
+    version: string,
+    champion_options: OptionInterface[],
+    queue_options: OptionInterface[],
+    only: string[],
 }>();
 
+const summonerStore = useSummonerStore();
+const filtersStore = useFiltersStore();
+summonerStore.setStore(props.summoner, props.version, props.champion_options, props.queue_options, props.only);
+filtersStore.setStore(props.filters);
 
 let search = ref(props.search ?? '');
-const summoner = getSummoner();
+
 
 watch(search, debounce(function (value: string) {
-    router.visit(route('summoner.encounters', getParamsWithFilters(getFilters(), {
-      summoner_id: summoner.id.toString(),
-        search: value
-    })), {
+    router.visit(route('summoner.encounters', {
+        summoner_id: summonerStore.summoner.id,
+        search: value,
+        ...filtersStore.toObj()
+    }), {
         preserveState: true,
         preserveScroll: true,
-        only: getOnly()
     })
 }, 500))
 

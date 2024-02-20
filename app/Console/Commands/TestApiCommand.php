@@ -3,8 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Jobs\UpdateDragonDataJob;
-use App\Jobs\UpdateSummonerJob;
-use App\Models\Summoner;
 use Illuminate\Console\Command;
 
 class TestApiCommand extends Command

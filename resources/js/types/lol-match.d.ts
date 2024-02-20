@@ -1,6 +1,6 @@
 import {SummonerMatchInterface} from "@/types/summoner_match";
 
-type LolMatchInterface = {
+export interface LolMatchInterface {
     id: number;
     updated: boolean;
     match_id: string;

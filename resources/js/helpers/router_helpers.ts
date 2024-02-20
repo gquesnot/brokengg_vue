@@ -1,8 +1,11 @@
 import {router} from "@inertiajs/vue3";
+import {useFiltersStore} from "@/store";
 
 
 export const navigateTo = (route_name: string, params: Record<string, number | string>) => {
-    router.visit(route(route_name, params), {
+    const filtersStore = useFiltersStore();
+
+    router.visit(route(route_name, {...params, ...filtersStore.toObj()}), {
         preserveState: true,
     });
 }
@@ -24,9 +27,9 @@ export const navigateToMatch = (summoner_id: number, summoner_match_id: number) 
 }
 
 export const navigateToSummoner = (summoner_id: number) => {
+    const filtersStore = useFiltersStore();
     router.visit(route('summoner.matches', {
         summoner_id: summoner_id,
-    }), {
-        preserveState: true,
-    });
+        ...filtersStore.toObj()
+    }), {});
 }

@@ -2,20 +2,31 @@
 import SummonerHeader from "@/Components/Summoner/SummonerHeader.vue";
 import {ref} from "vue";
 import EncounterPart from "@/Components/Summoner/EncounterPart.vue";
-import {getSummoner} from "@/helpers/root_props_helpers";
 import {SummonerEncounterInterface} from "@/types/summoner_encounter";
 import {SummonerInterface} from "@/types/summoner";
+import {useFiltersStore, useSummonerStore} from "@/store";
+import {BeforeFiltersInterface} from "@/types/filters";
+import {OptionInterface} from "@/types/option";
 
 
 const props = defineProps<{
     encounter: SummonerInterface
     vs_: SummonerEncounterInterface
-    with_: SummonerEncounterInterface
+    with_: SummonerEncounterInterface,
+    summoner: SummonerInterface,
+    filters: BeforeFiltersInterface,
+    version: string,
+    champion_options: OptionInterface[],
+    queue_options: OptionInterface[],
+    only: string[],
 }>();
 
+const summonerStore = useSummonerStore();
+const filtersStore = useFiltersStore();
+summonerStore.setStore(props.summoner, props.version, props.champion_options, props.queue_options, props.only);
+filtersStore.setStore(props.filters);
 
 const tab = ref('with')
-const summoner = getSummoner();
 
 
 </script>
@@ -40,11 +51,11 @@ const summoner = getSummoner();
 
         >
             <VWindowItem value="with">
-                <EncounterPart :encounter_data="with_" :summoner="summoner" :encounter="encounter"
+                <EncounterPart :encounter_data="with_" :summoner="summonerStore.summoner" :encounter="encounter"
                                :is_with="true"/>
             </VWindowItem>
             <VWindowItem value="vs">
-                <EncounterPart :encounter_data="vs_" :summoner="summoner" :encounter="encounter"
+                <EncounterPart :encounter_data="vs_" :summoner="summonerStore.summoner" :encounter="encounter"
                                :is_with="false"/>
             </VWindowItem>
         </VWindow>

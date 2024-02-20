@@ -1,11 +1,11 @@
 <script setup lang="ts">
 
 import {SummonerMatchInterface} from "@/types/summoner_match";
-import {getSummoner} from "@/helpers/root_props_helpers";
 import {urlChampionHelper, urlItemHelper, urlPerkHelper, urlSummonerSpellHelper} from "@/helpers/url_helpers";
 import {navigateToEncounter, navigateToSummoner} from "@/helpers/router_helpers";
 import {SummonerEncounterCountInterface} from "@/types/summoner_encounter_count";
 import {withoutTagLine} from "@/helpers/summoner_name_helper";
+import {useSummonerStore} from "@/store";
 
 
 const props = defineProps<{
@@ -16,10 +16,10 @@ const props = defineProps<{
 }>();
 
 
-const summoner = getSummoner();
+let summonerStore = useSummonerStore();
 
 const getTrColor = (participant: SummonerMatchInterface) => {
-    if (summoner.id === participant.summoner_id) {
+    if (summonerStore.summoner.id === participant.summoner_id) {
         return participant.won ? 'bg-blue-2' : 'bg-red-2'
     } else {
         return participant.won ? 'bg-blue-1' : 'bg-red-1'
@@ -47,7 +47,7 @@ for (let participant of props.participants) {
                 {{ won ? 'Victory' : 'Defeat' }}
             </th>
             <th class="p-2">Seen</th>
-          <th class="p-2">Rank</th>
+            <th class="p-2">Rank</th>
             <th class="p-2">KDA</th>
             <th class="p-2">Damage</th>
             <th class="p-2">CS</th>
@@ -65,7 +65,7 @@ for (let participant of props.participants) {
                                 :src="urlChampionHelper(participant.champion?.img_url)"
                                 class="w-12 h-12 rounded-full"/>
                             <div class="absolute -bottom-1 right-0 bg-gray-1 rounded-full px-0.5">
-                                {{participant.champ_level}}
+                                {{ participant.champ_level }}
                             </div>
                         </div>
                         <div class="flex flex-col ml-1">
@@ -93,7 +93,7 @@ for (let participant of props.participants) {
                     </div>
                 </td>
                 <td class="text-center">
-                    <template v-if="participant.summoner_id === summoner.id">
+                    <template v-if="participant.summoner_id === summonerStore.summoner.id">
                         <div class="flex items-center justify-center">
                             <VIcon icon="fa fa-user-o" class="w-3 h-3"/>
                         </div>
@@ -101,7 +101,7 @@ for (let participant of props.participants) {
                     </template>
                     <template v-else>
                         <a href="#"
-                           @click.prevent="navigateToEncounter(summoner.id, participant.summoner_id)">
+                           @click.prevent="navigateToEncounter(summonerStore.summoner.id, participant.summoner_id)">
 
                             <template
                                 v-if="summoner_encounter_count.hasOwnProperty(participant.summoner_id)">
@@ -114,14 +114,14 @@ for (let participant of props.participants) {
 
                     </template>
                 </td>
-              <td class="text-center">
-                <template v-if="participant.summoner.solo_q">
-                  {{ participant.summoner.solo_q.tier }} {{ participant.summoner.solo_q.rank }}
-                </template>
-                <template v-else>
-                  lvl {{ participant.summoner.summoner_level }}
-                </template>
-              </td>
+                <td class="text-center">
+                    <template v-if="participant.summoner.solo_q">
+                        {{ participant.summoner.solo_q.tier }} {{ participant.summoner.solo_q.rank }}
+                    </template>
+                    <template v-else>
+                        lvl {{ participant.summoner.summoner_level }}
+                    </template>
+                </td>
                 <td class="w-64 py-1  px-3">
                     <div class="ml-4 text-xl flex justify-center items-center flex-col">
                         <div class="flex">
@@ -132,7 +132,7 @@ for (let participant of props.participants) {
                             <div class="text-gray-5 font-bold">{{ participant.assists }}</div>
                         </div>
                         <div>
-                          {{ participant.kda?.toFixed(1) }}:1 KDA
+                            {{ participant.kda?.toFixed(1) }}:1 KDA
                         </div>
                     </div>
                 </td>

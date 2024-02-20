@@ -5,7 +5,7 @@ import {urlChampionHelper} from "@/helpers/url_helpers";
 import {ChampionStatsInterface} from "@/types/champions_stats";
 import {computed} from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import {getSummoner} from "@/helpers/root_props_helpers";
+import {useSummonerStore} from "@/store";
 
 
 const props = defineProps<{
@@ -15,11 +15,13 @@ const props = defineProps<{
 
 const winRate = computed(() => (props.champion.total_win / props.champion.total * 100).toFixed(0));
 const loses = computed(() => (props.champion.total - props.champion.total_win));
+let summonerStore = useSummonerStore();
+
 
 const navigateToChampion = () => {
     router.visit(route('summoner.champion', {
-      summoner_id: getSummoner().id,
-      champion_id: props.champion.champion_id,
+        summoner_id: summonerStore.summoner.id,
+        champion_id: props.champion.champion_id,
     }), {
         preserveState: true,
     })
@@ -41,7 +43,7 @@ const navigateToChampion = () => {
     </td>
     <td>
         <div>
-          <div>{{ props.champion.total_win }}W</div>
+            <div>{{ props.champion.total_win }}W</div>
             <div> {{ loses }}L</div>
         </div>
     </td>
@@ -49,9 +51,9 @@ const navigateToChampion = () => {
         {{ winRate }}%
     </td>
     <td>
-      <div class="flex flex-col w-36 items-center">
-        <div class="flex">
-          {{ props.champion.avg_kills }} / {{ props.champion.avg_deaths }} /
+        <div class="flex flex-col w-36 items-center">
+            <div class="flex">
+                {{ props.champion.avg_kills }} / {{ props.champion.avg_deaths }} /
                 {{ props.champion.avg_assists }}
             </div>
             <div> {{

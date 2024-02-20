@@ -3,17 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FiltersRequest;
-use App\Models\Summoner;
+use App\Traits\ControllerTrait;
 use Arr;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Inertia\Inertia;
 
 class ChampionsController extends Controller
 {
+    use ControllerTrait;
+
     public function index(FiltersRequest $request, int $summoner_id)
     {
         try {
-            $summoner = Summoner::findOrFail($summoner_id);
+            $summoner = $this->get_summoner($summoner_id);
         } catch (ModelNotFoundException $e) {
             return to_route('home');
         }
@@ -23,6 +25,13 @@ class ChampionsController extends Controller
 
         return Inertia::render('Summoner/Champions', [
             'champions' => $champions,
+            'summoner' => $summoner,
+            'champion_options' => fn() => $this->get_champion_options(),
+            'queue_options' => fn() => $this->get_queue_options($summoner),
+            'filters' => $filters,
+            'version' => fn() => $this->get_last_version(),
+            'only' => fn() => ['champions'],
+
         ]);
 
     }

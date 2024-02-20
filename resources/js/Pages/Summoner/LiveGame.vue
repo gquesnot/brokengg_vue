@@ -1,18 +1,29 @@
 <script setup lang="ts">
 import SummonerHeader from "@/Components/Summoner/SummonerHeader.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import {router, useForm, usePage} from "@inertiajs/vue3";
+import {router, useForm} from "@inertiajs/vue3";
 import LiveGameRowPart from "@/Components/Summoner/LiveGameRowPart.vue";
-import {getSummoner} from "@/helpers/root_props_helpers";
-import {onMounted, ref} from "vue";
+import {useFiltersStore, useSummonerStore} from "@/store";
+import {BeforeFiltersInterface} from "@/types/filters";
+import {SummonerInterface} from "@/types/summoner";
+import {OptionInterface} from "@/types/option";
 
 
 const props = defineProps<{
     live_game: any | null
-    fake_live_game: any | null
+    fake_live_game: any | null,
+    summoner: SummonerInterface,
+    filters: BeforeFiltersInterface,
+    version: string,
+    champion_options: OptionInterface[],
+    queue_options: OptionInterface[],
+    only: string[],
 }>();
+const summonerStore = useSummonerStore();
+const filtersStore = useFiltersStore();
+summonerStore.setStore(props.summoner, props.version, props.champion_options, props.queue_options, props.only);
+filtersStore.setStore(props.filters);
 
-const summoner = getSummoner();
 
 const form = useForm({
     lobby_search: 'Random Iron #EUW joined the lobby\n' +
@@ -21,11 +32,11 @@ const form = useForm({
 
 
 const searchLobby = () => {
-  router.visit(route('summoner.live-game', {summoner_id: summoner.id, lobby_search: form.lobby_search}),
+    router.visit(route('summoner.live-game', {summoner_id: summonerStore.summoner.id, lobby_search: form.lobby_search}),
         {
             preserveState: true,
-          onError: (error) => {
-          }
+            onError: (error) => {
+            }
         })
 }
 
@@ -69,8 +80,8 @@ const searchLobby = () => {
                            rows="5"/>
                 <div class="flex">
                     <PrimaryButton @click="searchLobby">Search</PrimaryButton>
-                  <PrimaryButton @click="router.reload({preserveState:true, only:['live_game', 'errors']})"
-                                 class="ml-4">
+                    <PrimaryButton @click="router.reload({preserveState:true, only:['live_game', 'errors']})"
+                                   class="ml-4">
                         Refresh
                     </PrimaryButton>
                 </div>

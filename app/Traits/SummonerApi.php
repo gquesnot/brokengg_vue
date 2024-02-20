@@ -4,7 +4,6 @@ namespace App\Traits;
 
 use App\Enums\PlatformType;
 use App\Enums\RegionType;
-use App\Events\SummonerUpdated;
 use App\Http\Integrations\LolApi\LolLiveGameConnector;
 use App\Http\Integrations\LolApi\LolMatchConnector;
 use App\Http\Integrations\LolApi\LolMatchDetailsConnector;
@@ -94,7 +93,6 @@ trait SummonerApi
             return $fn_call();
         } catch (RateLimitReachedException $e) {
             $seconds = $e->getLimit()->getRemainingSeconds();
-            SummonerUpdated::dispatch($this->id, false);
             sleep($seconds + 1);
 
             return $this->handleJobRequest($fn_call);

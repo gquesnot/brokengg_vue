@@ -1,78 +1,84 @@
 <script setup lang="ts">
 
 import {onMounted, Ref, ref} from "vue";
-import {Head, router, useForm, usePage} from "@inertiajs/vue3";
+import {Head, router, useForm} from "@inertiajs/vue3";
 import Datepicker from "vue3-datepicker";
-
-import {FiltersInterface} from "@/types/filters";
-import {
-    getChampionOptions,
-    getFilters,
-    getOnly,
-    getParamsWithFilters,
-    getQueueOptions,
-    getRouteParams,
-    getSummoner
-} from "@/helpers/root_props_helpers";
+import {getRouteParams} from "@/helpers/root_props_helpers";
 import {urlProfilIconHelper} from "@/helpers/url_helpers";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import {navigateToSummoner} from "@/helpers/router_helpers";
-import moment from "moment";
-import SummonerUpdateEventInterface from "@/types/summoner_update_event_interface";
 import AlertApi from "@/Components/AlertApi.vue";
-import {tagLineOnly, withoutTagLine} from "../../helpers/summoner_name_helper";
+import {tagLineOnly, withoutTagLine} from "@/helpers/summoner_name_helper";
+import {useFiltersStore, useSummonerStore} from "@/store";
+import moment from "moment";
+import _ from 'lodash';
 
 const props = defineProps<{
     tab: string
 }>();
 
-const filters = getFilters();
-const champion_options = getChampionOptions();
-const queue_options = getQueueOptions();
-let refresh_interval: any = null
+const filtersStore = useFiltersStore();
+const summonerStore = useSummonerStore();
 
 
-const refresh_summoner = () => {
-    //@ts-ignore
-    router.visit(route(route().current(), getParamsWithFilters(getFilters(), getRouteParams())), {
-        preserveState: true,
-        preserveScroll: true,
-      only: getOnly()
-    });
+const updateSummoner = () => {
+    router.patch(route('summoner.update', {summoner: summonerStore.summoner.id}))
 }
 
-onMounted(() => {
-  window.Echo.channel('summoner.' + getSummoner().id).listen('SummonerUpdated', ({should_start_refresh}: SummonerUpdateEventInterface) => {
-        if (should_start_refresh) {
-            refresh_summoner()
-            refresh_interval = setInterval(refresh_summoner, 3000)
-        } else {
-            clearInterval(refresh_interval)
-        }
+//FILTERS
+let form = useForm(
+    {
+        queue_id: filtersStore.queue_id,
+        champion_id: filtersStore.champion_id,
+        start_date: filtersStore.start_date ? new Date(filtersStore.start_date) : undefined,
+        end_date: filtersStore.end_date ? new Date(filtersStore.end_date) : undefined,
+        should_filter_encounters: filtersStore.should_filter_encounters,
+    }
+)
+
+const applyFilter = () => {
+    updateStoreFromForm();
+    //@ts-ignore
+    router.visit(route(route().current(), {
+        ...getRouteParams(),
+        ...filtersStore.toObj()
+    }), {
+        preserveState: true,
+        preserveScroll: true,
+        only: summonerStore.only
     })
-})
 
+}
 
-const form = useForm<{
-    filters: {
-        queue_id?: number
-        champion_id?: number
-        start_date?: Date
-        end_date?: Date
-        should_filter_encounters?: boolean
+const clearFilter = () => {
+    form.queue_id = undefined
+    form.champion_id = undefined
+    form.start_date = undefined
+    form.end_date = undefined
+    form.should_filter_encounters = false
+    updateStoreFromForm()
+    //@ts-ignore
+    router.visit(route(route().current(), getRouteParams()), {
+        preserveState: true,
+        preserveScroll: true,
+        only: summonerStore.only
+    })
+}
+
+const updateStoreFromForm = () => {
+    if (form.start_date !== undefined) {
+        filtersStore.start_date = moment(form.start_date.toISOString().split('T')[0]).add(1, 'days').format('YYYY-MM-DD')
     }
-}>({
-    filters: {
-        queue_id: filters.queue_id,
-        champion_id: filters.champion_id,
-        start_date: filters.start_date ? new Date(filters.start_date) : undefined,
-        end_date: filters.end_date ? new Date(filters.end_date) : undefined,
-        should_filter_encounters: filters.should_filter_encounters,
+    if (form.end_date !== undefined) {
+        filtersStore.end_date = moment(form.end_date.toISOString().split('T')[0]).add(1, 'days').format('YYYY-MM-DD')
     }
-});
+    filtersStore.should_filter_encounters = form.should_filter_encounters
+    filtersStore.queue_id = form.queue_id
+    filtersStore.champion_id = form.champion_id
+}
 
-
+// TABS
 export interface TabInterface {
     label: string
     route: string
@@ -86,78 +92,47 @@ const tabs: Ref<TabInterface[]> = ref([
 ])
 
 
-const updateSummoner = () => {
-    router.patch(route('summoner.update', {summoner: getSummoner().id}))
-}
-
-const applyFilter = () => {
-    let new_filters = formToFilters()
-    //@ts-ignore
-    usePage().props.filters = new_filters
-
-    //@ts-ignore
-    router.visit(route(route().current(), getParamsWithFilters(new_filters, getRouteParams())), {
-        preserveState: true,
-        only: getOnly()
-    })
-
-}
-
 const getTab = (label: string): TabInterface | undefined => {
     return tabs.value.find((tab: TabInterface) => tab.label === label)
 }
-
-
-const clearFilter = () => {
-    form.filters.queue_id = undefined
-    form.filters.champion_id = undefined
-    form.filters.start_date = undefined
-    form.filters.end_date = undefined
-    form.filters.should_filter_encounters = false
-    // @ts-ignore
-    usePage().props.filters = formToFilters()
-
-    //@ts-ignore
-    router.visit(route(route().current(), getRouteParams()), {
-        preserveState: true,
-        only: getOnly()
-    })
-}
-
-const formToFilters = () => {
-    let filters: FiltersInterface = {
-        queue_id: form.filters.queue_id,
-        champion_id: form.filters.champion_id,
-        start_date: form.filters.start_date ? form.filters.start_date.toISOString() : undefined,
-        end_date: form.filters.end_date ? form.filters.end_date.toISOString() : undefined,
-        should_filter_encounters: form.filters.should_filter_encounters ? form.filters.should_filter_encounters : false,
-    }
-    if (filters.start_date !== undefined) {
-        filters.start_date = moment(filters.start_date.split('T')[0]).add(1, 'days').format('YYYY-MM-DD')
-    }
-    if (filters.end_date !== undefined) {
-        filters.end_date = moment(filters.end_date.split('T')[0]).add(1, 'days').format('YYYY-MM-DD')
-    }
-    return filters
-}
-
 
 const switchTab = (label: string) => {
     let tab = getTab(label)
     if (tab) {
         router.visit(route(tab.route, {
-            summoner_id: getSummoner().id,
+            summoner_id: summonerStore.summoner.id,
+            ...filtersStore.toObj()
         }), {
             preserveState: true,
+            preserveScroll: true,
         })
     }
 }
+
+// EVENTS
+onMounted(() => {
+    const debouncedRefresh = _.debounce(() => {
+        //@ts-ignore
+        router.visit(route(route().current(), {
+            ...getRouteParams(),
+            ...filtersStore.toObj()
+        }), {
+            preserveState: true,
+            preserveScroll: true,
+        });
+    }, 3000); // 3000 milliseconds = 3 seconds
+
+    window.Echo.channel('summoner.' + summonerStore.summoner.id)
+        .listen('SummonerUpdated', () => {
+            debouncedRefresh();
+        });
+})
 
 
 </script>
 
 <template>
-    <Head :title="getSummoner().name"/>
+    <Head :title="summonerStore.summoner.name"/>
     <div class="flex justify-center">
         <a :href="route('home')">
             <div class="text-3xl font-bold mb-8"> BROKEN.GG</div>
@@ -166,25 +141,25 @@ const switchTab = (label: string) => {
     <div class="">
         <div class="flex justify-between">
             <div class="flex mt-4 ">
-              <div class="w-20">
-                <VImg :width="150" :height="80"
-                          :src="urlProfilIconHelper(getSummoner().profile_icon_id)"/>
+                <div class="w-20">
+                    <VImg :width="150" :height="80"
+                          :src="urlProfilIconHelper(summonerStore.summoner.profile_icon_id)"/>
                 </div>
                 <div class="ml-4 flex flex-col font-bold text-xl">
-                    <div @click="navigateToSummoner(getSummoner().id)" class="cursor-pointer">
-                        {{ withoutTagLine(getSummoner().name) }} <span
-                        class="text-gray-400">#{{ tagLineOnly(getSummoner().name) }}</span>
+                    <div @click="navigateToSummoner(summonerStore.summoner.id)" class="cursor-pointer">
+                        {{ withoutTagLine(summonerStore.summoner.name) }} <span
+                        class="text-gray-400">#{{ tagLineOnly(summonerStore.summoner.name) }}</span>
                     </div>
                     <div class="mb-1 text-base">
-                  <template v-if="getSummoner().solo_q">
-                    {{ getSummoner().solo_q?.tier }} {{ getSummoner().solo_q?.rank }}
-                  </template>
-                  <template v-else>
-                    lvl {{ getSummoner().summoner_level }}
-                  </template>
-                </div>
+                        <template v-if="summonerStore.summoner.solo_q">
+                            {{ summonerStore.summoner?.solo_q?.tier }} {{ summonerStore.summoner.solo_q?.rank }}
+                        </template>
+                        <template v-else>
+                            lvl {{ summonerStore?.summoner?.summoner_level }}
+                        </template>
+                    </div>
 
-                <PrimaryButton @click="updateSummoner" class="justify-center">
+                    <PrimaryButton @click="updateSummoner" class="justify-center">
                         Update
                     </PrimaryButton>
                 </div>
@@ -194,8 +169,8 @@ const switchTab = (label: string) => {
                     <div class="w-1/2">
                         <div>
                             <VAutocomplete
-                                v-model="form.filters.queue_id"
-                                :items="queue_options"
+                                v-model="form.queue_id"
+                                :items="summonerStore.queue_options"
                                 item-value="value"
                                 item-title="label"
                                 label="Queue"
@@ -208,8 +183,8 @@ const switchTab = (label: string) => {
                         </div>
                         <div>
                             <VAutocomplete
-                                v-model="form.filters.champion_id"
-                                :items="champion_options"
+                                v-model="form.champion_id"
+                                :items="summonerStore.champion_options"
                                 item-value="value"
                                 item-title="label"
                                 label="Champion"
@@ -223,14 +198,14 @@ const switchTab = (label: string) => {
                         </div>
                         <div>
                             <v-switch label="Filter Encounters"
-                                      v-model="form.filters.should_filter_encounters"></v-switch>
+                                      v-model="form.should_filter_encounters"></v-switch>
                         </div>
                     </div>
                     <div class="w-1/2 ml-4">
                         <div>
                             <label for="start_time">Start Date</label>
                             <Datepicker
-                                v-model="form.filters.start_date"
+                                v-model="form.start_date"
                                 id="start_time"
                                 name="start_time"
                                 class="text-gray-5"
@@ -242,7 +217,7 @@ const switchTab = (label: string) => {
                         <div class="mt-1.5">
                             <label for="end_time">End Date</label>
                             <Datepicker
-                                v-model="form.filters.end_date"
+                                v-model="form.end_date"
                                 id="end_time"
                                 name="end_time"
                                 class="text-gray-5"
@@ -273,7 +248,7 @@ const switchTab = (label: string) => {
             </ResponsiveNavLink>
         </div>
     </div>
-  <AlertApi/>
+    <AlertApi/>
 </template>
 
 <style>

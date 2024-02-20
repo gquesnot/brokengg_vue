@@ -1,4 +1,4 @@
-type ChampionInterface = {
+export interface ChampionInterface {
     id: number;
     name: string;
     title: string;
