@@ -120,10 +120,9 @@ onMounted(() => {
             preserveScroll: true,
         });
     }, 3000);
-
     window.Echo.channel('summoner.' + summonerStore.summoner.id)
-        .listen('summoner.updated', () => {
-            console.log(`received summoner.updated event for id:${summonerStore.summoner.id}`)
+        .listen('SummonerUpdated', () => {
+            console.log(`summoner.updated on ${summonerStore.summoner.id}`)
             debouncedRefresh();
         });
 })

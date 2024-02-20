@@ -1,3 +1,7 @@
+import './bootstrap';
+import '../css/app.css';
+import 'font-awesome/css/font-awesome.min.css'
+
 import {createSSRApp, DefineComponent, h} from 'vue';
 import {renderToString} from '@vue/server-renderer';
 import {createInertiaApp} from '@inertiajs/vue3';
@@ -12,10 +16,11 @@ import * as directives from 'vuetify/directives'
 import {aliases, fa} from 'vuetify/iconsets/fa4'
 
 import {ArcElement, Chart as ChartJS, Legend, Tooltip} from 'chart.js'
+import {createPinia} from "pinia";
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
-
+const pinia = createPinia()
 const vuetify = createVuetify({
     components,
     directives,
@@ -43,6 +48,7 @@ createServer((page) =>
             return createSSRApp({render: () => h(App, props)})
                 .use(plugin)
                 .use(vuetify)
+                .use(pinia)
                 .use(ZiggyVue, {
                     // @ts-expect-error
                     ...page.props.ziggy,
