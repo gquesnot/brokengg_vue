@@ -28,6 +28,11 @@ class SummonerUpdated implements ShouldBroadcast
         return 'broadcast';
     }
 
+    public function broadcastAs(): string
+    {
+        return 'summoner.updated';
+    }
+
     /**
      * Get the channels the event should broadcast on.
      *

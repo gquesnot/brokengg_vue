@@ -119,10 +119,11 @@ onMounted(() => {
         }), {
             preserveScroll: true,
         });
-    }, 3000); // 3000 milliseconds = 3 seconds
+    }, 3000);
 
     window.Echo.channel('summoner.' + summonerStore.summoner.id)
-        .listen('SummonerUpdated', () => {
+        .listen('summoner.updated', () => {
+            console.log(`received summoner.updated event for id:${summonerStore.summoner.id}`)
             debouncedRefresh();
         });
 })
