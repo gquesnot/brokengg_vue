@@ -117,7 +117,6 @@ onMounted(() => {
             ...getRouteParams(),
             ...filtersStore.toObj()
         }), {
-            preserveState: true,
             preserveScroll: true,
         });
     }, 3000); // 3000 milliseconds = 3 seconds
