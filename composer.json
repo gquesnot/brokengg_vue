@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.8",
         "laravel/framework": "^10.10",
@@ -21,7 +21,6 @@
         "saloonphp/pagination-plugin": "^2.0",
         "saloonphp/rate-limit-plugin": "^2.0",
         "saloonphp/saloon": "^v3.0",
-        "scoutapp/scout-apm-laravel": "^2.4",
         "spatie/enum": "^3.13",
         "spatie/laravel-data": "^3.6",
         "spatie/laravel-typescript-transformer": "^2.3",
