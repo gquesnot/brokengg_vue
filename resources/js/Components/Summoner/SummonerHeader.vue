@@ -122,7 +122,6 @@ onMounted(() => {
     }, 3000);
     window.Echo.channel('summoner.' + summonerStore.summoner.id)
         .listen('.summoner.updated', (e: any) => {
-            console.log(`summoner.updated on ${summonerStore.summoner.id}`, e)
             debouncedRefresh();
         });
 })
