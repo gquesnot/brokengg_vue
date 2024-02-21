@@ -109,22 +109,23 @@ const switchTab = (label: string) => {
     }
 }
 
+
 // EVENTS
-onMounted(() => {
-    const debouncedRefresh = _.debounce(() => {
-        //@ts-ignore
-        router.visit(route(route().current(), {
-            ...getRouteParams(),
-            ...filtersStore.toObj()
-        }), {
-            preserveScroll: true,
-        });
-    }, 3000);
-    window.Echo.channel('summoner.' + summonerStore.summoner.id)
-        .listen('.summoner.updated', (e: any) => {
+const debouncedRefresh = _.debounce(() => {
+    //@ts-ignore
+    router.visit(route(route().current(), {
+        ...getRouteParams(),
+        ...filtersStore.toObj()
+    }), {
+        preserveScroll: true,
+    });
+}, 3000);
+window.Echo.channel('summoner.' + summonerStore.summoner.id)
+    .listen('.summoner.updated', (e: any) => {
+        if (e.summoner_id == summonerStore.summoner.id) {
             debouncedRefresh();
-        });
-})
+        }
+    });
 
 
 </script>
