@@ -189,7 +189,7 @@ trait HandleMatchDataUpdate
         $match->updated = true;
 
         $match->save();
-        SummonerUpdated::dispatch($this->id);
+        event(new SummonerUpdated($this->id));
 
         return true;
     }

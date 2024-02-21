@@ -17,10 +17,9 @@ class SummonerUpdated implements ShouldBroadcast
     ) {
     }
 
-    public function broadcastWith(): array
+    public function broadcastAs(): string
     {
-        return [
-        ];
+        return 'summoner.updated';
     }
 
     public function broadcastQueue(): string
@@ -28,10 +27,6 @@ class SummonerUpdated implements ShouldBroadcast
         return 'broadcast';
     }
 
-    public function broadcastAs(): string
-    {
-        return 'summoner.updated';
-    }
 
     /**
      * Get the channels the event should broadcast on.
@@ -41,7 +36,7 @@ class SummonerUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('summoner.'.$this->summoner_id),
+            'summoner.' . $this->summoner_id
         ];
     }
 }
