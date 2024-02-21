@@ -22,12 +22,6 @@ class SummonerUpdated implements ShouldBroadcast
         return 'summoner.updated';
     }
 
-    public function broadcastWith(): array
-    {
-        return [
-            "summoner_ids" => $this->summoner_ids,
-        ];
-    }
 
     public function broadcastQueue(): string
     {
