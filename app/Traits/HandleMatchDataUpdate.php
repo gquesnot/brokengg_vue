@@ -190,7 +190,7 @@ trait HandleMatchDataUpdate
         $match->updated = true;
 
         $match->save();
-        event(new SummonerUpdated($participant_ids));
+        SummonerUpdated::dispatch($participant_ids);
 
         return true;
     }
