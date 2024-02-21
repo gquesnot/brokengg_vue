@@ -2,7 +2,6 @@
 
 namespace App\Http\Integrations\LolApi\Requests;
 
-use App\Models\Summoner;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
@@ -14,7 +13,7 @@ class LiveGameRequest extends Request
     protected Method $method = Method::GET;
 
     public function __construct(
-        protected Summoner $summoner,
+        protected string $encrypted_summoner_id,
     )
     {
     }
@@ -24,6 +23,7 @@ class LiveGameRequest extends Request
      */
     public function resolveEndpoint(): string
     {
-        return "/lol/spectator/v4/active-games/by-summoner/{$this->summoner->summoner_id}";
+
+        return "/lol/spectator/v4/active-games/by-summoner/{$this->encrypted_summoner_id}";
     }
 }

@@ -28,6 +28,7 @@ class LiveGameController extends Controller
 
         try {
             $summoner = $this->get_summoner($summoner_id);
+
         } catch (ModelNotFoundException $e) {
             return to_route('home');
         }
@@ -40,9 +41,9 @@ class LiveGameController extends Controller
 
         $filters = Validator::validate($request->all(), FiltersRequest::rules());
         $filters = Arr::get($filters, 'filters', []);
-
         try {
             $live_game = $this->getLiveGameData($summoner);
+
         } catch (NotFoundException|ForbiddenException $e) {
 
         } catch (RateLimitReachedException $e) {

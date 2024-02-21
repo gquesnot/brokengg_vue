@@ -48,6 +48,6 @@ trait ControllerTrait
 
     public function get_summoner($summoner_id)
     {
-        return Summoner::select(['id', 'name', 'profile_icon_id', 'summoner_level'])->with(['solo_q', 'pro_player'])->findOrFail($summoner_id);
+        return Summoner::select(['id', 'name', 'profile_icon_id', 'summoner_level', 'summoner_id'])->with(['solo_q', 'pro_player'])->findOrFail($summoner_id);
     }
 }

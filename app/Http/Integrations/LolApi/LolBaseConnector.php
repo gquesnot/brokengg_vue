@@ -33,8 +33,9 @@ class LolBaseConnector extends Connector
      */
     public function resolveBaseUrl(): string
     {
+        $connector_ref = strtolower($this->connector_ref->name);
 
-        return "https://{$this->connector_ref->name}.api.riotgames.com";
+        return "https://{$connector_ref}.api.riotgames.com";
     }
 
     /**

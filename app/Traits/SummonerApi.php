@@ -70,8 +70,8 @@ trait SummonerApi
     public function getLiveGame(): array
     {
         $api = new LolLiveGameConnector(PlatformType::EUW1);
-        $response = $api->send(new LiveGameRequest($this));
-
+        $request = new LiveGameRequest($this->summoner_id);
+        $response = $api->send($request);
         return $response->json();
     }
 
