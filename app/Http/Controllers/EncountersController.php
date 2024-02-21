@@ -24,7 +24,7 @@ class EncountersController extends Controller
         [$query, $encounter_query] = $summoner->get_summoner_match_query($filters);
         $encounters_query = $summoner->get_encounters_count_query($query->pluck('match_id'))
             ->when($search != null && $search != '', function ($query) use ($search) {
-                $query->where('summoners.name', 'like', '%'.$search.'%');
+                $query->where('summoners.name', 'ILIKE', '%' . $search . '%');
             });
 
         return Inertia::render('Summoner/Encounters', [

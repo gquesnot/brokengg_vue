@@ -22,12 +22,10 @@ class SummonerUpdated implements ShouldBroadcast
         return 'summoner.updated';
     }
 
-
     public function broadcastQueue(): string
     {
         return 'broadcast';
     }
-
 
     /**
      * Get the channels the event should broadcast on.
@@ -37,7 +35,7 @@ class SummonerUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            'summoner.update'
+            'summoner.update',
         ];
     }
 }

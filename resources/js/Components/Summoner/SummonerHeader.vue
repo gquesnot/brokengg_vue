@@ -176,10 +176,31 @@ window.Echo.channel('summoner.update')
                                 id="queue"
                                 density="comfortable"
                                 name="queue"
-                                class="mt-4"
                                 :clearable="true"
                             />
                         </div>
+                        <div class="w-full">
+                            <label for="start_time">Start Date</label>
+                            <Datepicker
+                                v-model="form.start_date"
+                                id="start_time"
+                                name="start_time"
+                                class="text-gray-5"
+                                clearable
+                                :format="['YYYY-MM-DD']"
+                                :input-props="{placeholder: 'YYYY-MM-DD'}"
+                            />
+                        </div>
+                        <div class="mt-2">
+                            <v-switch label="Filter Encounters"
+                                      v-model="form.should_filter_encounters"
+                                      color="indigo"
+                                      value="indigo"
+                                      class="h-16"
+                            ></v-switch>
+                        </div>
+                    </div>
+                    <div class="w-1/2 ml-4">
                         <div>
                             <VAutocomplete
                                 v-model="form.champion_id"
@@ -194,26 +215,9 @@ window.Echo.channel('summoner.update')
                                 :clearable="true"
 
                             />
+
                         </div>
-                        <div>
-                            <v-switch label="Filter Encounters"
-                                      v-model="form.should_filter_encounters"></v-switch>
-                        </div>
-                    </div>
-                    <div class="w-1/2 ml-4">
-                        <div>
-                            <label for="start_time">Start Date</label>
-                            <Datepicker
-                                v-model="form.start_date"
-                                id="start_time"
-                                name="start_time"
-                                class="text-gray-5"
-                                clearable
-                                :format="['YYYY-MM-DD']"
-                                :input-props="{placeholder: 'YYYY-MM-DD'}"
-                            />
-                        </div>
-                        <div class="mt-1.5">
+                        <div class="w-full">
                             <label for="end_time">End Date</label>
                             <Datepicker
                                 v-model="form.end_date"

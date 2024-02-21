@@ -184,8 +184,8 @@ trait HandleMatchDataUpdate
             SummonerMatchPerk::create($perks);
         }
 
-        $match->match_creation = Carbon::createFromTimestampMs($api_match['info']['gameCreation']);
-        $match->match_end = Carbon::createFromTimestampMs($api_match['info']['gameEndTimestamp']);
+        $match->match_creation = Carbon::createFromTimestamp($api_match['info']['gameCreation'] / 1000);
+        $match->match_end = Carbon::createFromTimestamp($api_match['info']['gameEndTimestamp'] / 1000);
         $match->match_duration = gmdate('H:i:s', $api_match['info']['gameDuration']);
         $match->map_id = $map->id;
         $match->queue_id = $queue->id;

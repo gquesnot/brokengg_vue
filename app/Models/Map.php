@@ -12,6 +12,8 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
  *
  * @property int $id
  * @property string $description
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Item> $items
+ * @property-read int|null $items_count
  *
  * @method static Builder|Map newModelQuery()
  * @method static Builder|Map newQuery()
@@ -30,4 +32,15 @@ class Map extends Model
         'id',
         'description',
     ];
+
+    public function items(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Item::class,
+            ItemMaps::class,
+            'map_id',
+            'id',
+            'id',
+            'item_id');
+    }
 }

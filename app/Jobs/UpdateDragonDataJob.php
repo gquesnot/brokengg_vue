@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Champion;
 use App\Models\Item;
+use App\Models\ItemMaps;
 use App\Models\Map;
 use App\Models\Mode;
 use App\Models\Perk;
@@ -15,6 +16,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -45,8 +47,9 @@ class UpdateDragonDataJob implements ShouldQueue
         [$last_version, $is_new] = $this->updateVersion();
         if ($is_new) {
             $this->updateChampions($last_version);
-            $this->updateItems($last_version);
             $this->updateMaps($last_version);
+            $this->updateItems($last_version);
+
             $this->updateQueues($last_version);
             $this->updateModes($last_version);
             $this->updatePerks($last_version);
@@ -128,12 +131,19 @@ class UpdateDragonDataJob implements ShouldQueue
                 'description' => $item['description'],
                 'img_url' => $item['image']['full'],
                 'tags' => $item['tags'],
+                'stats' => $item['stats'],
             ];
             if ($model) {
                 $model->update($data);
             } else {
-                Item::create($data);
+                $model = Item::create($data);
             }
+            $item_maps = collect(Arr::get($item, 'maps', []))
+                ->filter(fn($has_map) => $has_map)
+                ->map(function ($has_map, $map_id) use ($item_id) {
+                    return ['map_id' => $map_id, 'item_id' => $item_id];
+                })->toArray();
+            ItemMaps::upsert($item_maps, ['map_id', 'item_id']);
         }
     }
 
