@@ -120,9 +120,9 @@ const debouncedRefresh = _.debounce(() => {
         preserveScroll: true,
     });
 }, 3000);
-window.Echo.channel('summoner.' + summonerStore.summoner.id)
-    .listen('.summoner.updated', (e: any) => {
-        if (e.summoner_id == summonerStore.summoner.id) {
+window.Echo.channel('summoner.update')
+    .listen('.summoner.updated', (e: { summoner_ids: number[] }) => {
+        if (e.summoner_ids.includes(summonerStore.summoner.id)) {
             debouncedRefresh();
         }
     });

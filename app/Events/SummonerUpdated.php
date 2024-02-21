@@ -13,13 +13,20 @@ class SummonerUpdated implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(
-        public int $summoner_id,
+        public array $summoner_ids,
     ) {
     }
 
     public function broadcastAs(): string
     {
         return 'summoner.updated';
+    }
+
+    public function broadcastWith(): array
+    {
+        return [
+            "summoner_ids" => $this->summoner_ids,
+        ];
     }
 
     public function broadcastQueue(): string
@@ -36,7 +43,7 @@ class SummonerUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            'summoner.' . $this->summoner_id
+            'summoner.update'
         ];
     }
 }

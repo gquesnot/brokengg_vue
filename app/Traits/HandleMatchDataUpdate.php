@@ -69,6 +69,7 @@ trait HandleMatchDataUpdate
         }
 
         $matches_to_add = [];
+        $participant_ids = [];
         foreach ($api_match['info']['participants'] as $participant) {
             // remake
             $champion_id = intval($participant['championId']);
@@ -93,7 +94,7 @@ trait HandleMatchDataUpdate
                     'summoner_id' => $participant['summonerId'],
                 ]);
             }
-
+            $participant_ids[] = $summoner->id;
             $perk_primary_selections = collect($participant['perks']['styles'][0]['selections'])->map(function ($perk) {
                 return $perk['perk'];
             })->toArray();
@@ -189,7 +190,7 @@ trait HandleMatchDataUpdate
         $match->updated = true;
 
         $match->save();
-        event(new SummonerUpdated($this->id));
+        event(new SummonerUpdated($participant_ids));
 
         return true;
     }
