@@ -49,6 +49,9 @@ trait HandleMatchDataUpdate
     private function updateMatchFromArray(LolMatch $match, array $api_match)
     {
         //Storage::disk('local')->put("{$match_id}.json", json_encode($api_match));
+        if (!Arr::has($api_match, ['info'])) {
+            return false;
+        }
         $map_id = intval($api_match['info']['mapId']);
         $queue_id = intval($api_match['info']['queueId']);
 
